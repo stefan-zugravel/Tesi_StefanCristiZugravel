@@ -1,6 +1,6 @@
 # Tesi_StefanCristiZugravel
 
-Tesi di laurea magistrale di Stefan Cristi Zugravel
+Tesi di Laurea Magistrale di Stefan Cristi Zugravel
 
 Università degli Studi di Torino
 
