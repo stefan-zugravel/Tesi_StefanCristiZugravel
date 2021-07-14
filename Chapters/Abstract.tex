@@ -1,0 +1,41 @@
+\chapter{ABSTRACT}
+
+Hadron therapy is a particular type of oncological radiotherapy for the treatment of solid tumors that uses proton or
+ion beams instead of conventional X-rays. The usage of hadron particles allows a better control on the energy release,
+improving the precision of the treatment and the conservation of healthy tissues around the target.
+Particle beams are obtained by means of dedicated accelerators, requiring a precise control of particle flux and beam profile.
+Thus beam-monitoring systems become of primary importance, demanding the usage of fast particle sensors and readout electronics to monitor
+real-time the particle beam reaching the patient.\\
+
+In this context the Medical Physics group at University of Torino and INFN (the Italian National Institute for
+Nuclear and Particle Physics) is participating to
+the MoVeIT (Modeling and Verification for Ion beam Treatment planning) research project, which aims to develop new and
+innovative models for biologically optimized Treatment Planning Systems (TPS) using ion beams in hadron therapy.
+As~part of the project the Torino group is involved in the development of solid state detectors and readout electronics for measuring with high precision
+the characteristics of the hadron beam for irradiation, such as number of particles delivered per unit time, energy and beam profile.\\
+
+Low-Gain Avalanche Diode (LGAD) thin silicon sensors segmented in strips have been selected as a~promising choice for the implementation
+of the final beam-monitoring system. Thanks to the internal gain mechanism in fact, this sensor technology allows to obtain a large
+signal-to-noise ratio (SNR) for very low amounts of deposited charge, thus allowing to detect and count single beam particles.
+
+\noindent Silicon strips are read out by a full-custom and optimized Application Specific Integrated Circuit (ASIC) designed by Torino INFN.
+The chip, named ABACUS (Asynchronous-logic-Based Analog Counter for Ultra fast Silicon strips), has been 
+designed using a commercial CMOS 110~nm and integrates 24 readout channels. Each channel includes a low-noise preamplifier 
+and a fast discriminator. The data acquisition system uses commercial Field Programmable Gate Array (FPGA) boards that receive
+the data from up to six readout chips.\\
+
+This thesis presents my personal contributions on the upgrade of the FPGA firmware used to characterize
+the second version of the ABACUS chip and measurement results.
+The FPGA used to readout the chip is a Kintex-7 KC705 board by Xilinx programmed using the VHDL Hardware Description Language. The FPGA
+is responsible for both the chip configuration and sensor data readout.
+
+\noindent The first part of my work describes the upgraded VHDL firmware, which includes several new features such as:
+i) the creation of a debugging tool for malfunctioning channels on the board;
+ii) the complete rewriting of the internal Digital to Analog Converter (DAC) configuration system for the new ABACUS chip, which
+now uses an address-based system instead of a serial method;
+iii) the addition of a timestamp in the data packets for a more accurate calculation of the particle rate;
+iv) the implementation of a latch for internal counters;
+v) firmware modifications that allow the usage of LVDS (Low-Voltage Differential Signaling) signals instead of CML (Current Mode Logic) ones.
+
+The second part of the thesis presents experimental results for the characterization of the second version of the ABACUS chip.
+Measurements include DAC-linearity studies and threshold scans to quantify the threshold dispersion between channels
