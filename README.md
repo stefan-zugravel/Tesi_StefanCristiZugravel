@@ -2,10 +2,10 @@
 
 Tesi di laurea magistrale di Stefan Cristi Zugravel
 
-Università degli studi di Torino
+Università degli Studi di Torino
 
-Corso di laurea magistrale in Fisica
+Corso di Laurea Magistrale in Fisica
 
-Curricula in Fisica delle tecnologie avanzate
+Curricula in Fisica delle Tecnologie Avanzate
 
 Anno Accademico 2020/2021
