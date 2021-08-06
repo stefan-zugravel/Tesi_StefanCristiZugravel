@@ -161,24 +161,133 @@ The number of patients treated with protons or carbon ions is growing each year 
 	\caption{Number of patients treated with annually with protons and carbon ions}
 	\label{fig:patientstreated}
 \end{figure}
-This numbers, even if are growing, are still a small fraction of the total number of tumors treated with external radiation; X-ray being the main
+\noindent This numbers, even if are growing, are still a small fraction of the total number of tumors treated with external radiation; X-ray being the main therapy method. 
+The main reason lies in the need for complex accelerators (cyclotrons or synchrotrons) fundamental to accelerate the ions to
+the energies needed to penetrate deeply into the tissues and a sophisticated dose distribution system that guarantees the achievable precision in delivering the dose in the various regions of the patient.
+Charged particles beams used id hadron therapy are accelerated by synchrotrons or cyclotrons.
+\newline
+Cyclotrons take up less space and are cheaper to build and to maintain, however the accelerated particles have fixed energy that can not be changed. It can only be reduced using absorbent elements called range shifter.
+On the contrary, a synchrotron can accelerate ions at different energies, but it need much more space and money to operate.
+Typically a medical purpose synchrotron like the one in figure \ref{fig:sincrotrone} has a ring of at least 10m in diameter and needs one or two linear accelerators in series.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch1/Sincrotrone}
+	\caption{The synchrotron at the National Center of Oncological Hadrotherapy (CNAO) of Pavia}
+	\label{fig:sincrotrone}
+\end{figure}
+\noindent Regardless of the type of acceleration used, it is crucial that the beam remain modulated in energy and direction in such a way to produce an optimal dose distribution. This is generally achieved by producing a Spread Out Bragg Peak (SOBP), a constant longitudinal dose distribution in the volume to be treated obtained by superimposing beams at different energies, as shown in figure \ref{fig:sobp}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch1/SOBP}
+	\caption{The SOBP is obtained by superimposing multiple beams with different energy, thus creating a dose profile constant with the depth of the tissue}
+	\label{fig:sobp}
+\end{figure}
+\noindent There are two ways to conform the particle beam to the volume to be treated, these are passive and active distribution systems.
 
 \subsection{Passive dose distribution systems}
-
+\noindent Passive dose distribution techniques are mainly employed in centers where a cyclotron is used, which provides a fixed energy beam.
+The passive methods consist in the use of appropriate absorbing and collimating elements that cause a broadening of the beam, modify its energy in order to produce an appropriate SOBP and adapt the lateral shape to the volume to be treated.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/Basic-design-of-irradiation-system-for-hadron-therapy}
 	\caption{Basic design of passive dose distribution system for hadron therapy used to adapt the dose to the form of the tumor}
 	\label{fig:passive}
 \end{figure}
+\noindent A typical example of passive dose distribution system is shown in figure \ref{fig:passive}. A fixed energy beam passes through a first thin layer of scattering material (scatter), like lead, that causes the beam to broaden with a simil-gaussian transverse distribution.
+The thin thickness of the material means that the energy loss is minimum.
+The dose is monitored with some ionization chambers.
+The maximum energy and thus the SOBP is set with the use of range shifters.
+The beam lateral profile is adapted to the form of the tumor with the use of collimators.
+The dose is set in accordance with the shape of the tumor with the use of range compensators.
+\newline
+The advantages of this technique are the simplicity, safety, wide diffusion in existential hadrontherapy centers and low sensitivity to the temporal dynamics of the beam. 
+On the other hand there is the reduced flexibility in the three dimensional conformation of the dose, the need to use customized collimators, the difficulty of obtaining a truly parallel beam, the low efficiency of use of the beam and the contamination of the patient due to the production of secondary fragments (for example neutrons) in nuclear interactions with absorbent elements.
+
 \subsection{Active dose distribution systems}
+\noindent Unlike passive systems in which the beam is spread to cover the entire tumor area, in active distribution systems the tumor volume is divided into a grid of points, called spots, that are grouped into several mono-energetic layers, where each layer corresponds to the position of the Bragg peak of fixed energy beam, called pencil beam.
+The lateral conformation is obtained with a magnetic deflection, while the energy of the beam is changed to move the Bragg peak from one layer to the other.
+In active systems based on cyclotrons, the energy of the beam is changed using absorbent materials (range shifters) of appropriate thickness, while in synchrotron-based centers, directly changing the energy at which the beam is accelerated between one spill and the next.
+Scanning in the direction orthogonal to the beam is performed with two perpendicular magnets.
+\newline
+There are two modes of active distribution: in one the beam is moved continuously along the scanning lines and the transverse dose distribution is modulated by adjusting the scanning speed (raster scanning). A second mode (spot scanning)\cite{cnao} consists in keeping the beam fixed on a spot until the predetermined dose is reached, and then moving it, without turning it off, to the adjacent spot until the whole mono-energetic slice is is completely irradiated, as shown in figure \ref{fig:active}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch1/Active}
+	\caption{Basic design of active dose distribution system for hadron therapy used to adapt the dose to the form of the tumor. Modulated dose distribution in the transverse plane by scanning magnets (top) and on the longitudinal axis with the superposition of energy beams different (bottom)}
+	\label{fig:active}
+\end{figure}
+\noindent This last technique provides the enormous advantage of being able to perform an extremely precise and homogeneous irradiation that adapts to the shape of the tumor which is in most cases irregular.
+Another advantage compared to passive systems is the absence of material on the beam line, a lower lateral penumbra due to the absence of collimators, a high efficiency of use of the beam and the possibility to synchronize the radiation with the respiratory phase of the patient.
 
 \subsection{Treatment Planning System}
+\noindent The Treatment Planning System (TPS) is software that simulates patient dose distribution and calculates the optimal beam configuration to achieve clinical dose specifications for the tumor and healthy organs.
+It is a complex tool, which uses information on the patient's anatomy as input provided by computed tomography (CT) images, with physician-designated contours of the tumor and surrounding organs.
+Based on this information and the specifications of the desired target dose and the maximum tolerable dose on other organs, the TPS performs a minimization procedure (called "reverse planning") to determine the treatment parameters.
+The output of the TPS provides the parameters corresponding to the number of particles, energies and directions of the pencil beam for each spot necessary to best meet the specifications.
+The TPS searches for the solution iteratively: starting from an initial hypothesis on the number of particles for each spot, the program calculates the spectra of the particles for each point of interest and estimates the corresponding biological effect.
+If the result meets the specifications, the TPS can terminate the execution and if not, the program must appropriately vary the number of irradiated particles and repeat the biological effect assessment, until the specifications are met or the maximum number of iterations is reached.
+
 
 \section{Beam monitoring}
+\noindent The accuracy of the dose distribution obtained with the active pencil beam scanning technique is based on a precise online measurement of the beam position and the number of particles irradiated at each point.
+The Dose Distribution System (DDS)\cite{pencil} must control the scanning system, consisting of two power supplies connected to two orthogonal bipolar magnets to deflect the beam horizontally and vertically.
+Once the required number of particles are irradiated in one spot, the DDS vary the currents in the magnets in order to move the beam to the next point.
+Moreover, the DDS must be interfaced with the accelerator control to request a quick stop of the beam when a slice is completed or to request new energy values for the treatment of the next slice.
+The operations of the DDS are all based on the online measurement of the number of irradiated particles and the direction of the beam carried out with dedicated detectors.
+\newline
+The most commonly used monitor detectors are based on ionization chambers (ICs).
+Figure \ref{fig:monitor}, for example, shows the beam detector system used by the National Center of Oncological Hadrotherapy (CNAO) in Pavia, consisting of five planar ionization chambers (ICs) filled with nitrogen and positioned at the end of the beam line.
+Two chambers with a single electrode provide information on the number of particles irradiated with a frequency of 1 MHz, while the other three chambers have electrodes segmented into strips or pixels for measuring the shape and position of the beam.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch1/MonitorSystem.PNG}
+	\caption{}
+	\label{fig:monitor}
+\end{figure}
+\noindent Due to their limited complexity, ICs offer several advantages such as robustness, ease of construction and operation, and show no indication of performance degradation due to radiation and aging effects, even after several years of operation.
+Despite being the gold standard in beam monitoring applications in hadrontherapy, the imminent development of new treatment techniques are beginning to suffer from the limitations of gas detector technology.
+\newline
+ICs measure the charge produced in the gas, which depends not only on the number of particles, but also on the energy of the particles and environmental parameters.
+To determine the number of particles irradiated on each spot, the energy of the beam must be known in advance as well as the effects of temperature and pressure dependencies must be taken into account.
+Periodic calibration procedures are required to ensure the reliability of the ICs in clinical practice.
+Another limitation of the ionization chambers is their limited sensitivity: due to the small ionization charge produced in gases, the minimum number of particles that an IC can detect is limited to about $10^4$ protons.
+Furthermore, the collection times of the charge in the gas are relatively long (of the order of hundreds of $\mu$s) and therefore their response is rather slow.
+These limitations prevent their use in treatment modalities where rapid changes in position are required or when a limited number of particles must be irradiated at each spot.
+\newline
+To overcome the limitations of ionization chambers as monitoring devices in hadrontherapy, as their limited sensitivity, the dependence of the measurable number of particles on the energy of the beam and environmental parameters, slow response times, the Medical Physics group of the University of Turin is studying a new approach for beam monitoring based on the solid state detector.
+In particular, segmented silicon detectors are considered as an alternative to IC chambers to count the number of particles in a therapeutic beam.
+\newline
+In the next paragraph it is described the operation of a silicon detector, while in the next chapter it will be shown how their characteristics can compensate for the limitations of the ionization chambers.
+
+
 
 \subsection{Silicon detectors}
 
+\noindent Silicon is a semiconductor formed by tetravalent atoms \cite{detector}, with a resistivity between that of the metal and the insulators, with a forbidden energy band of 1.14 eV.
+An electron jumping in the conduction band leaves a hole in the valence band, which behaves like a positive charge carrier.
+When silicon is doped with trivalent atoms (acceptors) there is an excess of holes ("p-type" material).
+Doping with pentavalent (donor) atoms produces materials with an excess of electrons (called "n-type").
+\newline
+A silicon detector is based on p-n junctions, and on the formation of a depletion region without free charges obtained by applying an intense reverse polarization.
+In a silicon detector the depletion region is the active volume in which the hole-electron pairs are created by the ionization of the particles, similar to how ion-electron pairs are produced in a gas detector.
+The current induced in the electrode during the migration of the hole-electron pairs is collected and integrated to measure the total charge produced, proportional to the loss of energy by the charged particle.
+\newline
+The average energy required to create a hole-electron pair is an order of magnitude smaller in silicon than in a gas (3.6 eV in Si compared to more than 30 eV in N$_2$ or in air).
+Also considering the much higher density of silicon than a gas, the charge produced by an ionizing particle in a thin layer of silicon is high enough to be measurable even for a single particle.
+\newline
+The silicon detectors are constructed with a series of p-n junctions with the electrodes segmented into strips or pixels, and used for particle monitoring in particle physics and nuclear physics applications.
+An example of a silicon strip detector is shown in figure \ref{fig:detector}. It consists of highly doped p-type strips implanted on an n-type substrate and an n ++ electrode.
+The substrate n is completely emptied by applying a positive voltage on the electrode n++ with respect to the strips.
+An ionizing particle penetrates the emptied substrate and generates electron-hole pairs that migrate along the electric field generated by the applied voltage and induces a current signal on the aluminum strips.
+In this example, the aluminum electrodes are separated by a thin SiO2 capacitive layer (AC coupling), but configurations with direct connection of the aluminum to the n ++ electrode (DC coupling) are also possible.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch1/Detector.PNG}
+	\caption{Schematic of a silicon detector with strip segmented electrodes}
+	\label{fig:detector}
+\end{figure}
+\noindent In a typical strip detector, the thickness of the emptying region is about 300$\mu$m to produce a sufficient charge detectable by the reading electronics. 
+The typical collection time of electrons and holes varies from 3 ns to 6 ns, depending on the applied voltage.
 
 
 
