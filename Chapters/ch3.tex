@@ -62,13 +62,34 @@ became apparent only in retrospect. The three ages are:
 \begin{itemize}
 	\item Age of Invention 1984–1991
 	\newline
-	The first FPGA, the Xilinx XC2064, contained only 64 logic blocks, each of which held two three-input Look-Up Tables (LUTs) and one register, less than 1000 gates.
+	In the Age of Invention, FPGAs were small, so the design problem was small. Though they were desirable, synthesis
+	and even automated placement and routing were not considered essential. Many deemed it impractical even to
+	attempt design automation on the personal computers of the time, since ASIC placement and routing was being
+	done on mainframe computers.
+	Manual design, both
+	logical and physical, was acceptable because of the small problem size. Manual design was often necessary because
+	of the limited routing resources on the chips.
+	Radically different architectures precluded universal FPGA design tools, as were available in the ASIC business.
+	FPGA vendors took on the added burden of EDA (Electronic Design Automation) development for their devices and this was eventually recognized as an advantage.
+	\newline
+	In the Age of Invention, FPGAs were much smaller than the applications that users wanted to put into them. As a
+	result multiple-FPGA systems became popular and automated multi-chip partitioning software was identified as
+	an important component of an FPGA design suite, even as automatic placement and routing were not.
 	\item Age of Expansion 1992–1999
-	%\newline
-	
+	\newline
+	Through the Age of Expansion, Moore’s Law rapidly increased the capacity of FPGAs, leading to a demand for
+	design automation and permitting longer interconnect segmentation.
+	FPGAs encroached on ASIC territory as FPGA device capacity grew more rapidly than the
+	demand from applications. No longer did users clamor for multi-FPGA partitioning software.
+	As FPGAs became more popular, EDA companies became interested in providing tools for them.
 	\item Age of Accumulation 2000–2007
-	%\newline
-	
+	\newline
+	The biggest change in FPGAs in the Age of Accumulation was the change in the target application. The FPGA
+	business grew not from general ASIC replacement, but from adoption by the communications infrastructure. Companies
+	such as Cisco Systems used FPGAs to make custom data paths for steering huge volumes of internet and packetized
+	voice traffic through their switches and routers.
+	By the end of the 2000s, FPGAs were not general-purpose ASIC replacements as much as they were data-routing engines.
+	FPGA bitwise programmability assured their continued use in a wide range of applications, including control and automotive systems.
 \end{itemize}
 
 \section{FPGA Versus PAL}
@@ -118,7 +139,7 @@ shown in figure 4, consists of an array of programmable logic blocks and interco
 	\item FPGA architecture could look nothing like a memory. Design and manufacturing were very different than memory.
 	\item The logic blocks were smaller. There was no guarantee that a single function would fit into one. Therefore, it was difficult to determine ahead of time how much logic would fit into the FPGA.
 	\item The performance of the FPGA depended on where the logic was placed in the FPGA. FPGAs required placement and routing, so the performance of the finished design was not easy to predict in advance.
-	\item Complex EDA (Electronic Design Automation) software was required to fit a design into an FPGA.
+	\item Complex EDA software was required to fit a design into an FPGA.
 \end{itemize}
 
 
@@ -256,6 +277,16 @@ subsequent phases:
 \end{figure}
 
 \section{Hardware Description Language}
+\noindent Hardware description language (HDL) is a specialized computer language used to describe the structure and behaviour of electronic circuits, and most commonly, digital logic circuits\cite{hdl}. A hardware description language looks like a programming language similar to C; it is a textual description consisting of expressions, statements and control structures. One important difference between most programming languages and HDLs is that HDLs explicitly include the notion of time.
+HDLs form an integral part of EDA systems, especially for complex circuits, such as ASICs, PLDs and FPGAs.
+\newline
+The first hardware description languages appeared in the late 1960s, looking like more traditional languages.
+By the late 1970s, design using PLDs became popular, although these designs were primarily limited to designing finite-state machines.
+In 1985 Gateway Design Automation introduced Verilog and Intermetrics released the first completed version of the VHSIC (Very High Speed Integrated Circuit) Hardware Description Language (VHDL).
+VHDL was developed at the behest of the United States Department of Defence's VHSIC program.
+Within a few years, VHDL and Verilog emerged as the dominant HDLs in the electronics industry.
+\subsection{VHDL}
+\noindent The biggest part of the FPGA firmware used in the MoVe\_IT project is written in VHDL\cite{vhdl}. This HDL was invented to describe hardware and in fact VHDL is a concurrent language. What this means is that, normally, VHDL instructions are all executed at the same time (concurrently), regardless of the size of the needed implementation. Thus the VHDL model can be translated into a form that can be used to generate actual working circuits.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch3/VHDL}
@@ -264,21 +295,132 @@ subsequent phases:
 \end{figure}
 
 \subsection{Entity}
+\noindent A digital system is structured as a hierarchic collection of modules. Each module, that can be  has a series of ports that enables him to communicate with the external world. The VHDL entity provides a simple wrapper for the
+lower-level circuitry. This wrapper effectively describes how the black box interfaces with the outside world. Since VHDL describes digital circuits, the entity simply lists the various inputs and outputs of the underlying circuitry.
+\begin{figure}
+	\centering
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{IMG/ch3/ENTITY2}
+		\caption{VHDL entity declaration}
+		\label{fig:entity2}
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.62\linewidth]{IMG/ch3/ENTITY1}
+		\caption{Black box design example}
+		\label{fig:entity1}
+	\end{minipage}
+\end{figure}
+\noindent In figure \ref{fig:entity2} it can be seen that each port matches an arrow in figure \ref{fig:entity1}; the arrow goes inside the black box for an input and outside for an output. The data type std\_logic is what the IEEE has standardized for the representation of digital signals. 
 
 \subsection{Architecture}
+\noindent The VHDL entity declaration, introduced before, describes the interface or the external representation of the circuit. The architecture describes what the circuit actually does.
+There can be any number of equivalent architectures describing a single entity. The VHDL coding style used inside
+the architecture body has a significant effect on the way the circuit is
+synthesized, thus how the circuit will be implemented inside an actual silicon device.
+An architecture can be written by means of three modelling techniques
+plus any combination of these three. There is the data-flow model, the behavioural model and the structural model.
+\begin{itemize}
+	\item \textbf{data-flow model}:
+	\newline
+	In the data-flow approach, circuits are described by showing the input and output relationships between the various built-in components of the VHDL language. The built-in components of VHDL include operators such as AND, OR, XOR, etc.
+	It is good that it can be seen the flow of data in the circuit by examining the VHDL code, however data-flow modelling works fine for small and relatively simple circuits; as circuits become more complicated, it is often advantageous
+	to switch to behavioural style models.
+	\item \textbf{behavioural model}:
+	\newline
+	The behavioural style architecture provides no details as to how the design is implemented in actual hardware.
+	Instead, the behavioural style models how the circuit outputs will react to the circuit inputs.
+	Behavioural modelling is considered higher up on the circuit abstraction level as compared to data-flow models. It is the
+	VHDL synthesizer tool that decides the actual circuit implementation.
+	The heart of the behavioural style architecture is the process statement.
+	\item \textbf{structural model}:
+	\newline
+	As digital designs become more complex, it becomes less likely that any one design can be implemented with any one of the three types of VHDL models. Most complex designs could be considered structural models. Modular designs promote understandability by packing low-level functionality into modules.
+	The VHDL structural model supports the reuse of design units. This includes units that have been previously designed as well as the ability to use predefined module libraries.
+	
+\end{itemize}
 
 \subsection{Process}
+\noindent The process statement is a statement which contains a certain number of instructions that, when the process statement is executed, are executed sequentially. In other words, the process statement is a tool that can be used any time it is needed to execute a certain number of instructions in a sequential manner, one instruction after the other, from top to bottom.
+\newline
+The process statement in itself is a concurrent statement and therefore will be executed together with the other concurrent statements in the body of the architecture where it sits, like in figure \ref{fig:vhdl}.
 
 \subsection{Constraints}
-
+\noindent Constraints\cite{constraints1} are used to influence the FPGA design implementation tools including the
+synthesizer, and place-and-route tools. They allow the user to specify the design
+performance requirements and guide the tools toward meeting those requirements. The
+implementation tools prioritize their actions based on the optimization levels of synthesis,
+specified timing, assignment of pins, and grouping of logic provided to the tools by the user.
+There are two main type of constraints: 
+\begin{itemize}
+	\item \textbf{Logical constraints} are constraints that are attached to elements in the design prior to
+	mapping or fitting. Applying logical constraints helps to adapt the design performance to expected worst-case conditions. Later, when choosing a specific Xilinx architecture and place and route or fit the design, the logical constraints are converted into physical constraints\cite{constraints2}.
+	\newline
+	There are three main categories of logical constraints:
+	\begin{itemize}
+		\item Placement constraints
+		\item Relative Location (RLOC) constraints
+		\item Timing constraints
+	\end{itemize}
+	Timing constraints allow to specify the maximum allowable delay or skew on any given set of paths or nets in the design.
+	
+	\item \textbf{Physical constraints}. Constraints can also be attached to the elements in the physical design, that is, the design
+	after mapping has been performed. These constraints, like I/O pin selection, are referred to as physical constraints.	 
+\end{itemize}
+\noindent XDC constraints are a combination of industry standard Synopsys Design Constraints (SDC) and Xilinx proprietary physical constraints. XDC constraints have the following properties:
+\begin{itemize}
+	\item They are not simple strings, but are commands that follow the Tcl (Tool command language) semantic.
+	\item They can be interpreted like any other Tcl command by the Vivado Tcl interpreter.
+	\item They can be stored in one or more XDC files.
+\end{itemize}
 
 \section{Development tools}
 
 \subsection{Vivado}
+\noindent In the MoVe\_IT project for the simulation, synthesis and implementation of the firmware it was used only Xilinx Vivado software.
+\newline
+Vivado Design Suite is a software suite produced by Xilinx for synthesis and analysis of HDL designs. It has also its own text editor, however it is not the most efficient tool for writing code.
+Vivado includes a in-built logic simulator, high-level synthesis, an IP (Intellectual Property) Integrator, and a toolchain that converts C code into programmable logic\cite{vivado}.
+This tool supports both VHDL and Verilog and can manage mixed language projects.
+For this project was used the Vivado 2015.4 version. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/VIVADO}
+	\caption{Vivado 2015.4 project mode working environment}
+	\label{fig:vivado}
+\end{figure}
 
-\subsection{LabView}
-
+\subsection{LabVIEW}
+\noindent Laboratory Virtual Instrument Engineering Workbench (LabVIEW) is a system-design platform and development environment for a visual programming language from National Instruments. The graphical language is named "G". LabVIEW is commonly used for data acquisition, instrument control, and industrial automation on a variety of operating systems.
+LabVIEW integrates the creation of user interfaces (termed front panels) into the development cycle. LabVIEW programs-subroutines are termed virtual instruments (VIs). Each VI has three components: a block diagram, a front panel, and a connector pane.
+The front panel is built using controls and indicators. Controls are inputs: they allow a user to supply information to the VI. Indicators are outputs: they indicate, or display, the results based on the inputs given to the VI. The back panel, which is a block diagram, contains the graphical source code.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/LABVIEW}
+	\caption{LabVIEW example project}
+	\label{fig:labview}
+\end{figure}
+\noindent The graphical approach also allows "non-programmers" to build programs by dragging and dropping virtual representations of lab equipment with which they are already familiar.
+\newline
+LabVIEW includes extensive support for interfacing to devices such as instruments, cameras, and other devices like, in this case, FPGA boards.
 \section{Kintex 7 kc705}
+\noindent In the MoVe\_IT project are used FPGA boards like the one in figure \ref{fig:kintex}, a Xilinx Kintex 7 kc705 development board.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/KINTEX}
+	\caption{Xilinx Kintex 7 kc705 development board}
+	\label{fig:kintex}
+\end{figure}
+\noindent Its main characteristics are:
+\begin{itemize}
+	\item
+	\item
+	\item
+	\item
+	\item
+	\item
+\end{itemize}
 
 
 
