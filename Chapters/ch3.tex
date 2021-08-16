@@ -404,6 +404,14 @@ The front panel is built using controls and indicators. Controls are inputs: the
 \noindent The graphical approach also allows "non-programmers" to build programs by dragging and dropping virtual representations of lab equipment with which they are already familiar.
 \newline
 LabVIEW includes extensive support for interfacing to devices such as instruments, cameras, and other devices like, in this case, FPGA boards.
+\newline
+In figure \ref{fig:labview2} it can be seen the LabVIEW program that controls (writes and reads) the internals DACs for the ABACUS2 chip; it will be analyzed more in depth in the next chapter.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{IMG/ch3/LABVIEW2}
+	\caption{LabVIEW Test Hardware Commands program. The white rectangles are inputs, the user can set a value bounded between 0 and 63, the green dots and the buttons are 1 bit inputs, while the more grey squares are outputs}
+	\label{fig:labview2}
+\end{figure}
 \section{Xilinx 7 Series}
 \noindent The FPGA used in this project is a Kintex 7, however Xilinx 7 series comprise four FPGA families that address a complete range of system requirements; in figure \ref{fig:kintex72} it can be seen a comparison between the four different families.
 \begin{figure}[H]
