@@ -1,13 +1,73 @@
-\chapter{MoVe\_IT kc705 tera10 firmware update}
+\chapter{MoVe\_IT kc705 Tera10 firmware update}
+\section{Introduction}
+\noindent As explained in the previous chapters a good VHDL design, in order to improve readability and order, uses separate modules for each main task of the firmware. Each module is connected with wires (signals) to the others. The first half of this chapter will analyze the structure of the kc705 tera10 firmware, while the second half will be focused on the thesis work; this comprehends the HDL additions to the firmware, the software simulations and the test simulations on chip.
+In section \ref{hardware} will be described a simple level translator built for simulation purposes while in sections \ref{testbench} and \ref{testboard} will be briefly analyzed the experimental setup.
 
 \section{Firmware structure}
 \noindent
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch4/TERA10}
-	\caption{kc705 tera10 firmware structure}
+	\caption{KC705 tera10 firmware structure}
 	\label{fig:tera10}
 \end{figure}
+\begin{itemize}
+	\item \textbf{KC705 TERA10}: this is the main module, everything lives inside it, thus it contains no logic, only component declarations and port-maps. In this module can be set the firmware version ("B20C" for example) that will the displayed on the LCD.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item \textbf{LCD Controller}: it is the module that drives the 16x2 LCD display of the board.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{IMG/ch4/LCD}
+		\caption{KC705 tera10 LCD output}
+		\label{fig:lcd}
+	\end{figure}
+	\noindent This module contains multiple processes, FSMs (Finite State Machines) and a RAM module. The first FSM manages the start-up sequence for the LCD, the second does the conversion of the firmware version from hex to ASCII, a third one sends one by one the characters to the display while a fourth one manages the communications with the UDP module. In fact the firmware can not only display a fixed pre-selected banner, but also a user-sent 'message' from the pc.
+	The LCD is extremely useful when working with more than one card for discriminating one from another and for keeping track of the firmware version of each board.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+	\item \textbf{Tera10 I/O}: this module contains the declaration and port-map for 24 \textit{tera10 channel coincidence} modules\cite{limardi}; each module receives as an input the data from two channels of the ABACUS2 chip, this signal is thus de-serialized with a 1GHz frequency (\textit{serdes\_clk}), ten times higher than the main clock (100MHz). The output of the de-serializer is a 10 bit bus (one for each signal) to which it is added, using a shift register, the last bit from the previous bus. This is done in order to not lose any transition (high/low) from one packet and the next one.
+	\newline
+	The counting of the number of pulses is done with a LUT (Look Up Table) that from a 11bit bus gives back a 3 bit logic vector corresponding to the number from 0 to 1. This result is used to update a 32bit counter for each channel; in figure \ref{fig:coincidence} those are N1 for ch0 and N2 for ch1.
+	\newline
+	In order to count with efficiency even at high rates a previous student implemented in the firmware pile-up correction algorithms. AND and OR logic combinations between the two channels 10bit bus are done, compared with others LUTs and added to four new 32bit counters ($N_{AND}$, $T_{AND}$, $N_{OR}$ and $T_{OR}$). 
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{IMG/ch4/COINCIDENCE}
+		\caption{KC705 tera10 channel coincidence architecture diagram}
+		\label{fig:coincidence}
+	\end{figure}
+	\noindent The counters $T_{1}$, $T_{2}$, $T_{AND}$ and $T_{OR}$ contain the number of clock strokes in which one of the two channel or a logic combination of both is \textit{high}.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	\item \textbf{Tera10 Controller}: this module is strictly connected to the previous one (\textit{Tera10 I/O}), in fact it receives every counter from the previous block and manages the data in accord to the commands sent by the user. These commands can be:
+	\begin{itemize}
+		\item x"01" \textit{reset serdes}: send reset signal for the de-serializer.
+		\item x"02" \textit{reset counters}: every counter for each \textit{tera10 channel coincidence} module is set to 0.
+		\item x"10" \textit{set counter enable}: to enable selected counters. This is done by dividing the channels in blocks of 16. When a 20bit command is sent bits 18-17-16 are used to identify the block, and the next 16bit are encoded one-hot for each channel; for example, to enable channel 2 the data to be sent is \textit{0-000-0000000000000010} and to enable channel 18 the data is \textit{0-001-0000000000000100}.   
+		\item x"11" \textit{read counter}: read selected counter; the firmware response is a 16bit bus, thus 2 commands are needed in order to read the entire counter; the LSB (Least Significative Bit) selects between the fist and last 16bit. for example:
+		\newline
+		fifo\_data(7 downto 0) = "01110110" means read ch59\_counter(15 downto 0)
+		\newline
+		fifo\_data(7 downto 0) = "01110111" means read ch59\_counter(31 downto 15)
+		\item x"13" \textit{read clocks}: read selected clock counter; the firmware response is a 16bit bus, thus are valid the same considerations as before.
+		\item x"14" \textit{read coincidence counter}: read selected coincidence counter, the MSB (Most Significative Bit) selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16bit buss. for example:
+		\newline
+		fifo\_data(7 downto 0) = "10000010" means read ch0203\_or\_counter
+		\item x"15" \textit{read coincidence clocks}: read selected clock coincidence counter, the MSB (Most Significative Bit) selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16bit bus.
+		\item x"18" \textit{set selected channel}:
+		\item x"20" \textit{do external trigger}:
+		\item x"12" \textit{read event buffer ram address}:
+		\item x"80" \textit{read event buffer ram}:
+	\end{itemize}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	\item \textbf{Hardware Controller}:
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	\item \textbf{Command Processor}:
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	\item \textbf{GbPhy}:
+	
+\end{itemize}
 
 \subsection{GbPhy}
 
@@ -37,7 +97,7 @@
 
 \subsection{Latching counters}
 
-\section{Hardware devices}
+\section{Hardware devices}\label{hardware}
 
 \begin{figure}[H]
 	\centering
@@ -48,7 +108,7 @@
 
 \section{Simulations}
 
-\section{Test Bench}
+\section{Test Bench}\label{testbench}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch4/TESTBENCH}
@@ -56,7 +116,7 @@
 	\label{fig:testbench}
 \end{figure}
 
-\section{Test board}
+\section{Test board}\label{testboard}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch4/TESTBOARD}
