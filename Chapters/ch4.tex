@@ -66,11 +66,11 @@ In section \ref{hardware} will be described a simple level translator built for 
 	\end{figure}
 	\noindent The counters $T_{1}$, $T_{2}$, $T_{AND}$ and $T_{OR}$ contain the number of clock strokes in which one of the two channel or a logic combination of both is \textit{high}.
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-	\item \textbf{Tera10 Controller}: this module is strictly connected to the previous one (\textit{Tera10 I/O}), in fact it receives every counter from the previous block and manages the data in accord to the commands sent by the user. These commands can be:
+	\item \textbf{Tera10 Controller}: this module is strictly connected to the previous one (\textit{Tera10 I/O}), in fact it receives every counter from the previous block and manages the data in accord to the commands sent by the user. Some of the more used and important commands are:
 	\begin{itemize}
 		\item x"01" \textit{reset serdes}: send reset signal for the de-serializer.
 		\item x"02" \textit{reset counters}: every counter for each \textit{tera10 channel coincidence} module is set to 0.
-		\item x"10" \textit{set counter enable}: to enable selected counters. This is done by dividing the channels in blocks of 16. When a 20bit command is sent bits 18-17-16 are used to identify the block, and the next 16bit are encoded one-hot for each channel; for example, to enable channel 2 the data to be sent is \textit{0-000-0000000000000010} and to enable channel 18 the data is \textit{0-001-0000000000000100}.   
+		\item x"10" \textit{set counter enable}: to enable selected counters. This is done by dividing the channels in blocks of 16. When a 20bit data command is sent bits 18-17-16 are used to identify the block, and the next 16bit are encoded one-hot for each channel; for example, to enable channel 2 the data to be sent is \textit{0-000-0000000000000010} and to enable channel 18 the data is \textit{0-001-0000000000000100}.   
 		\item x"11" \textit{read counter}: read selected counter; the firmware response is a 16bit bus, thus 2 commands are needed in order to read the entire counter; the LSB (Least Significative Bit) selects between the fist and last 16bit. For example:
 		\newline
 		fifo\_data(7 downto 0) = "01110110" means read ch59\_counter(15 downto 0)
@@ -81,19 +81,33 @@ In section \ref{hardware} will be described a simple level translator built for 
 		\newline
 		fifo\_data(7 downto 0) = "10000010" means read ch0203\_or\_counter(15 downto 0)
 		\item x"15" \textit{read coincidence clocks}: read selected clock coincidence counter, the MSB (Most Significative Bit) selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16bit bus.
-		\item x"18" \textit{set selected channel}:
-		\item x"20" \textit{do external trigger}:
-		\item x"12" \textit{read event buffer ram address}:
-		\item x"80" \textit{read event buffer ram}:
+		%\item x"18" \textit{set selected channel}:
+		%\item x"20" \textit{do external trigger}:
+		%\item x"12" \textit{read event buffer ram address}:
+		%\item x"80" \textit{read event buffer ram}:
 	\end{itemize}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-	\item \textbf{Hardware Controller}:	
+	\item \textbf{Hardware Controller}: this module manages hardware devices such as internal and external DACs, LEDs and GPIO (General Purpose Input Output) switches\&buttons. The main commands are:
+	\begin{itemize}
+		\item x"01" \textit{read GPIO switches}: this command returns the current state of the GPIO switches and buttons, thus:
+		\newline
+		reply(8 downto 4) = buttons state
+		\newline
+		reply(3 downto 0) = switches state
+		\item x"02" \textit{set hardware LED}: this command can turn on or off LEDs.
+		\item x"11" \textit{set baseline DACs}: this command is used both, for writing (setting) and reading the values of the ABACUS2 internal DACs, this will be explained in detail in section \ref{InternalDac}.
+		\item {\color{red} non so se ho detto cose sbagliate}
+		\item x"20" \textit{clear external DAC}: to clear the present settings of the eternal DAC. 
+		\item x"21" \textit{set external DAC data register}: to set the external DAC with the values written in the RAM.
+		\item x"22" \textit{write external DAC register}: to write on RAM the values to be written on the eternal DAC.
+	\end{itemize}  
+		
 \end{itemize}
 
 \section{Firmware update}
 
-\subsection{Hardware controller}
+\subsection{Hardware controller}\label{InternalDac}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{IMG/ch4/INTERNALDAC}
