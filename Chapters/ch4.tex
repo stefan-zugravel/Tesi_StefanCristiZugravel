@@ -97,23 +97,40 @@ In section \ref{hardware} will be described a simple level translator built for 
 		reply(3 downto 0) = switches state
 		\item x"02" \textit{set hardware LED}: this command can turn on or off LEDs.
 		\item x"11" \textit{set baseline DACs}: this command is used both, for writing (setting) and reading the values of the ABACUS2 internal DACs, this will be explained in detail in section \ref{InternalDac}.
-		\item {\color{red} non so se ho detto cose sbagliate}
-		\item x"20" \textit{clear external DAC}: to clear the present settings of the eternal DAC. 
+		%\item {\color{red} non so se ho detto cose sbagliate}
+		\item x"20" \textit{clear external DAC}: to clear the current settings of the eternal DAC. 
 		\item x"21" \textit{set external DAC data register}: to set the external DAC with the values written in the RAM.
-		\item x"22" \textit{write external DAC register}: to write on RAM the values to be written on the eternal DAC.
+		\item x"22" \textit{write external DAC register}: to write on memory the values to be written on the eternal DAC.
 	\end{itemize}  
 		
 \end{itemize}
+\noindent Each module contains at least two FSM (Finite State Machine) in order to properly communicate with GbPhy and the logic needed for its purpose. 
 
 \section{Firmware update}
+My work on the KC705 Firmware can be divided into three parts:
+\begin{itemize}
+	\item The implementation of the logic for the configuration of the ABACUS internal DACs. 
+	\item The addition of a latch logic in order to save into a register the current state of every counter in the firmware.
+	\item The addition of a timestamp generator to obtain a more precise calculation of the proton rate. 
+\end{itemize}
 
 \subsection{Hardware controller}\label{InternalDac}
+\noindent The internal DACs of the ABACUS\_v2 chip can be described as in figure \ref{fig:internaldac}, thus with 3 inputs (clock, data\_IN and reset) and an output (data\_OUT)\cite{dac}.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth]{IMG/ch4/INTERNALDAC}
+	\includegraphics[width=0.4\linewidth]{IMG/ch4/INTERNALDAC}
 	\caption{test bench}
 	\label{fig:internaldac}
 \end{figure}
+\noindent The 2x24 threshold fine tuning DACs are controlled by 48 5-bits registers. These registers can be independently
+loaded and read-out via a serial interface protocol based on 16-bits words. The commands are send via a Serial
+INput pin (SIN) and the data are read-out on a Serial OUTput pin (SOUT). The two serial streams are
+synchronous to the CLK clock input and are sampled on the clock rising edge.
+The write operations are performed according to the following sequence:
+\begin{itemize}
+	\item Send start sequence : hex A5A5
+	\item Send write command : 11a13...a8d7...d0
+\end{itemize}
 
 \begin{figure}[H]
 	\centering

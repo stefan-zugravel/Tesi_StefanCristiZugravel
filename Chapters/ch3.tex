@@ -386,12 +386,22 @@ This tool supports both VHDL and Verilog and can manage mixed language projects.
 For this project was used the Vivado 2015.4 version. 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{IMG/ch3/VIVADO}
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/VIVADO}
 	\caption{Vivado 2015.4 project mode working environment}
 	\label{fig:vivado}
 \end{figure}
 
 \subsection{IP}
+\noindent \textit{"Intellectual property (IP) is a category of property that includes intangible creations of the human intellect."}
+\newline
+Xilinx allows the user to use pre-configured pieces of code that were written by expertises specifically for a particular purpose, such as: FIFO memory, RAM memory, Adder block, Clock Manager, De-Serializer block and more.
+In a complex project it is common to use a handful of IPs; first of all having a pre-prepared and tested block speeds-up the coding process and secondly it allows the user to validate less code. The same IP module can be is instantiated multiple time, with different names, in the same project. In figure \ref{fig:ip}  on the left it can be seen a list of all the IPs used in the current firmware and on the right there is a list of all the categories of available IPs, some are free to use and some have a cost.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/IP}
+	\caption{Vivado 2015.4 IP manager}
+	\label{fig:ip}
+\end{figure} 
 
 \subsection{LabVIEW}
 \noindent Laboratory Virtual Instrument Engineering Workbench (LabVIEW) is a system-design platform and development environment for a visual programming language from National Instruments. The graphical language is named "G". LabVIEW is commonly used for data acquisition, instrument control, and industrial automation on a variety of operating systems.
@@ -415,6 +425,13 @@ In figure \ref{fig:labview2} it can be seen the LabVIEW program that controls (w
 	\label{fig:labview2}
 \end{figure}
 \subsection{TCL}
+Tcl (Tool Command Language) is a very powerful dynamic programming language, suitable for a very wide range of uses, including web and desktop applications, networking, administration, testing and many more. Open source and business-friendly, Tcl is a mature yet evolving language that is truly cross platform, easily deployed and highly extensible.\cite{tcl}.
+Xilinx has adopted Tcl as the native programming language for the Vivado Design Suite,
+as it is easily adopted and mastered by designers familiar with this industry standard
+language. The Tcl interpreter inside the Vivado Design Suite provides the full power and
+flexibility of Tcl to control the application, access design objects and their properties, and
+create custom reports. Using Tcl, the user can adapt the design flow to meet specific design
+challenges.
 
 \section{Xilinx 7 Series}
 \noindent The FPGA used in this project is a Kintex 7, however Xilinx 7 series comprise four FPGA families that address a complete range of system requirements; in figure \ref{fig:kintex72} it can be seen a comparison between the four different families.
