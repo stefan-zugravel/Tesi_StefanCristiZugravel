@@ -104,25 +104,25 @@ In section \ref{hardware} will be described a simple level translator built for 
 	\end{itemize}  
 		
 \end{itemize}
-\noindent Each module contains at least two FSM (Finite State Machine) in order to properly communicate with GbPhy and the logic needed to execute its purpose.
+\noindent Each module contains at least two FSM (Finite State Machine) in order to properly communicate with GbPhy and the logic needed to execute its purpose. The first FSM, in figure \ref{fig:fsmFIFO1}, reads a FIFO (First Input First Output) memory in which are stored the commands received from GbPhy. If the memory is empty the logic remains in the \textit{Iddle} state until a new command is received. Once the command is selected the logic can execute it and can generate a reply string.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/CMDtoTERA10.pdf}
-	\caption{}
+	\caption{Command to TERA10 Finite State Machine Diagram}
 	\label{fig:fsmFIFO1}
 \end{figure}
-
+\noindent In order to send the data to the computer in the correct order another FIFO is implemented for storing all the replies strings. %This is done in the \textit{Send Reply} state.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/TERA10controll.pdf}
-	\caption{}
+	\caption{TERA10 control Finite State Machine}
 	\label{fig:fsmFIFO2}
 \end{figure}  
 
 \section{Firmware update}
 My work on the KC705 Firmware can be divided into three parts:
 \begin{itemize}
-	\item The implementation of the logic for the configuration of the ABACUS internal DACs, in section \ref{InternalDac}. 
+	\item The implementation of the logic for the configuration of the ABACUS\_v2 internal DACs, in section \ref{InternalDac}. 
 	\item The addition of a latch logic in order to save into a register the current state of every counter in the firmware, in section \ref{Latch}.
 	\item The addition of a timestamp generator to obtain a more precise calculation of the proton rate, in section \ref{Timestamp}. 
 \end{itemize}
