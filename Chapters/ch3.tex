@@ -431,7 +431,8 @@ as it is easily adopted and mastered by designers familiar with this industry st
 language. The Tcl interpreter inside the Vivado Design Suite provides the full power and
 flexibility of Tcl to control the application, access design objects and their properties, and
 create custom reports. Using Tcl, the user can adapt the design flow to meet specific design
-challenges.
+challenges.
+
 
 \section{Xilinx 7 Series}
 \noindent The FPGA used in this project is a Kintex 7, however Xilinx 7 series comprise four FPGA families that address a complete range of system requirements; in figure \ref{fig:kintex72} it can be seen a comparison between the four different families.
@@ -502,7 +503,45 @@ challenges.
 \end{itemize}
 
 \section{KC705 FMC debug tool}
-
+\noindent The Kintex7 KC705 board does not have a way to auto check if all of the devices on the board are working properly. This means that if a reading channel on one of the two FMC connector goes defective the user does not get any feedback.
+For example, if \textit{ch00\_counter} is always 0, even if the test pulses (TP) are being sent to the chip, the user needs to understand if the chip is bad or the FMC channel is damaged. This problem can be easily solved with the use of an oscilloscope, but the problem remains:
+how to understand if all the I/O resources needed are working properly?
+\\
+This was my first contribution for the project.
+In order to create a easy to use debug tool for the FMC connectors of the board I created a new additional firmware that sets all the FMC pins as output.
+With the use of an IP LVDS output buffer the pin can be driven with a HIGH/LOW logic signal. The user can change state with the use of a dip switch.
+In figure \ref{fig:debug1} it can be seen the first part of the output-pins declaration in the VHDL code. The code is divided into 5 "columns":
+\begin{itemize}
+	\item \textbf{Pin name}: is the name given to each signal in the hdl code.
+	\item \textbf{Pin configuration}: std\_logic output.
+	\item \textbf{J22 Pin-schematic Net Name}: pin name in the FPGA schematic documentation. 
+	\item \textbf{FPGA Pin}: pin name used in constraints file. 
+	\item \textbf{J4}: pin number in the FMC breakout board in figure \ref{fig:debug2}. 
+\end{itemize}     
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/DEBUG1}
+	\caption{Example code for the kc705 FMC debug tool}
+	\label{fig:debug1}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.35\linewidth]{IMG/ch3/DEBUG2}
+	\caption{FMC BREAKOUT board connector J4 scheme}
+	\label{fig:debug2}
+\end{figure}\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{IMG/ch3/DEBUG3}
+\caption{Constraints code example}
+\label{fig:debug3}
+\end{figure}
+\noindent For example; if the external DAC does not get any data the procedure to check the pin is as follows:
+\begin{itemize}
+	\item Check in the .xdc constraints file the respective signal, in this case \textit{baseline\_dac1\_mosi} in figure \ref{fig:debug3} and look for the FPGA Pin name, in this case \textit{H30} and \textit{G30}.
+	\item Check in the HDL, figure \ref{fig:debug1} to witch breakout pin leads the signal; in this case \textit{H30}$\rightarrow$P7 and \textit{G30}$\rightarrow$P8 in figure \ref{fig:debug2}.
+	\item Load on the board the debug firmware and check with a multimeter the voltages at the desired pins.    
+\end{itemize}
+\noindent If the channel is working properly the voltages should be LOW$\approx$0.75~V and HIGH$\approx$1.5~V for the LVDS25 specs.  
 
 
 

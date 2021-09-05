@@ -109,39 +109,59 @@ In section \ref{hardware} will be described a simple level translator built for 
 \section{Firmware update}
 My work on the KC705 Firmware can be divided into three parts:
 \begin{itemize}
-	\item The implementation of the logic for the configuration of the ABACUS internal DACs. 
-	\item The addition of a latch logic in order to save into a register the current state of every counter in the firmware.
-	\item The addition of a timestamp generator to obtain a more precise calculation of the proton rate. 
+	\item The implementation of the logic for the configuration of the ABACUS internal DACs, in section \ref{InternalDac}. 
+	\item The addition of a latch logic in order to save into a register the current state of every counter in the firmware, in section \ref{Latch}.
+	\item The addition of a timestamp generator to obtain a more precise calculation of the proton rate, in section \ref{Timestamp}. 
 \end{itemize}
 
 \subsection{Hardware controller}\label{InternalDac}
-\noindent The internal DACs of the ABACUS\_v2 chip can be described as in figure \ref{fig:internaldac}, thus with 3 inputs (clock, data\_IN and reset) and an output (data\_OUT)\cite{dac}.
+\noindent The internal DACs of the ABACUS\_v2 chip can be described as in figure \ref{fig:internaldac}, thus as a module with 3 inputs (clock, data\_IN and reset) and an output (data\_OUT)\cite{dac}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\linewidth]{IMG/ch4/INTERNALDAC}
 	\caption{test bench}
 	\label{fig:internaldac}
 \end{figure}
-\noindent The 2x24 threshold fine tuning DACs are controlled by 48 5-bits registers. These registers can be independently
+\noindent The 24 threshold fine tuning DACs are controlled by 24 5-bits registers. These registers can be independently
 loaded and read-out via a serial interface protocol based on 16-bits words. The commands are send via a Serial
 INput pin (SIN) and the data are read-out on a Serial OUTput pin (SOUT). The two serial streams are
 synchronous to the CLK clock input and are sampled on the clock rising edge.
+\newline
 The write operations are performed according to the following sequence:
 \begin{itemize}
-	\item Send start sequence : hex A5A5
-	\item Send write command : 11a13...a8d7...d0
+	\item Send start sequence : 0xA5A5 = 0b1010010110100101
+	\item Send write command : 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$d$_{7}$d$_{6}$d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$ with:
+	\begin{itemize}
+		\item 11 = write command
+		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address. a$_{13}$ $\rightarrow$ a$_{9}$ is the channel address (with reference to the physical layout, address 0 is the leftmost channel and 23 is the rightmost one), while a$_{8}$ selects the VTH+ (when 1) or the VTH- DAC (when 0); this function is not used for this version of the ABACUS chip. Addresses from
+		24 to 31 are not used.
+		\item d$_{7}$ $\rightarrow$ d$_{0}$ = 8 bit data. The bits d$_{7}$ $\rightarrow$ d$_{0}$ are the data to be written in the DAC registers (from 0 to 63); the two MSBs are not used.
+	\end{itemize}
 \end{itemize}
+\noindent The read operations are performed as follows :
+\begin{itemize}
+	\item Send start sequence : 0xA5A5 = 0b1010010110100101
+	\item Send read command : 10a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00x$_{5}$x$_{4}$x$_{3}$x$_{2}$x$_{1}$x$_{0}$ with:
+	\begin{itemize}
+		\item 10 = read command
+		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address.
+		\item 00x$_{5}$ $\rightarrow$ x$_{0}$. With x = DON'T CARE 
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Configuration logic}
+
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch4/FSM}
-	\caption{test bench}
-	\label{fig:fsm}
+	\includegraphics[width=1.0\linewidth]{FSMdiagrams/InternalDACsFSM.pdf}
+	\caption{FSM for the configuration of the internal fine tuning DACs of the ABACUS\_v2 chip}
+	\label{fig:fsmDACs}
 \end{figure}
 
-\subsection{Latching counters}
+\subsection{Latching counters}\label{Latch}
 
-\subsection{Timestamp generator}
+\subsection{Timestamp generator}\label{Timestamp}
 
 \section{Simulations}
 

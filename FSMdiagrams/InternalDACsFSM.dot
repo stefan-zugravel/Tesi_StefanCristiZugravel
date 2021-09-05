@@ -1,0 +1,43 @@
+digraph G {
+	rankdir=LR;
+	newrank=true;
+	nodesep=0.655;
+	
+	Iddle [shape=box];
+	WaitFirstClock [label="Wait First\nClock"];
+	Iddle -> WaitFirstClock;
+	WaitFirstClock -> SetData;
+	
+	subgraph cluster_0 {
+	    //labelloc=b;
+		style=bold; 
+		color=red;
+		label="Sending data to ABACUS";
+		
+		SetData -> SetClock;
+		SetClock -> ClearClock;
+		ClearClock -> NextBit;
+		NextBit -> SetData [label="Clock Number < 32"];
+	}	
+	
+	subgraph cluster_1 {
+		//labelloc=b;
+		style=bold;
+		color=red;
+		label="Ending communication and receiving data from ABACUS";
+		
+		SetDataEndComm [label="SetData\nEndComm"];
+		SetClockEndComm [label="SetClock\nEndComm"];
+		ClearClockEndComm [label="ClearClock\nEndComm"];
+		
+		NextBit -> EndComm [label="Clock Number = 32"];
+		EndComm -> SetDataEndComm;
+		SetDataEndComm -> SetClockEndComm;
+		SetClockEndComm -> ClearClockEndComm;
+		ClearClockEndComm -> EndComm [label="Clock Number < 64"];
+	}
+	
+	EndComm -> Iddle [label="Clock Number = 64"];
+	
+	{ rank=same; SetData; EndComm; }
+}
