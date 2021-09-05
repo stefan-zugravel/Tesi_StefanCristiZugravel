@@ -1,0 +1,35 @@
+digraph G {
+    rankdir=LR;
+    //newrank=true;
+    //nodesep=0.666;
+    
+    Iddle [shape=box, label= "Iddle"];
+    Iddle2 [shape=box, label= "Iddle"];
+    ReadFifo1 [label= "Read FIFO"];
+    //ReadFifo2 [label= "Read FIFO 2"];
+    CmdSel [label= "Command\nSelect"];
+    CmdErr [label= "Command\nError"];
+    ResetSERDES [label= "Reset\nDeserializer"];
+    reserCounters [label= "Reset\nCounters"];
+    others [label= "...........\n..........."];
+    ReadCoincClocks [label= "Read Coincidence\nClocks"];
+    SendReply [label= "Send Reply"];
+    
+    //Iddle -> ReadFifo1 -> ReadFifo2 -> CmdSel;
+    Iddle -> ReadFifo1 -> CmdSel;
+    CmdSel -> CmdErr;
+    CmdSel -> ResetSERDES;
+    CmdSel -> reserCounters;
+    CmdSel -> others;
+    CmdSel -> ReadCoincClocks;
+    
+    CmdErr-> SendReply;
+    ResetSERDES-> SendReply;
+    reserCounters-> SendReply;
+    others-> SendReply;
+    ReadCoincClocks-> SendReply;
+    
+    SendReply -> Iddle2;
+    
+    { rank=same; CmdErr; ResetSERDES; reserCounters; others; ReadCoincClocks}
+}

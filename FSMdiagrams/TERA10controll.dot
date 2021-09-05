@@ -1,0 +1,22 @@
+digraph G {
+    rankdir=LR;
+    //newrank=true;
+    //nodesep=0.666;
+    
+    Iddle [shape=box, label= "Iddle"];
+    Iddle2 [shape=box, label= "Iddle"];
+    //ReadFifo1 [label= "Read FIFO"];
+    //ReadFifo2 [label= "Read FIFO 2"];
+    CmdSel [label= "Command\nSelect"];
+    CmdErr [label= "Command\nError"];
+    Send [label= "Send Tera10\nCommand"];
+    Wait [label= "Wait Tera10\nReply"];
+    Read [label= "Read Tera10\nReply"];
+    
+    Iddle -> CmdSel;
+    CmdSel -> CmdErr -> Iddle2;
+    CmdSel -> Send -> Wait -> Read -> Iddle2;
+    
+    {rank=same; CmdErr; Send}
+    
+}

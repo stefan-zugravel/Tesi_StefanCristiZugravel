@@ -7,8 +7,8 @@ In section \ref{hardware} will be described a simple level translator built for 
 \noindent
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch4/TERA10}
-	\caption{KC705 tera10 firmware structure}
+	\includegraphics[width=0.45\linewidth]{IMG/ch4/HIERARCHY5}
+	\caption{KC705 tera10 firmware structure. GbPhy= purple; tera10\_latch\_counter= yellow; tera10\_io= green; tera10\_controller= light blue; lcd\_controller= red; hardware\_controller= blue; command\_processor= grey.}
 	\label{fig:tera10}
 \end{figure}
 \begin{itemize}
@@ -26,7 +26,7 @@ In section \ref{hardware} will be described a simple level translator built for 
 		\caption{GbPhy firmware structure}
 		\label{fig:phy100}
 	\end{figure}
-	\noindent GbPhy provides a UDP-based Ethernet control link based on a fixed length 8 byte protocol.
+	\noindent GbPhy provides a UDP-based Ethernet control link based on a fixed length 8 byte protocol (64 bit).
 	For each 8 byte message the user can send 4 bytes of data. The data is thus divides as follow:
 	\begin{itemize}
 		\item command\_contents(31 downto 28) => sub-system target;
@@ -104,7 +104,20 @@ In section \ref{hardware} will be described a simple level translator built for 
 	\end{itemize}  
 		
 \end{itemize}
-\noindent Each module contains at least two FSM (Finite State Machine) in order to properly communicate with GbPhy and the logic needed for its purpose. 
+\noindent Each module contains at least two FSM (Finite State Machine) in order to properly communicate with GbPhy and the logic needed to execute its purpose.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{FSMdiagrams/CMDtoTERA10.pdf}
+	\caption{}
+	\label{fig:fsmFIFO1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{FSMdiagrams/TERA10controll.pdf}
+	\caption{}
+	\label{fig:fsmFIFO2}
+\end{figure}  
 
 \section{Firmware update}
 My work on the KC705 Firmware can be divided into three parts:
@@ -119,7 +132,7 @@ My work on the KC705 Firmware can be divided into three parts:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\linewidth]{IMG/ch4/INTERNALDAC}
-	\caption{test bench}
+	\caption{Internal fine tuning DACs module representation}
 	\label{fig:internaldac}
 \end{figure}
 \noindent The 24 threshold fine tuning DACs are controlled by 24 5-bits registers. These registers can be independently
@@ -135,7 +148,7 @@ The write operations are performed according to the following sequence:
 		\item 11 = write command
 		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address. a$_{13}$ $\rightarrow$ a$_{9}$ is the channel address (with reference to the physical layout, address 0 is the leftmost channel and 23 is the rightmost one), while a$_{8}$ selects the VTH+ (when 1) or the VTH- DAC (when 0); this function is not used for this version of the ABACUS chip. Addresses from
 		24 to 31 are not used.
-		\item d$_{7}$ $\rightarrow$ d$_{0}$ = 8 bit data. The bits d$_{7}$ $\rightarrow$ d$_{0}$ are the data to be written in the DAC registers (from 0 to 63); the two MSBs are not used.
+		\item d$_{7}$ $\rightarrow$ d$_{0}$ = 8 bit data. The bits d$_{5}$ $\rightarrow$ d$_{0}$ are the data to be written in the DAC registers (from 0 to 63); the two MSBs (d$_{7}$d$_{6}$) are not used.
 	\end{itemize}
 \end{itemize}
 \noindent The read operations are performed as follows :
@@ -148,6 +161,7 @@ The write operations are performed according to the following sequence:
 		\item 00x$_{5}$ $\rightarrow$ x$_{0}$. With x = DON'T CARE 
 	\end{itemize}
 \end{itemize}
+\noindent The serial output is a 16 bits word with format 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$.
 
 \subsubsection{Configuration logic}
 
@@ -163,38 +177,4 @@ The write operations are performed according to the following sequence:
 
 \subsection{Timestamp generator}\label{Timestamp}
 
-\section{Simulations}
 
-\subsection{Internal DAC simulation}
-
-\subsection{Latching counters simulation}
-
-\subsection{Timestamp generator simulation}
-
-\section{Hardware devices}\label{hardware}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch4/DIAGRAM}
-	\caption{test bench}
-	\label{fig:diagram}
-\end{figure}
-
-
-\section{Test Bench}\label{testbench}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch4/TESTBENCH}
-	\caption{test bench}
-	\label{fig:testbench}
-\end{figure}
-
-\section{Test board}\label{testboard}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch4/TESTBOARD}
-	\caption{test board}
-	\label{fig:testboard}
-\end{figure}
-
-\section{Esa-Abacus}
