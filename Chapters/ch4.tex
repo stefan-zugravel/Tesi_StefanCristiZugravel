@@ -111,7 +111,9 @@ In section \ref{hardware} will be described a simple level translator built for 
 	\caption{Command to TERA10 Finite State Machine Diagram}
 	\label{fig:fsmFIFO1}
 \end{figure}
-\noindent In order to send the data to the computer in the correct order another FIFO is implemented for storing all the replies strings. %This is done in the \textit{Send Reply} state.
+\noindent In order to send the data to the computer in the correct order another FIFO memory is implemented for storing all the replies strings.
+The logic that writes the data into the memory is described in the FSM in figure \ref{fig:fsmFIFO2}.
+%This is done in the \textit{Send Reply} state.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/TERA10controll.pdf}
@@ -162,16 +164,84 @@ The write operations are performed according to the following sequence:
 	\end{itemize}
 \end{itemize}
 \noindent The serial output is a 16 bits word with format 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$.
-
 \subsubsection{Configuration logic}
-
-
+In order to configure the internal DACs of the ABACUS\_v2 chip 16 bits words are needed. The UDP protocol implemented with the GbPhy project give the user the possibility to send 20 bits of data.
+Therefore the data was divided as follows:
+\begin{itemize}
+	\item 3 bits ( data19 $\rightarrow$ data17 ) not used
+	\item 2 bits ( data16 $\rightarrow$ data15 ) command
+	\item 6 bits ( data14 $\rightarrow$ data9 ) address
+	\item 8 bits ( data8 $\rightarrow$ data1 ) DAC data
+	\item 1 bit ( data0 ) DAC select
+\end{itemize}
+\noindent The already written hardware controller module had a command and a logic for the configuration of the internal DACs of the original ABACUS chip.
+The first version of the chip didn't had an address based DAC, but a long shift-register that did not worked properly.
+I decided to maintain the same sub-system command id of the previous version and completely rewrite the FSM that sends the data. 
+In figure \ref{fig:fsmDACs} it can be seen the new logic diagram.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/InternalDACsFSM.pdf}
 	\caption{FSM for the configuration of the internal fine tuning DACs of the ABACUS\_v2 chip}
 	\label{fig:fsmDACs}
 \end{figure}
+\noindent The FSM runs into an independent process that sends to the chip 64 clock strokes, in the first 32 the data is sent, while in the remaining 32 the firmware is waiting for a response from the the ASIC.
+In figure \ref{fig:fsmDACs} the two operations are divided into two red clusters.
+By examining the finite state machine it can be observed that:
+\begin{itemize}
+	\item \textbf{Iddle}: when an internal DAC configuration command is received the logic of the FSM in figure \ref{fig:fsmFIFO1} will turn \textit{high} a signal in order to trigger this process (\textit{set\_baseline\_dacs}), thus the state of this machine will go from \textit{Iddle} to \textit{WaitFirstClock} on the first rising edge of the 125~MHz clock.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMiddle}
+		\caption{}
+		\label{fig:fsmiddle}
+	\end{figure} 
+	\item \textbf{Wait first clock}: in order to generate the \textit{sck} (serial clock for the internal dacs) the logic uses a 12~bit (\textit{baseline\_clk\_div\_ctrl}) counter that generates a signal (\textit{baseline\_clk\_div}) each time it is full, thus it counts \textit{FFF}.
+	\newline To be noted that the state of the \textit{baseline\_dac\_state} does not change immediately after the counter reaches \textit{FFF}, this is not a problem since this delay is always the same and thus it does not affect the logic.
+	\newline The process that runs the counter is independent from the FSM, it runs always. In order to sync the counter and the logic it was implemented a state that waits until the counter resets to 0. This can be seen in figure \ref{fig:fsmwaitfirstclock}. 
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMwaitfirstclock}
+		\caption{}
+		\label{fig:fsmwaitfirstclock}
+	\end{figure}
+	\item \textbf{Set Data}: with the first \textit{setData} state it starts the first cluster (sending data to the chip). The initial 16~bits are coded into the firmware and are always the same \textit{0xA5A5}.
+	The \textit{setData} state waits until a \textit{baseline\_clk\_div} signal (when the counter resets) and then drives the \textit{baseline\_dac\_mosi} (Master Output Slave Input; data from the FPGA to the chip) signal accordingly to the data. When the signal is sent the FSM also change state to \textit{setClock}.
+	This can be seen in figure \ref{fig:fsmsetdata}. 
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMsetdata}
+		\caption{}
+		\label{fig:fsmsetdata}
+	\end{figure}
+	\item \textbf{Set Clock}: the generation of the \textit{baseline\_dac\_sck} works on the same principle. When the counter resets the FSM changes state and the clock output is driven \textit{high}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMsetclock}
+		\caption{}
+		\label{fig:fsmsetclock}
+	\end{figure}
+	\item \textbf{Clear Clock}: The clock signal is now \textit{high} and the data was previously setted, thus it can be assumed that chip sampled correctly the information. At this point, again, when the counter resets itself the FSM changes state and the clock signal goes \textit{low}.
+	\newline It is important to observe that from the end of \textit{setClock} to the end of \textit{clearClock} it passes 1 counter cycle, however from the end of \textit{clearClock} to the end of \textit{setClock} it passes 2 counter cycles. This leads to a clock signal with 33\% duty cycle that is perfectly fine for the ABACUS\_v2 chip.
+	The FSM clock has a 8~ns period, the counter has 12~bits and resets itself when it is full. Thus, since 0xFFF~=~4095, it can be calculated that a counter cycles lasts 32,76~$\mu$s~=~8~ns$\cdot$4095. The theoretic clock period of the internal DACs should be three times this value, therefore 98,28~$\mu$s. It will be shown if section \ref{dactests} that this is perfectly correct.     
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMnextbit}
+		\caption{}
+		\label{fig:fsmnextbit}
+	\end{figure}
+	\item \textbf{Next Bit}:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMcluster1}
+		\caption{}
+		\label{fig:fsmcluster1}
+	\end{figure}
+	\item \textbf{End Communication}:
+	\item \textbf{Set Data End Communication}:
+	\item \textbf{Set Clock End Communication}:
+	\item \textbf{Clear Clock End Communication}:
+	
+\end{itemize}
 
 \subsection{Latching counters}\label{Latch}
 
