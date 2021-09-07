@@ -162,8 +162,9 @@ The write operations are performed according to the following sequence:
 		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address.
 		\item 00x$_{5}$ $\rightarrow$ x$_{0}$. With x = DON'T CARE 
 	\end{itemize}
+	\item The serial output is a 16 bits word with format 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$.
 \end{itemize}
-\noindent The serial output is a 16 bits word with format 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$.
+\noindent After any operation (write or read) send a 00x$_{13}$x$_{12}$x$_{11}$x$_{10}$x$_{9}$x$_{8}$x$_{7}$x$_{6}$x$_{5}$x$_{4}$x$_{3}$x$_{2}$x$_{1}$x$_{0}$. With x = DON'T CARE
 \subsubsection{Configuration logic}
 In order to configure the internal DACs of the ABACUS\_v2 chip 16 bits words are needed. The UDP protocol implemented with the GbPhy project give the user the possibility to send 20 bits of data.
 Therefore the data was divided as follows:
@@ -229,20 +230,64 @@ By examining the finite state machine it can be observed that:
 		\caption{}
 		\label{fig:fsmnextbit}
 	\end{figure}
-	\item \textbf{Next Bit}:
+	\item \textbf{Next Bit}: inside the FSM there is a 5~bit counter (\textit{baseline\_dac\_bit\_ctrl}) that keeps trace of the number of bits sent to the chip. the \textit{nextBit} state checks this value; if the number of clocks (data in) is less than 32 the logic keeps sending data, like in figure \ref{fig:fsmcluster1}, if the number of clocks is 32 the logic start the ending communication sequence, like in figure \ref{fig:fsmendcommunication}.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMcluster1}
 		\caption{}
 		\label{fig:fsmcluster1}
 	\end{figure}
-	\item \textbf{End Communication}:
-	\item \textbf{Set Data End Communication}:
-	\item \textbf{Set Clock End Communication}:
-	\item \textbf{Clear Clock End Communication}:
-	
+	\item \textbf{End Communication}: with the \textit{EndCommunication} state it starts the seconds cluster of the FSM in figure \ref{fig:fsmDACs}, thus "ending communication and receiving data from ABACUS". This state performs the same tasks as \textit{nextBit}, therefore it checks if \textit{baseline\_dac\_bit\_ctrl}<32. If the condition is true the logic switches to \textit{SetDataEndCommunication}, if the condition is false the logic returns to iddle. 
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMendcommunication}
+		\caption{}
+		\label{fig:fsmendcommunication}
+	\end{figure}
+	\item \textbf{Set Data End Communication}: this state keeps the output (\textit{baseline\_dac\_mosi}) always \textit{low}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMsetdataendcommunication}
+		\caption{}
+		\label{fig:fsmsetdataendcommunication}
+	\end{figure}
+	\item \textbf{Set Clock End Communication}: as for the \textit{setClock} state, when the 12~bit counter resets it drives \textit{high} the ABACUS\_v2 clock signal.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMsetclockendcommunication}
+		\caption{}
+		\label{fig:fsmsetclockendcommunication}
+	\end{figure}
+	\item \textbf{Clear Clock End Communication}: as for the \textit{clearClock} state, when the 12~bit counter resets it drives \textit{low} the ABACUS\_v2 clock signal.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMclearclockendcommunication}
+		\caption{}
+		\label{fig:fsmclearclockendcommunication}
+	\end{figure}	
 \end{itemize}
 
+\noindent In figure \ref{fig:fsmalmostall} it can be seen an overview of the data sent to the chip. On the first raw the is the \textit{baseline\_clk\_div} signal that goea \textit{high} when the 12~bit counter resets. In row number three the is the \textit{baseline\_dac\_mosi} signal; this is the data in that goes inside the chip! to be noted that the first 16 bits are the start sequence 1010-0101-1010-0101. In row number four the is the \textit{baseline\_dac\_sck} signal; to be noted that the duty cycle is 33\% and that the transitions of the mosi signal are always shifted of $\approx$33~$\mu$s compared to those of the clock.
+This ensures that the signal is stable before sampling.
+In the fifth row there is the \textit{baseline\_dac\_bit\_ctrl} counter; to be noted that it resets after the value of 32 and after that the mosi signal is always \textit{low}.   
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMalmostall}
+	\caption{}
+	\label{fig:fsmalmostall}
+\end{figure}
+\subsubsection{Reading logic}
+In order to read the data from the chip I implemented two new processes. A 16~bit shift register (\textit{shift\_register\_baseline\_dac(15 downto 0)}) and a "comparator".
+The shift register receives the miso (Master Input Slave Output) signal and samples it at the falling edge of the \textit{baseline\_dac\_sck} signal. Then it stores the data into a bus that is updated each clock stroke.
+The comparator look for the first 8~bits (the MSB, Most Significant Bits) of the shift register and compares them with the address of the read command received.
+If \textit{shift\_register\_baseline\_dac(15 downto 8) = 11 + fifo\_data(14 downto 9)}, thus if the first 8 bits of the shift register are equal to 11+address as seen in section \ref{InternalDac} then the remaining 8 bit of the shift register are the data of the internal DAC.
+%
+%METTERE FOTO SHIFT REGISTER
+%
+%
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Latching counters}\label{Latch}
 
 \subsection{Timestamp generator}\label{Timestamp}
