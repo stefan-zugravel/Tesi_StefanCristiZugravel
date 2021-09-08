@@ -148,8 +148,7 @@ The write operations are performed according to the following sequence:
 	\item Send write command : 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$d$_{7}$d$_{6}$d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$ with:
 	\begin{itemize}
 		\item 11 = write command
-		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address. a$_{13}$ $\rightarrow$ a$_{9}$ is the channel address (with reference to the physical layout, address 0 is the leftmost channel and 23 is the rightmost one), while a$_{8}$ selects the VTH+ (when 1) or the VTH- DAC (when 0); this function is not used for this version of the ABACUS chip. Addresses from
-		24 to 31 are not used.
+		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address. a$_{13}$ $\rightarrow$ a$_{9}$ is the channel address (with reference to the physical layout, address 0 is the leftmost channel and 23 is the rightmost one), while a$_{8}$ selects the VTH+ (when 1) or the VTH- DAC (when 0); this function is not used for this version of the ABACUS chip. Addresses from 24 to 31 are not used.
 		\item d$_{7}$ $\rightarrow$ d$_{0}$ = 8 bit data. The bits d$_{5}$ $\rightarrow$ d$_{0}$ are the data to be written in the DAC registers (from 0 to 63); the two MSBs (d$_{7}$d$_{6}$) are not used.
 	\end{itemize}
 \end{itemize}
@@ -162,7 +161,12 @@ The write operations are performed according to the following sequence:
 		\item a$_{13}$ $\rightarrow$ a$_{8}$ = 6 bit address.
 		\item 00x$_{5}$ $\rightarrow$ x$_{0}$. With x = DON'T CARE 
 	\end{itemize}
-	\item The serial output is a 16 bits word with format 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$.
+	\item The serial output is a 16 bits word with format 11a$_{13}$a$_{12}$a$_{11}$a$_{10}$a$_{9}$a$_{8}$00d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$ with:
+	\begin{itemize}
+		\item 11 = response of successful reading.
+		\item a$_{13}$ $\rightarrow$ a$_{8}$ = confirmation of the reading address.
+		\item d$_{5}$d$_{4}$d$_{3}$d$_{2}$d$_{1}$d$_{0}$ = 6~bit word of data.
+	\end{itemize}
 \end{itemize}
 \noindent After any operation (write or read) send a 00x$_{13}$x$_{12}$x$_{11}$x$_{10}$x$_{9}$x$_{8}$x$_{7}$x$_{6}$x$_{5}$x$_{4}$x$_{3}$x$_{2}$x$_{1}$x$_{0}$. With x = DON'T CARE
 \subsubsection{Configuration logic}
@@ -281,14 +285,43 @@ In order to read the data from the chip I implemented two new processes. A 16~bi
 The shift register receives the miso (Master Input Slave Output) signal and samples it at the falling edge of the \textit{baseline\_dac\_sck} signal. Then it stores the data into a bus that is updated each clock stroke.
 The comparator look for the first 8~bits (the MSB, Most Significant Bits) of the shift register and compares them with the address of the read command received.
 If \textit{shift\_register\_baseline\_dac(15 downto 8) = 11 + fifo\_data(14 downto 9)}, thus if the first 8 bits of the shift register are equal to 11+address as seen in section \ref{InternalDac} then the remaining 8 bit of the shift register are the data of the internal DAC.
-%
-%METTERE FOTO SHIFT REGISTER
-%
-%
-%
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMshiftregister}
+	\caption{}
+	\label{fig:fsmshiftregister}
+\end{figure}
+\noindent In figure \ref{fig:fsmshiftregister} the read command was \textit{"000 "10" "000100" "00000000" "0"} (read command on channel 4 ) and it can be seen that when the first 8 bits of the shift register are \textit{"11000100"} it means that the last 8 bits are the data, in this case \textit{"00110011"}~=~0x33;
+\newline
+Simulation on board will be analysed  in section \ref{dactests}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Latching counters}\label{Latch}
+\noindent As for now any counter can be read one at the time even while its counting, however this setup has some limitations. First of all this setup \underline{can not} read the value of two or more counters at the same time   
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.85\linewidth]{IMG/ch4/routed_colored_counters_clocks}
+		\caption{After placement device view\\ with 96 counters latched}
+		\label{fig:counters_clocks}
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.85\linewidth]{IMG/ch4/routed_colored_perfect}
+		\caption{After placement device view\\ with all 192 counters latched}
+		\label{fig:allcounters}
+	\end{minipage}
+\end{figure}
+\noindent It is interesting to observe how the placement of the logic changes ........
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\linewidth]{IMG/ch4/TIMING_perfect}
+	\caption{}
+	\label{fig:timingperfect}
+\end{figure}
 
 \subsection{Timestamp generator}\label{Timestamp}
 
