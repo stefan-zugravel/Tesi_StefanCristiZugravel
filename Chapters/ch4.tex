@@ -297,8 +297,100 @@ Simulation on board will be analysed  in section \ref{dactests}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Latching counters}\label{Latch}
-\noindent As for now any counter can be read one at the time even while its counting, however this setup has some limitations. First of all this setup \underline{can not} read the value of two or more counters at the same time   
+\noindent As for now any counter can be read one at the time even while its counting, however this setup has some limitations. First of all it \underline{can not} read the value of two or more counters at the same time.
+In second place it should me considered that it is difficult to measure the rate of particles not having two well defined points with a timestamp and the number of counted particles.
+In order to solve this "problem" and to add features to the firmware I implemented a latch system that saves into a memory the current state of every counter of the firmware and generates a timestamp.
+In order to do that I created a new module, called \textit{tera10\_latch\_counter} that contains all the memory and the logic needed for the latch system and for the timestamp generation. This last part will be explained in section \ref{Timestamp}.
+The firmware has a total of 192 counters that needs to be latched; they are divided as follows:
+\begin{itemize}
+	\item 48 counters: counters
+	\item 48 counters: clock counters
+	\item 48 counters: AND/OR coincidence events counters
+	\item 48 counters: AND/OR coincidence events clock counters
+\end{itemize}
+\noindent Each channel needs to be saved at the exact same time (same clock stroke), thus a deep ram block that contains every counter in a different address can not be taken into consideration.
+I then decided to implement a new Block RAM IP, as in figure \ref{fig:ramip}. This new pre-configured module implements a easy to use (32x2) RAM component, thus 32~bits of data and two possible states (1~bit address). The final version of the firmware will use 192 of this components. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{IMG/ch4/LATCH_RAM_IP}
+	\caption{Vivado IP manager summary for Latch Counters Block Memory IP}
+	\label{fig:ramip}
+\end{figure}
+\noindent Before talking about the latch logic it is important to understand how the RAM needs to be controlled. There are a total of 8 input signals and one output:
+\begin{itemize}
+	\item clka and clkb: clock signal for writing and reading logic. Considering that all the logic runs on the 125~MHz \textit{tera10\_clk}, in order to avoid timing errors clka and clkb will also be 125~MHz
+	\item ena and enb: enable signal for ram ports \textit{A} and \textit{B}, this signals are always \textit{high}
+	\item dina: 32~bit input signal
+	\item doutb: 32~bit output signal
+	\item addra: 1~bit write address, this means that the ram has depth 2; two states can be latched
+	\item addrb: 1~bit read address
+	\item wea: \textit{write enable a}, when this signal is \textit{high} the input from dina is saved into memory at the address addra
+\end{itemize} 
+\noindent The \textit{tera10\_latch\_counter} receives as inputs every counter from \textit{tera10\_I/O}; each counter is then routed to the input (dina) of one ram component. When the user sends a \textit{do\_latch} command with the desired address (0 or 1) the \textit{wea} signal will turn \textit{high} for every ram implemented and thus the state of every counter will be saved.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{FSMdiagrams/latch_counter.pdf}
+	\caption{Counters data flow from \textit{tera10\_I/O} to the PC}
+	\label{fig:latch_counter}
+\end{figure}
+\noindent In order to control the block I created a new sub-system target (\textit{0x8}) dedicated to the latch and timestamp and two new FSMs with the same style as the ones in figure \ref{fig:fsmFIFO1} and \ref{fig:fsmFIFO2}. The new sub-system commands ids are:
+\begin{itemize}
+	\item \textit{0x0F} do latch: 
+	\begin{itemize}
+		\item fifo\_data(8) = write address ('0' or '1')
+	\end{itemize}
+	\item \textit{0x1F} read latch counters:
+	\begin{itemize}
+		\item fifo\_data(8) = read address ('0' or '1')
+		\item fifo\_data(7 downto 1) = counter select (from 0$\rightarrow$"0000000" to 48$\rightarrow$"0110000")
+		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
+	\end{itemize}
+	\item \textit{0x2F} read latch clocks:
+	\begin{itemize}
+		\item fifo\_data(8) = read address ('0' or '1')
+		\item fifo\_data(7 downto 1) = counter select (from 0$\rightarrow$"0000000" to 48$\rightarrow$"0110000")
+		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
+	\end{itemize}
+	\item \textit{0x3F} read latch coincidence counters:
+	\begin{itemize}
+		\item fifo\_data(8) = read address ('0' or '1')
+		\item fifo\_data(7) = coincidence select ('0'$\rightarrow$read AND coincidence; '1'$\rightarrow$read OR coincidence)
+		\item fifo\_data(6 downto 1) = counter select (from 0$\rightarrow$"0000000" to 24$\rightarrow$"0011000")
+		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
+	\end{itemize}
+	\item \textit{0x4F} read latch coincidence clocks:
+	\begin{itemize}
+		\item fifo\_data(8) = read address ('0' or '1')
+		\item fifo\_data(7) = coincidence select ('0'$\rightarrow$read AND coincidence; '1'$\rightarrow$read OR coincidence)
+		\item fifo\_data(6 downto 1) = counter select (from 0$\rightarrow$"0000000" to 24$\rightarrow$"0011000")
+		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
+	\end{itemize}
+	\item \textit{0x5F} do timestamp: see section \ref{Timestamp}
+	\item \textit{0x6F} read timestamp: see section \ref{Timestamp}
+\end{itemize}
 
+\subsubsection{Vivado simulations}
+\noindent In order to test the correct functioning of the latch logic I performed extensive software simulation. In figure \ref{fig:dolatch} it can be seen how the latching system works for one channel, in this case \textit{ch00}. The first signal is the 125~MHz clock then it can be seen the received packet divided in three buses that are:
+\begin{itemize}
+	\item fifo\_target = sub-system target
+	\item fifo\_command = sub-system commands id
+	\item fifo\_data = command data
+\end{itemize} 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/LATCHsimulations/DOLATCH}
+	\caption{}
+	\label{fig:dolatch}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/LATCHsimulations/READLATCH}
+	\caption{}
+	\label{fig:readlatch}
+\end{figure}
+
+\subsubsection{Implementation}
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
@@ -324,5 +416,77 @@ Simulation on board will be analysed  in section \ref{dactests}.
 \end{figure}
 
 \subsection{Timestamp generator}\label{Timestamp}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\linewidth]{IMG/ch4/FIFOnearRAM}
+	\caption{}
+	\label{fig:fifonearram}
+\end{figure}
+
+\section{Final firmware reports}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.85\linewidth]{IMG/ch4/FirmwareNOFLAT/DEVICE}
+		\caption{}
+		\label{fig:noflatdevice}
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.85\linewidth]{IMG/ch4/FirmwareFLAT/DEVICE}
+		\caption{}
+		\label{fig:flatdevice}
+	\end{minipage}
+\end{figure}
+\noindent To be noted that with a flat hierarchy the division between modules with different colours can not be done
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{IMG/ch4/FirmwareNOFLAT/TIMING}
+	\caption{}
+	\label{fig:noflattiming}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{IMG/ch4/FirmwareFLAT/TIMING}
+	\caption{}
+	\label{fig:flattiming}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{IMG/ch4/FirmwareNOFLAT/POWER}
+		\caption{}
+		\label{fig:noflatpower}
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{IMG/ch4/FirmwareFLAT/POWER}
+		\caption{}
+		\label{fig:flatpower}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch4/FirmwareNOFLAT/UTILIZATION}
+		\caption{}
+		\label{fig:noflatutilization}
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch4/FirmwareFLAT/UTILIZATION}
+		\caption{}
+		\label{fig:flatutilization}
+	\end{minipage}
+\end{figure}
 
 

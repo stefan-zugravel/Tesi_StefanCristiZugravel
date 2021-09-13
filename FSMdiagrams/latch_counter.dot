@@ -1,0 +1,29 @@
+digraph G {
+    //rankdir=LR;
+    //newrank=true;
+    splines=false;
+    nodesep=0.5;
+    
+    counter [shape=box, label= "TERA10\nI/O", width = 1, height = 1];
+    latch [shape=box, label= "LATCH\nBLOCK", width = 1, height = 1];
+    controller [shape=box, label= "TERA10\nCONTROLLER", width = 1, height = 1];
+    output [shape=box, label= "REPLY\nTO PC", width = 1, height = 1];
+    one [shape=none, label= " ", width = 0 , height = 0];
+    two [shape=none, label= " ", width = 0 , height = 0];
+    
+    one->counter[label="DATA"];
+    counter->controller[label=""];
+    controller->output;
+    counter->latch[label=""]
+    latch->output;
+    
+    
+    {rank=same; one; counter; output; controller;}
+    
+}
+
+//strict digraph {
+//    a [shape="ellipse" style="filled" fillcolor="#1f77b4"]
+//    b [shape="polygon" style="filled" fillcolor="#ff7f0e"]
+//    a -> b [fillcolor="#a6cee3" color="#1f78b4"]
+//}
