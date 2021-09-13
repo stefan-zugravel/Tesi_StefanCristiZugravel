@@ -372,17 +372,26 @@ I then decided to implement a new Block RAM IP, as in figure \ref{fig:ramip}. Th
 \subsubsection{Vivado simulations}
 \noindent In order to test the correct functioning of the latch logic I performed extensive software simulation. In figure \ref{fig:dolatch} it can be seen how the latching system works for one channel, in this case \textit{ch00}. The first signal is the 125~MHz clock then it can be seen the received packet divided in three buses that are:
 \begin{itemize}
-	\item fifo\_target = sub-system target
-	\item fifo\_command = sub-system commands id
-	\item fifo\_data = command data
+	\item fifo\_target = sub-system target, in this case \textit{0x8}
+	\item fifo\_command = sub-system commands id, in this case \textit{0x0F}, thus a \textit{do\_latch} command
+	\item fifo\_data = command data, in this case \textit{0x00100}, only fifo\_data(8)=~'1'. This means that the data will be saved on address 1.
 \end{itemize} 
+The next signal is \textit{ch00\_data}, this is a 32~bit counter that contains the number of particles that have been detected by the sensor (in this case it is all a simulation and the number of simulated particles is 7).
+Then there is the state of the FSM that controls the latch module. It is interesting to observe how it works. From the idle state it reads the FIFO memory that contains the command and stores it into a register, then the \textit{cmdSel} state drives the logic to the appropriate next state using the command id.
+Once the FSM is in the \textit{DOlatch} state the write enable a (wea) turns \textit{high} for one clock stroke and the address updates following the command data, in this case '1'.  
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{IMG/ch4/LATCHsimulations/DOLATCH}
 	\caption{}
 	\label{fig:dolatch}
 \end{figure}
-
+\noindent In figure \ref{fig:readlatch} is shown an example of the reading process from a RAM module. The first signal, as before, is the 125~MHz clock then there is the received packet:
+\begin{itemize}
+	\item fifo\_target = sub-system target, in this case \textit{0x8}
+	\item fifo\_command = sub-system commands id, in this case \textit{0x1F}, thus a \textit{read\_latch\_counter} command
+	\item fifo\_data = command data, in this case \textit{0x00100}, only fifo\_data(8)=~'1'. This means that the data will be read from address 1, from the channel 0, since fifo\_data(7 downto 1) = "0000000" and from the first 16 bits since.
+\end{itemize}
+\noindent When the FSM state is \textit{ReadLatchCounter} the \textit{latch\_counter\_ram\_address\_read} updates in this case to '1'. After 2 clock strokes the RAM output updates as well. From now on the logic can take this value and send it to the pc. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{IMG/ch4/LATCHsimulations/READLATCH}
@@ -391,22 +400,29 @@ I then decided to implement a new Block RAM IP, as in figure \ref{fig:ramip}. Th
 \end{figure}
 
 \subsubsection{Implementation}
+When coding HDL it is extremely important to \underline{always} remember that every line of the code correspond to something physical inside the FPGA die. This means that if the user is adding FIFOs, BRAMs or LUTs the Vivado software suite needs create a new net-list and place every component in such a way that the timing requirements are still met.
+It is thus interesting to observe how the placement changes when a new features is added to the firmware.
+In figures \ref{fig:counters_clocks} and \ref{fig:allcounters} it can be seen the post-routing device view for two different moments of the latch counter module development. On the left there is a firmware version with only 96 counters enabled to latch while on the right all 192 RAM modules are implemented and working.
+The two most important modules to observe in this pictures are: \textit{tera10\_latch\_counter} in yellow and \textit{tera10\_io} in green.
+The Block RAMs are placed inside the die in strips and in the device representation are coloured in red; in total it can be observed 7 red RAM strips that corresponds to a total of 445 blocks.
+In figure \ref{fig:counters_clocks} the number of used RAM blocks is low, thus the placer decided to group together the I/O logic (green).
+In figure \ref{fig:allcounters} the number of used RAM blocks doubled, it is not efficient to group together all the cell from the I/O module. The placer decided to spread-out the design and placed the counting logic in the nearest position to the respective RAM component. In this way when a \textit{do\_latch} signal is provided the path between the counter and the ram input is always the lowest possible.
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/routed_colored_counters_clocks}
-		\caption{After placement device view\\ with 96 counters latched}
+		\caption{Post-routing device view\\ with 96 counters latched}
 		\label{fig:counters_clocks}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/routed_colored_perfect}
-		\caption{After placement device view\\ with all 192 counters latched}
+		\caption{Post-routing device view\\ with all 192 counters latched}
 		\label{fig:allcounters}
 	\end{minipage}
 \end{figure}
-\noindent It is interesting to observe how the placement of the logic changes ........
+
 
 \begin{figure}[H]
 	\centering
