@@ -398,7 +398,19 @@ Once the FSM is in the \textit{DOlatch} state the write enable a (wea) turns \te
 	\caption{}
 	\label{fig:readlatch}
 \end{figure}
-
+\noindent But how does the correct 32~bit RAM output signal reaches the GbPhy module and thus the computer?
+The 192 individually implemented RAM components are divided into 4 main categories that have been explained before (counters, clock counters, coincidence counters and clock coincidence counters).
+The outputs of the RAMs of each main module are all connected to a 8~bit multiplexer. Each multiplexer is controlled by the fifo\_data(7 downto 0). These four multiplexers are then connected to another 4-inputs 1-output MUX controlled by the fifo\_command (sub-system command id). In this way the user can obtain and read only the wanted signal.
+In figure \ref{fig:replylatch} it can be seen a simulation of the of the reply from a read latch counter command.
+The first signal is the 125~MHz clock, then there is, as in figure \ref{fig:readlatch}, the received packet, the FSM state and the RAM output signal.
+The next signal, \textit{read\_latch\_counter\_reply[15:0]} is the 16~bit output from the first main MUX and updates itself after one clock stroke of the RAM output.
+This signal is then concatenated with the sub-system target (4~bit), the sub-system command id (8~bit) and 4 zeros into a 32~bit reply string (\textit{command\_reply\_contents[31:0]}) that is sent to the PC. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/LATCHsimulations/REPLYLATCH}
+	\caption{}
+	\label{fig:replylatch}
+\end{figure}
 \subsubsection{Implementation}
 When coding HDL it is extremely important to \underline{always} remember that every line of the code correspond to something physical inside the FPGA die. This means that if the user is adding FIFOs, BRAMs or LUTs the Vivado software suite needs create a new net-list and place every component in such a way that the timing requirements are still met.
 It is thus interesting to observe how the placement changes when a new features is added to the firmware.
@@ -407,6 +419,7 @@ The two most important modules to observe in this pictures are: \textit{tera10\_
 The Block RAMs are placed inside the die in strips and in the device representation are coloured in red; in total it can be observed 7 red RAM strips that corresponds to a total of 445 blocks.
 In figure \ref{fig:counters_clocks} the number of used RAM blocks is low, thus the placer decided to group together the I/O logic (green).
 In figure \ref{fig:allcounters} the number of used RAM blocks doubled, it is not efficient to group together all the cell from the I/O module. The placer decided to spread-out the design and placed the counting logic in the nearest position to the respective RAM component. In this way when a \textit{do\_latch} signal is provided the path between the counter and the ram input is always the lowest possible.
+When minimizing the timing Slack the placer needs also to consider every physical constraint such as Input and output pins. 
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
@@ -422,8 +435,8 @@ In figure \ref{fig:allcounters} the number of used RAM blocks doubled, it is not
 		\label{fig:allcounters}
 	\end{minipage}
 \end{figure}
-
-
+\subsubsection{Timing}
+While designing FPGA logic it is important to follow some rules in order to------------------------------------------------------
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/TIMING_perfect}
