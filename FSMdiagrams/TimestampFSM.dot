@@ -1,0 +1,24 @@
+digraph G {
+    rankdir=LR;
+    //newrank=true;
+    //splines=false;
+    //nodesep=0.5;
+    
+    idle [label= "IDLE", width = 1, height = 1];
+    do1 [label= "DO\nTIMESTAMP", width = 1, height = 1];
+    do2 [label= "WAIT", width = 1, height = 1];
+    //output [shape=box, label= "REPLY\nTO PC", width = 1, height = 1];
+    //one [shape=none, label= " ", width = 0 , height = 0];
+    //two [shape=none, label= " ", width = 0 , height = 0];
+    
+    idle->do1[label="do_timestamp=1"];
+    idle->idle[label="do_timestamp=0"];
+    
+    do1->do2;
+    
+    do2->idle[label="do_timestamp=0"];
+    do2->do2[label="do_timestamp=1"];
+    
+    {rank=same; }
+    
+}

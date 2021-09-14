@@ -436,15 +436,64 @@ When minimizing the timing Slack the placer needs also to consider every physica
 	\end{minipage}
 \end{figure}
 \subsubsection{Timing}
-While designing FPGA logic it is important to follow some rules in order to------------------------------------------------------
+\noindent When writing RTL (Register Transfer Level)\cite{timing}, the design is described in terms of what happens between registers. “What happens” is combinational logic. In FPGAs, that combinational logic is implemented as networks of look-up tables (LUTs). Data is "waiting" at the output of some registers. It flows through a combinational network of LUTs until a stable result is achieved and is presented to the inputs of the next register. Then, the next clock edge arrives and clocks that result into the register.
+What often happens in practice is that the data takes too long to propagate through the combinational logic, and it isn’t ready by the time the clock edge arrives to clock the data into the next register.
+Instead, what gets clocked in is some transient result that almost certainly is wrong. This is known as \textit{TIMING VIOLATION}.
+The design tools can estimate how long data will take to flow through the combinational logic and arrive at those inputs, and it will let know that the design has a problem. It does so by adding up the expected delay from all the LUTs (and the wiring that interconnects them) and compares that with the clock period.
+If the combinational delay is less than the clock period, the difference is called the “slack”. Slack is good. When the combinational delay is more than the clock period, it appears the “negative slack”. Negative slack is bad!
+The Vivado design suite has a Design Timing Report Summary that allows the user to easily rate the timing behaviour of the design.
+In figure \ref{fig:timingperfect} it can be seen such report.
+The Worst Negative Slack (WNS) is the slack value, in nano-seconds (ns), of the path with the worst timing. In this case this value is 0.122~ns which is greater than zero. This means that the path with the worst timing still meets the constraints.
+The Total Negative Slack (TNS) is the slack sum of every path that do not met timing constraints. In this case it is 0,000~ns; this means that there are NO problematic paths.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/TIMING_perfect}
-	\caption{}
+	\caption{Design Timing Report Summary for kc705\_tera10 firmware; All user specified timing constraints are met}
 	\label{fig:timingperfect}
 \end{figure}
 
 \subsection{Timestamp generator}\label{Timestamp}
+\noindent A rate is defined ad the "quantity, amount, or degree of something measured per unit of time". In the previous section I enabled the saving into a RAM of the current state of every counter of the FPGA. Using this latch module allows to measure with high precision the number of particles from one time to another. However, in order to calculate a rate it is needed also a timestamp. In this section I will explain how the timestamp-generator works.
+The hearth of a time measuring device is a event generator with well defined period. A clock signal!
+The first process implemented is a 500~MHz counter.
+This means that the period is 2~ns; using a 64~bit register means that the maximum time interval measurable is:
+\begin{equation}
+	2 \: ns \cdot \: 64 \: bit \: =\: 2 \: ns \cdot \: 18,44\cdot10^{18} \: = \: 36,6\cdot10^{9} \: s \approx 1170 \: years 
+\end{equation}
+\noindent With a 64 bit counter the FPGA could stay ON for more than 1000 years and still count without resetting the register. Maybe it's a bit overkill, however the Xilinx Kintex 7 has many more resources than the project needs, thus the use of a 64 bit counter is acceptable.
+The counting process runs on a 500~MHz clock (used also for the de-serializer) while the \textit{tera10\_latch\_counter} module runs on a 125~MHz clock. In order to enable the data flow between the two domain, without causing time violation errors, I used a new CDC (Clock Domain Crossing) FIFO memory IP, in figure \ref{fig:fifo_ip}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{IMG/ch4/FIFO_IP}
+	\caption{}
+	\label{fig:fifo_ip}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\linewidth]{FSMdiagrams/timestampFSM.pdf}
+	\caption{}
+	\label{fig:timestampFSM}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/TIMESTAMPsimulations/TIMESTAMPFSM}
+	\caption{}
+	\label{fig:timestampfsm}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\linewidth]{IMG/ch4/TIMESTAMPsimulations/TIMESTAMPFIFO}
+	\caption{}
+	\label{fig:timestampfifo}
+\end{figure}
 
 \begin{figure}[H]
 	\centering
