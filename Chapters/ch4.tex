@@ -461,40 +461,82 @@ This means that the period is 2~ns; using a 64~bit register means that the maxim
 	2 \: ns \cdot \: 64 \: bit \: =\: 2 \: ns \cdot \: 18,44\cdot10^{18} \: = \: 36,6\cdot10^{9} \: s \approx 1170 \: years 
 \end{equation}
 \noindent With a 64 bit counter the FPGA could stay ON for more than 1000 years and still count without resetting the register. Maybe it's a bit overkill, however the Xilinx Kintex 7 has many more resources than the project needs, thus the use of a 64 bit counter is acceptable.
-The counting process runs on a 500~MHz clock (used also for the de-serializer) while the \textit{tera10\_latch\_counter} module runs on a 125~MHz clock. In order to enable the data flow between the two domain, without causing time violation errors, I used a new CDC (Clock Domain Crossing) FIFO memory IP, in figure \ref{fig:fifo_ip}.
-
+The counting process runs on a 500~MHz clock (used also for the de-serializer) while the \textit{tera10\_latch\_counter} module runs on a 125~MHz clock. In order to enable the data flow between the two domain, without causing time violation errors, I used a CDC (Clock Domain Crossing) FIFO memory IP, in figure \ref{fig:fifo_ip}.
+This automatically generated module has a 64~bit write width, a depth of 512 (the minimum for this type of Built/in FIFO), six inputs and three output:
+\begin{itemize}
+	\item \textit{rst}: reset signal; active \textit{high}
+	\item \textit{wr\_clk}: write clock; 500~MHz clock used for the counting process
+	\item \textit{rd\_clk}: read clock; 125~MHz clock used for the \textit{tera\_latch\_counter} processes
+	\item \textit{din[63:0]}: data in; 64~bit input signal at 500~MHz
+	\item \textit{wr\_en}: write enable; when the signal is \textit{high} the logic transfers the din signal into the memory
+	\item \textit{rd\_en}: read enable; when the signal is \textit{high} the logic transfers the data from the memory to the dout signal
+	\item \textit{full}: output signal, when the FIFO memory if full this signal is \textit{high}
+	\item \textit{empty}: output signal, when the FIFO memory is empty this signal is \textit{high}
+	\item \textit{dout[63:0]}: data out; 64~bit output signal at 125~MHz
+\end{itemize}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch4/FIFO_IP}
 	\caption{}
 	\label{fig:fifo_ip}
 \end{figure}
-
-
+\noindent I then added two sub-system commands ids to the ones in section \ref{Latch}:
+\begin{itemize}
+	\item \textit{0x5F} do timestamp:
+	\begin{itemize}
+		\item fifo\_data(11 downto 8) = read address (from \textit{0x0} to \textit{0xF})
+		\item fifo\_data(7 downto 0) = don't care
+	\end{itemize}
+	\item \textit{0x6F} read timestamp:
+	\begin{itemize}
+		\item fifo\_data(11 downto 8) = read address (from \textit{0x0} to \textit{0xF})
+		\item fifo\_data(7 downto 0) = select data portion (from \textit{0x00} to \textit{0x03})
+		\begin{itemize}
+			\item "0000\_0000" = fifo\_reply(15 downto 0) <= timestamp(15 downto 0)
+			\item "0000\_0001" = fifo\_reply(15 downto 0) <= timestamp(31 downto 16)
+			\item "0000\_0010" = fifo\_reply(15 downto 0) <= timestamp(47 downto 32)
+			\item "0000\_0011" = fifo\_reply(15 downto 0) <= timestamp(63 downto 48)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+\noindent To be noted that when a \textit{do\_latch} command is performed also the \textit{do\_timestamp} process runs.
+The \textit{do\_timestamp} signal runs on the 125~MHz clock and has a duration of several 500~MHz clock strokes. The logic that latches the counter and uses this signal as a trigger runs on this second, faster, clock.
+This means that the trigger signal is being oversampled and thus no timing violation is being created.
+However, if the logic receives the \textit{do\_timestamp} signal for multiple clock cycles it could overwrite the timestamp and thus ruin the data.
+In order to prevent that I implemented an extremely simple FSM, in figure \ref{fig:timestampFSM}, that ensures that the timestamp counter is being latched only once for each trigger signal.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.85\linewidth]{FSMdiagrams/timestampFSM.pdf}
 	\caption{}
 	\label{fig:timestampFSM}
 \end{figure}
-
-
-
+\noindent In figure \ref{fig:timestampfsm} it can be seen the FSM simulation; the first signal is the 500~MHz clock. After this there is the 64~bit counter that is being updated each clock rising edge. The third signal is the \textit{do\_timestamp} trigger. The fourth is the FSM state.
+From the \textit{idle} state when \textit{do\_timestamp} is \textit{high} it goes to \textit{dotimestamp1}. In this state the latching is done and the data is temporally saved into a register (\textit{timestamp\_signal[63:0]}). At the next rising edge clock it switches to \textit{dotimestamp2} (WAIT in figure \ref{fig:timestampFSM}) and sits here until \textit{do\_timestamp} turns \textit{low}. Then it goes back to idle ready for another trigger.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{IMG/ch4/TIMESTAMPsimulations/TIMESTAMPFSM}
 	\caption{}
 	\label{fig:timestampfsm}
 \end{figure}
-
-
+\noindent The \textit{timestamp\_signal[63:0]} signal needs to be ported from one clock domain to another. For this purpose it is used the CDC FIFO.
+In figure \ref{fig:timestampfifo} it can be seen a simulation of this memory component. 
+The first two signal are the write clock (500~MHz) and read clock (125~MHz). While the FSM is in the \textit{dotimestamp2} state the write enable signal (\textit{wr\_en}) turns \textit{high}. This means that right before enabling the writing into the FIFO at the input the correct signal appears (\textit{din[63:0]}). 
+This design works on the assumption that only one timestamp at the time is generated, thus the memory or is empty, or contains only one data.
+If the memory is not empty the signal \textit{empty} goes \textit{low} and at the next rising edge of the read clock the read enable (\textit{rd\_en}) signal goes \textit{high}.
+When the read enable signal is \textit{high} at the output of the FIFO memory (\textit{dout[63:0]}) appears the timestamp data and at the same time the \textit{timestamp\_ram\_write\_en} signal turn to \textit{'1'}.
+This allows the data to be stored into a 64~bit width 16 depth RAM memory as explained in the previous section; ready to be read and sent to the PC.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{IMG/ch4/TIMESTAMPsimulations/TIMESTAMPFIFO}
 	\caption{}
 	\label{fig:timestampfifo}
 \end{figure}
+\noindent In order to read the entire 64~bit signal the data is divided into four 16~bit pieces. Each part of the timestamp (0 down to 15; 16 down to 31; 32 down to 47; 48 down to 63) have to be individually read with a command and then put it together in software. 
 
+\subsubsection{Implementation}
+\noindent It is interesting to observe how the placer managed this new addition to the firmware. The FIFO memory is implemented with a Built-in FIFO, this means that inside the FPGA die there is a portion of space built with the purpose to be a FIFO. This makes the IP extremely efficient and less space hungry.
+In this design the FIFO is only used to cross the clock domain, it stores at MAXIMUM one 64~bit array not more. The data is stored into a RAM in order to allow random writes and reads.
+In figure \ref{fig:fifonearram} it can be seen how the placer "decided" to place the RAM Block (in green) in the nearest possible position to the FIFO Block (in red) in order to minimize the path delay. In yellow there is the logic cells of the \textit{tera10\_latch\_counter} module used to control the FIFO and the RAM.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/FIFOnearRAM}
@@ -503,6 +545,8 @@ The counting process runs on a 500~MHz clock (used also for the de-serializer) w
 \end{figure}
 
 \section{Final firmware reports}
+In this section it will be analysed the output results from the final implementation of the firmware version.
+
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
