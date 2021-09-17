@@ -477,7 +477,7 @@ This automatically generated module has a 64~bit write width, a depth of 512 (th
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch4/FIFO_IP}
-	\caption{}
+	\caption{Vivado IP manager summary for CDC FIFO Memory IP}
 	\label{fig:fifo_ip}
 \end{figure}
 \noindent I then added two sub-system commands ids to the ones in section \ref{Latch}:
@@ -507,7 +507,7 @@ In order to prevent that I implemented an extremely simple FSM, in figure \ref{f
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.85\linewidth]{FSMdiagrams/timestampFSM.pdf}
-	\caption{}
+	\caption{Timestamp latch FSM diagram}
 	\label{fig:timestampFSM}
 \end{figure}
 \noindent In figure \ref{fig:timestampfsm} it can be seen the FSM simulation; the first signal is the 500~MHz clock. After this there is the 64~bit counter that is being updated each clock rising edge. The third signal is the \textit{do\_timestamp} trigger. The fourth is the FSM state.
@@ -535,80 +535,95 @@ This allows the data to be stored into a 64~bit width 16 depth RAM memory as exp
 
 \subsubsection{Implementation}
 \noindent It is interesting to observe how the placer managed this new addition to the firmware. The FIFO memory is implemented with a Built-in FIFO, this means that inside the FPGA die there is a portion of space built with the purpose to be a FIFO. This makes the IP extremely efficient and less space hungry.
-In this design the FIFO is only used to cross the clock domain, it stores at MAXIMUM one 64~bit array not more. The data is stored into a RAM in order to allow random writes and reads.
+In this design the FIFO is only used to cross the clock domain, it stores at MAXIMUM one 64~bit array, not more. The data is stored into a RAM in order to allow random writes and reads.
 In figure \ref{fig:fifonearram} it can be seen how the placer "decided" to place the RAM Block (in green) in the nearest possible position to the FIFO Block (in red) in order to minimize the path delay. In yellow there is the logic cells of the \textit{tera10\_latch\_counter} module used to control the FIFO and the RAM.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/FIFOnearRAM}
-	\caption{}
+	\caption{Device view with focus on timestamp FIFO and RAM placement}
 	\label{fig:fifonearram}
 \end{figure}
 
 \section{Final firmware reports}
-In this section it will be analysed the output results from the final implementation of the firmware version.
+In this section it will be analyzed the output results from the implementation of the final firmware version. This last implementation was done with two different configurations, in order to understand the differences between them.
+Usually a HDL design has a top entity and in the top architecture there are some components instantiated. While in those components architectures, they can be some other components instantiated. This is called hierarchy. Each component has its own input/output ports to interface with its parents entity and its child components. Those ports form the "hierarchy" boundaries. A hierarchy diagram can be seen in figure \ref{fig:tera10}.
+When implementing the flatten\_hierarchy option controls how Synthesis tool handles those hierarchy boundaries.
+"Full" means to break those boundaries and have a flattened netlist. Thus, all elements are in the same hierarchy. "None" means keeping all boundaries as they are described in the RTL.
+In this section it will be analyzed the differences between these two results. In figure \ref{fig:noflatdevice} the logic has not been flattened while in figure \ref{fig:flatdevice} the logic was flattened. It can be seen an important difference in the placement layout, however a RAM block is still a RAM block and has to be placed in more or less the same spot.
 
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/FirmwareNOFLAT/DEVICE}
-		\caption{}
+		\caption{Firmware device view \\with NON flattened logic}
 		\label{fig:noflatdevice}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/FirmwareFLAT/DEVICE}
-		\caption{}
+		\caption{Firmware device view \\with flattened logic}
 		\label{fig:flatdevice}
 	\end{minipage}
 \end{figure}
-\noindent To be noted that with a flat hierarchy the division between modules with different colours can not be done
+\noindent To be noted that with a flat hierarchy the division between modules with different colours can not be done. In fact there are no modules and components, the logic is all at the same "level".
+For both of these implementations three type of reports have been performed: TIMING, POWER and UTILIZATION.
 
-
+\subsubsection{Final timing report}
+\noindent In figures \ref{fig:noflattiming} and \ref{fig:flattiming} it can be seen that in both cases the timing requirements are met, the number of total endpoints is the same (40986). The values of Worst Negative Slack (WNS) and Worst Hold Slack (WHS) are slightly different, however not by much. It should be considered that for our purpose any value greater than zero is acceptable.
+A small difference in WNS (if still positive) won't affect the operation of the device.  
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch4/FirmwareNOFLAT/TIMING}
-	\caption{}
+	\caption{Timing report with hierarchical logic}
 	\label{fig:noflattiming}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch4/FirmwareFLAT/TIMING}
-	\caption{}
+	\caption{Timing report with flattened logic}
 	\label{fig:flattiming}
 \end{figure}
 
+\subsubsection{Final power report}
+\noindent In figures \ref{fig:noflatpower} and \ref{fig:flatpower} it can be seen a on-chip power report for each case.
+This value $\approx$1.825~W is an estimation of the dynamic power consumption of the logic alone, NOT the board, that has to deliver power to many more component, such as: LCD display and backlight, LEDs, cooling fan, I/O pins, voltage converters, JTAG and PHY daughter boards and more.
+It is interesting to consider how the power consumption is divided; almost 40\% of the total energy draw is due to the RAM memory, this means that my additions to the firmware had a measurable impact on the on-chip power. However this values are still extremely low and, in addition, this application has no power limitations. Thus we can use this numbers only for our interest without beeing too much concerned about efficiency. 
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\linewidth]{IMG/ch4/FirmwareNOFLAT/POWER}
-		\caption{}
+		\caption{Power report with \\hierarchical logic}
 		\label{fig:noflatpower}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\linewidth]{IMG/ch4/FirmwareFLAT/POWER}
-		\caption{}
+		\caption{Power report with \\flattened logic}
 		\label{fig:flatpower}
 	\end{minipage}
 \end{figure}
-
+\subsubsection{Final utilization report}
+\noindent In figures \ref{fig:noflatutilization} and \ref{fig:flatutilization} it can be seen the utilization report for each case. The two tables are almost identical, the only difference is that the flattened design uses three LUTs less. Not that big of a difference considering that the total available LUTs are 203800. This means that this design is already enough optimized as a hierarchy and the flattening does not affect so much the resources utilization.
+The two more used resources are the BRAM, used for the implementation of the latch and the timestamp, and the I/O ports, used to communicated with the testboards and thus with the chips.
+It should be noted that NO resource is used for more that 50\%, the KC705 board is extremely capable and it is underused for this project; with enough time many more feature could be added without any board limitation. 
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch4/FirmwareNOFLAT/UTILIZATION}
-		\caption{}
+		\caption{Utilization report with \\hierarchical logic}
 		\label{fig:noflatutilization}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch4/FirmwareFLAT/UTILIZATION}
-		\caption{}
+		\caption{Utilization report with \\flattened logic}
 		\label{fig:flatutilization}
 	\end{minipage}
 \end{figure}
+\noindent In this particular case the differences between flattened and non-flattened implementation is negligible. I decided to used the non-flattened design for no specific reason, I like the idea of a hierarchy in my design.
 
 
