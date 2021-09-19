@@ -1,14 +1,14 @@
 \chapter{MoVe\_IT kc705 Tera10 firmware update}
 \section{Introduction}
-\noindent As explained in the previous chapters a good VHDL design, in order to improve readability and order, uses separate modules for each main task of the firmware. Each module is connected with wires (signals) to the others. The first half of this chapter will analyze the structure of the kc705 tera10 firmware, while the second half will be focused on the thesis work; this comprehends the HDL additions to the firmware, the software simulations and the test simulations on chip.
-In section \ref{hardware} will be described a simple level translator built for simulation purposes while in sections \ref{testbench} and \ref{testboard} will be briefly analyzed the experimental setup.
+\noindent As explained in the previous chapters a good VHDL design, in order to improve readability and order, uses separate modules for each main task of the firmware. Each module is connected with wires (signals) to the others. The first half of this chapter will analyze the structure of the kc705 tera10 firmware, while the second half will be focused on the thesis work; this comprehends the HDL additions to the firmware and the simulations carried out with Xilinx Vivado Software.
+In this chapter there are also considerations on the implemented design and a short analysis of the timing, power and utilization post-implementation reports. 
 
 \section{Firmware structure}
 \noindent
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.45\linewidth]{IMG/ch4/HIERARCHY5}
-	\caption{KC705 tera10 firmware structure. GbPhy= purple; tera10\_latch\_counter= yellow; tera10\_io= green; tera10\_controller= light blue; lcd\_controller= red; hardware\_controller= blue; command\_processor= grey.}
+	\caption{KC705\_tera10 firmware structure. GbPhy= purple; tera10\_latch\_counter= yellow; tera10\_io= green; tera10\_controller= light blue; lcd\_controller= red; hardware\_controller= blue; command\_processor= grey.}
 	\label{fig:tera10}
 \end{figure}
 \begin{itemize}
