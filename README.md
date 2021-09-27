@@ -27,6 +27,5 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dNOPAUSE -dQUIET -dBATCH -dPrinte
 ```
 
 ## TO DO LIST
-1. Change aspect ration of oscilloscope screenshots
-2. **DO THE DEGREE FORM!!!!!!!!!!!!!!**
-3. Write chapter 5
+1. Write a better descriptoin for the FMC debug tool
+2. Write chapter 5

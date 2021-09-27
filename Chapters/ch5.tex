@@ -67,7 +67,7 @@ Moreover, the main components of the test board are:
 In order to solve this problem two simple devices have been implemented; a voltage divider and a level translator device.
 \subsubsection{Voltage divider}
 On the one hand the data coming from the FPGA to the chip is at 2,5~V single-ended. To lower this value it has been implemented a simple voltage divider with 2 SMD (Surface-Mount Devices) resistors
-\subsubsection{Level translator}
+\subsubsection{Level translator}\label{leveltranslator}
 On the other hand the data coming from the chip is at 1.2~V. This value is too low and thus the board reads it always as \textit{low}. A voltage translation device is needed in order to boost the signal \textit{high} value. For this purpose I created the simple circuit in figure \ref{fig:diagram} using three 1~k$\Omega$ resistor and two classic \textit{2N2222} transistors that are configured in the standard common emitter mode.
 \begin{figure}[H]
 	\centering
@@ -84,6 +84,7 @@ According to the simulation the device works properly and thus it can be impleme
 	\label{fig:transsimulation}
 \end{figure}
 \noindent The device was built soldering the components on a piece of perfboard that can be seen in figure \ref{fig:fronttranslator} and \ref{fig:backtranslator}.
+It need to be powered externally with 2.45~V and, in order to assure the safety of the FPGA, the current was limited to 0.05~A. 
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{.5\textwidth}
@@ -99,31 +100,92 @@ According to the simulation the device works properly and thus it can be impleme
 		\label{fig:backtranslator}
 	\end{minipage}
 \end{figure}
-\section{Firmware validation on board}
 
-\subsection{Internal DACs test}\label{dactests}
-%scrivi qualcosa del tipo: il processo di validazione è composto da due parti, una in cui l'oscilloscopio viene collegato direttamente alla board in modo da verificare il corretto output e una in cui la board viene collegata al chip
-\noindent In order to validate the correct operation of
+\section{Firmware validation on board}
+The validation of the firmware was performed in two separate moments, the first one was done in May 2021 and validated the trimming DACs, while the second one was carried out in October 2021 and tested the latch system and the timestamp generator. 
+\subsection{Trimming DAC test}\label{dactests}
+The trimming DAC validation process was divided into three parts, the verification of the clock period and the amplitude of the signal, the verification of the writing sequence and finally the verification of the reading process. 
+All this tests were performed with the FPGA connected to the ABACUS\_v2 test board and the relevant signals were probed with the oscilloscope. 
+\subsubsection{Clock and amplitude}
+For this first part the goal was to validate the clock period and its amplitude. In order to do that a write command was sent while probing the \textit{baseline\_dac\_sck} signal. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_clock-specks}
-	\caption{}
+	\caption{\textit{baseline\_dac\_sck}; period and amplitude measurements}
 	\label{fig:clockspecs}
 \end{figure}
+\noindent In section \ref{confing} it was said that the clock period should theoretically be 98.28~$\mu$s, in figure \ref{fig:clockspecs} it can be seen that the measured period is 98.44~$\mu$s. The difference between the two values is 160~ns which is approximately $\approx$0.16\% of the total. The period can thus be considered perfectly compatible considering that the cursor positioning was done manually and thus the human error must be considered too.
+The second value to be noted in figure \ref{fig:clockspecs} is that the amplitude of the signal is 1.22~V, this is perfectly safe for the chip. 
 
 \subsubsection{Write command}
+\noindent In order to write into the trimming DACs and read from them a new labview panel was made by \textit{Emanuele Data}\cite{data}. This piece of software can be seen in figure \ref{fig:labview3} sends the commands discussed in section \ref{InternalDac}. In addition it implements some useful features like:
+\begin{itemize}
+	\item The ability to write on only one DAC at the time with the \textit{Set Internal DAC} button.
+	\item The ability to write every DAC with a single \textit{Set multiple internal DAC} button press.
+	\item The possibility to read only one DAC value at the time with the \textit{Read ONE Internal DAC} button.
+	\item The possibility to read every DAC with a single \textit{Read Internal DACs} button press.
+	\item The ability to chose for each DAC channel if the signal needs to be sent to the HPC or LPC FMC.
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.99\linewidth]{IMG/ch3/LABVIEW2}
+	\caption{LabVIEW tool coded by \textit{Emanuele Data} for the configuration of the trimming DACs}
+	\label{fig:labview3}
+\end{figure}
+\noindent In figure \ref{fig:ch05write63} it can be seen a reading sequence being sent to the chip. In green there is the clock signal discussed previously while in yellow it can be seen the serial data being sent to the DAC controller.
+Each horizontal square is 0.5~ms, while each vertical square is 1~V (the signals were probed after the voltage divider). 
+Between the two markers there is the initialization sequence that needs to be always sent, this is 0xA5A5~=~0b1010-0101-1010-0101.
+Immediately after that there are the two command bits, in this case (Writing) their are 0b11.
+Next in sequence there is the 6~bit channel address that is divided into a 5~bit address plus a 1~bit V$_{th}$ selector, that for this version of the chip is not used thus is always zero.
+The remaining 5~bits are 0d5~=~0b0-0101 thus channel 5. The remaining 8~bits are divided into 2 not used bits (the MSB) and 6 data bits.
+In this case these bits are 0d63~=~0b0011-1111, the maximum possible value for a 6~bit DAC.
+After this the clock continues for 16 more cycles while the data stays \textit{low}.
+For the moment the user has no way of knowing if the chip was properly configured because it does not sends any feedback while writing. In order to verify if the DACs are properly setted a reading procedure needs to be carried out. This will be analysed in the next subsection.  
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-write63-baselinedac1}
-	\caption{}
+	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{green}green}= clock, {\color{yellow}yellow}= data out}
 	\label{fig:ch05write63}
 \end{figure}
-
 \subsubsection{Read command}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-read63-baselinedac1}
+	\caption{Reading sequence, channel 5, word 63, DAC 1\\{\color{green}green}= clock, {\color{yellow}yellow}= data out,\\{\color{red}red}= data in, {\color{blue}blue}= data from chip}
 	\label{fig:ch05read63}
+\end{figure}
+\noindent In figure \ref{fig:ch05read63} it can be seen a reading sequence being performed on the same channel as before (ch05).
+In green there is the clock signal, in yellow it can be seen the serial data being to the chip, in blue there is the data going from from the chip to the level translator and in red there is the data from the level translator to the FPGA.
+Each horizontal square is 0.5~ms, while each vertical square is 1~V for the green and yellow signals and 2~V for the red and blue signals.
+Between the two markers there is the initialization sequence 0xA5A5~=~0b1010-0101-1010-0101, after that there is the 2-bit read command 0b10 and next there is the address to be read, in this case channel 5, thus 0d5~=~0b0-0101 as before.
+When sending a read command the 8~bit data are not considered; this firmware drives them \textit{low}.
+The output from the chip is at 1.2~V, too low to be read by the board, for this reason the signal is boosted by the level translator shown in section \ref{leveltranslator} up to 2.5~V (in red).
+The data sent by the chip is made up by 16~bit words. The first 2~bit are a \textit{"read confirmation"} signal 0b11. The next 6 bit are the confirmation of the selected channel, it this case 0d5~=~0b0-0101 plus 0b0 for the V$_{th}$ selector.
+The chip is reading from the same channel that was configured before.
+The last 8~bit are the read value, in this case 0d63~=~0b0011-1111.
+The read value is the same as the configured one! this means that the firmware and the chip are working properly.
+It is interesting to consider that the trimming DACs does not retain their state, if the chip was configured and then powered off the configuration will be lost and at the next power on the DACs will start from their initial value.
+It is important to know that this initial value is NOT always zero, but some random value due to the manufacturing process.
+This behaviour makes the ability to read and configure these DACs even more important for every data taking. In appendix \ref{DacAppendix} there are more examples of write and read sequences. 
+\subsubsection{Considerations}
+\noindent Before talking about the obtained results it is useful to remember what a threshold scan is and how it is used.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/tscan_sketch}
+	\caption{}
+	\label{fig:tscansketch}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/ThScan_ch0.pdf}
+	\caption{}
+	\label{fig:thscanch0}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/DAC_V_REF_600mv-Copia.pdf}
+	\caption{}
+	\label{fig:pedestal}
 \end{figure}
 
 

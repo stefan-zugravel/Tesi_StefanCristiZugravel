@@ -1,4 +1,4 @@
-\part{Work on the kc705\_tera10 firmware}
+\part{Work on the kc705\_tera10 FPGA firmware}
 
 \chapter{FPGA: historical introduction, structure, design flow, VHDL and use in the MoVe\_IT project}
 \section{Introduction}
@@ -141,7 +141,7 @@ shown in figure 4, consists of an array of programmable logic blocks and interco
 	\item FPGA architecture could look nothing like a memory. Design and manufacturing were very different than memory.
 	\item The logic blocks were smaller. There was no guarantee that a single function would fit into one. Therefore, it was difficult to determine ahead of time how much logic would fit into the FPGA.
 	\item The performance of the FPGA depended on where the logic was placed in the FPGA. FPGAs required placement and routing, so the performance of the finished design was not easy to predict in advance.
-	\item Complex EDA software was required to fit a design into an FPGA.
+	\item Complex EDA (Electronic Design Automation) software was required to fit a design into an FPGA.
 \end{itemize}
 
 
@@ -397,7 +397,7 @@ For this project was used the Vivado 2015.4 version.
 \noindent \textit{"Intellectual property (IP) is a category of property that includes intangible creations of the human intellect."}
 \newline
 Xilinx allows the user to use pre-configured pieces of code that were written by expertises specifically for a particular purpose, such as: FIFO memory, RAM memory, Adder block, Clock Manager, De-Serializer block and more.
-In a complex project it is common to use a handful of IPs; first of all having a pre-prepared and tested block speeds-up the coding process and secondly it allows the user to validate less code. The same IP module can be is instantiated multiple time, with different names, in the same project. In figure \ref{fig:ip}  on the left it can be seen a list of all the IPs used in the current firmware and on the right there is a list of all the categories of available IPs, some are free to use and some have a cost.
+In a complex project it is common to use a handful of IPs; first of all having a pre-prepared and tested block speeds-up the coding process and secondly it allows the user to validate less code. The same IP module can be instantiated multiple time, with different names, in the same project. In figure \ref{fig:ip}  on the left it can be seen a list of all the IPs used in the current firmware and on the right there is a list of all the categories of available IPs, some are free to use and some have a cost.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch3/IP}
@@ -505,13 +505,15 @@ challenges.
 \end{itemize}
 
 \section{KC705 FMC debug tool}
-\noindent The Kintex7 KC705 board does not have a way to auto check if all of the devices on the board are working properly. This means that if a reading channel on one of the two FMC connector goes defective the user does not get any feedback.
-For example, if \textit{ch00\_counter} is always 0, even if the test pulses (TP) are being sent to the chip, the user needs to understand if the chip is bad or the FMC channel is damaged. This problem can be easily solved with the use of an oscilloscope, but the problem remains:
+\noindent The Kintex7 KC705 board does not have a way to auto-check if all of the devices on the board are working properly.
+This means that if a channel on one of the two FMC connector goes defective the user does not get any feedback.
+For example, if \textit{ch00\_counter} is always 0, even if the test pulses (TP) are being sent to the chip, is up to the user to understand if the chip is bad or the FMC channel is damaged. This problem can be easily solved with the use of an oscilloscope used to probe the selected channel, however that's not a practical solution.
+Thus the question is:
 how to understand if all the I/O resources needed are working properly?
 \\
 This was my first contribution for the project.
-In order to create a easy to use debug tool for the FMC connectors of the board I created a new additional firmware that sets all the FMC pins as output.
-With the use of an IP LVDS output buffer the pin can be driven with a HIGH/LOW logic signal. The user can change state with the use of a dip switch.
+In order to create a easy to use debug tool for the FMC connectors of the board I created a completely new firmware that sets all the FMC pins as an output.
+With the use of an LVDS IP output buffer the pin pairs can be driven with a \textit{high}/\textit{low} logic signal. The user is able to change state with the use of a dip switch.
 In figure \ref{fig:debug1} it can be seen the first part of the output-pins declaration in the VHDL code. The code is divided into 5 "columns":
 \begin{itemize}
 	\item \textbf{Pin name}: is the name given to each signal in the hdl code.

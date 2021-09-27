@@ -169,7 +169,7 @@ The write operations are performed according to the following sequence:
 	\end{itemize}
 \end{itemize}
 \noindent After any operation (write or read) send a 00x$_{13}$x$_{12}$x$_{11}$x$_{10}$x$_{9}$x$_{8}$x$_{7}$x$_{6}$x$_{5}$x$_{4}$x$_{3}$x$_{2}$x$_{1}$x$_{0}$. With x = DON'T CARE
-\subsubsection{Configuration logic}
+\subsubsection{Configuration logic}\label{confing}
 In order to configure the internal DACs of the ABACUS\_v2 chip 16 bits words are needed. The UDP protocol implemented with the GbPhy project give the user the possibility to send 20 bits of data.
 Therefore the data was divided as follows:
 \begin{itemize}
@@ -227,7 +227,7 @@ By examining the finite state machine it can be observed that:
 	\end{figure}
 	\item \textbf{Clear Clock}: The clock signal is now \textit{high} and the data was previously setted, thus it can be assumed that chip sampled correctly the information. At this point, again, when the counter resets itself the FSM changes state and the clock signal goes \textit{low}.
 	\newline It is important to observe that from the end of \textit{setClock} to the end of \textit{clearClock} it passes 1 counter cycle, however from the end of \textit{clearClock} to the end of \textit{setClock} it passes 2 counter cycles. This leads to a clock signal with 33\% duty cycle that is perfectly fine for the ABACUS\_v2 chip.
-	The FSM clock has a 8~ns period, the counter has 12~bits and resets itself when it is full. Thus, since 0xFFF~=~4095, it can be calculated that a counter cycles lasts 32,76~$\mu$s~=~8~ns$\cdot$4095. The theoretic clock period of the internal DACs should be three times this value, therefore 98,28~$\mu$s. It will be shown if section \ref{dactests} that this is perfectly correct.     
+	The FSM clock has a 8~ns period, the counter has 12~bits and resets itself when it is full. Thus, since 0xFFF~=~4095, it can be calculated that a counter cycles lasts 32.76~$\mu$s~=~8~ns$\cdot$4095. The theoretic clock period of the internal DACs should be three times this value, therefore 98.28~$\mu$s. It will be shown if section \ref{dactests} that this is perfectly correct.     
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.0\linewidth]{IMG/ch4/DACsimulations/FSMnextbit}
@@ -309,7 +309,8 @@ The firmware has a total of 192 counters that needs to be latched; they are divi
 	\item 48 counters: AND/OR coincidence events clock counters
 \end{itemize}
 \noindent Each channel needs to be saved at the exact same time (same clock stroke), thus a deep ram block that contains every counter in a different address can not be taken into consideration.
-I then decided to implement a new Block RAM IP, as in figure \ref{fig:ramip}. This new pre-configured module implements a easy to use (32x2) RAM component, thus 32~bits of data and two possible states (1~bit address). The final version of the firmware will use 192 of this components. 
+I then decided to implement a new Block RAM IP, as in figure \ref{fig:ramip}. This new pre-configured module implements a easy to use (32x2) RAM component, thus 32~bits of data and two possible states (1~bit address). The final version of the firmware will use 192 of this components.
+This means that for each state a total of 6.144~kb of memory needs to be allocated, thus in total 12.288~kb. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch4/LATCH_RAM_IP}
