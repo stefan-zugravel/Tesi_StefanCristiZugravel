@@ -169,28 +169,49 @@ It is important to know that this initial value is NOT always zero, but some ran
 This behaviour makes the ability to read and configure these DACs even more important for every data taking. In appendix \ref{DacAppendix} there are more examples of write and read sequences. 
 \subsubsection{Considerations}
 \noindent Before talking about the obtained results it is useful to remember what a threshold scan is and how it is used.
+The signal coming from the CSA (Charge Sensitive Amplifier) is a sum of two components, one in DC, that is called the pedestal and can be seen in figure \ref{fig:tscansketch} as a really noisy base, and the signal that is being amplified.
+The chip sends a logic signal each time the output of the CSA is greater than a selected threshold value.
+If the threshold voltage is less than the pedestal the output of the chip will always be \textit{low}, thus the measured rate will be zero.
+If the V$_{th}$ is approximately equal to the pedestal the chip is sampling noise and the rate will explode.
+When the V$_{th}$ is greater than the pedestal the chip is sampling only signal, this can be seen in figure \ref{fig:tscansketch}.
+Incrementing even more the threshold voltage will cause a gradual death of the rate, due to the noise. This decrease in the rate can be fitted with an error function.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/tscan_sketch}
-	\caption{}
+	\caption{Threshold scan example from textbook}
 	\label{fig:tscansketch}
 \end{figure}
+\noindent This behaviour can be observed in figure \ref{fig:thscanch0}; in blue there is a threshold scan curve with trimming DAC fixed at 0x00~=~0d00 and variable external DAC, while in green there is the same threshold scan but with trimming DAC setted at 0x3F~=~0d63.
+The measurement was performed with the fast pulse generator setted at 600~mV at 10~KHz on the odd channels. The data was extracted from ch1.
+It can be observed the conduct described before, at first, for low V$_{th}$, the rate is 0, then in explodes when it reaches the noise; after that it samples the signal, in this case at exactly 10~KHz and lastly it gradually dies. 
+By fitting the last part of the threshold scan with and error function it is possible to calculate the pedestal value of the curve.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/ThScan_ch0.pdf}
-	\caption{}
+	\caption{Data analysed by \textit{Emanuele Data}, {\color{blue}blue}= trimming DAC at 0d00,\\{\color{green}green}= trimming DAC at 0d63}
 	\label{fig:thscanch0}
 \end{figure}
+\noindent The most important thing to observe in figure \ref{fig:thscanch0} is that a change of the trimming DAC value leads to a translation of the threshold scan curve.
+This translations is approximately 20~mV.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/DAC_V_REF_600mv-Copia.pdf}
-	\caption{}
+	\caption{Data analysed by \textit{Emanuele Data}, {\color{blue}blue}= pedestal values with trimming DAC at 0d00, {\color{green}green}= pedestal values with trimming DAC at 0d63}
 	\label{fig:pedestal}
 \end{figure}
-
+\noindent After fitting the S-curves with the error function and calculating the pedestal voltages some mode consideration can be taken.
+In figure \ref{fig:pedestal} is can be seen a distribution of the pedestal voltages for some channels with trimming DAC configured at 0d00 (blue) and at 0d63 (green).
+The average difference between the two values for each channel is approximately 20,9~mV.
+In conclusion, the ability to change the trimming DACs values allows to reduce the dis-uniformity between channels and thus to obtain a more accurate measurement of the particles rate.
 
 \subsection{Latching counters test}
 
 \subsection{Timestamp generator test}
 
 \section{Esa-Abacus}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch5/EsaAbacus.png}
+	\caption{Esa-Abacus board}
+	\label{fig:esaabacus}
+\end{figure}

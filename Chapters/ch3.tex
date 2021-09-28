@@ -506,18 +506,40 @@ challenges.
 
 \section{KC705 FMC debug tool}
 \noindent The Kintex7 KC705 board does not have a way to auto-check if all of the devices on the board are working properly.
-This means that if a channel on one of the two FMC connector goes defective the user does not get any feedback.
-For example, if \textit{ch00\_counter} is always 0, even if the test pulses (TP) are being sent to the chip, is up to the user to understand if the chip is bad or the FMC channel is damaged. This problem can be easily solved with the use of an oscilloscope used to probe the selected channel, however that's not a practical solution.
+This means that if a channel on one of the two FMC connector goes defective the user does not get any message or feedback.
+For example, if \textit{ch00\_counter} is always 0, even if the test pulses (TP) are being sent to the chip, is up to the user to understand if the chip is bad or the FMC channel is damaged. This problem can be solved using an oscilloscope to probe the selected channel, however that's not a practical and fast solution.
 Thus the question is:
 how to understand if all the I/O resources needed are working properly?
-\\
+\subsection{LVDS25}
+Before seeing that it is useful to understand what tipe of signal the FPGA is receiving and what are the levels involved.
+Low Voltage Differential Signaling\cite{lvds} (LVDS) is a technical standard that specifies electrical characteristics of a differential, serial signaling standard.
+LVDS operates at low power and can run at very high speeds using inexpensive twisted-pair copper cables. LVDS is a physical layer specification only.
+LVDS was introduced in 1994, and has become popular in products such as LCD-TVs, automotive infotainment systems, industrial cameras, notebook and tablet computers, communications systems, and FPGAs boards. The typical applications are high-speed video, graphics, video camera data transfers, and general purpose computer buses.
+LVDS is a differential signaling system, meaning that it transmits information as the difference between the voltages on a pair of wires; the two wire voltages are compared at the receiver.
+In a typical implementation, the transmitter injects a constant current of 3.5~mA into the wires, with the direction of current determining the digital logic level. The current passes through a termination resistor of about 100~$\Omega$ to 120~$\Omega$ at the receiving end, and then returns in the opposite direction via the other wire. From Ohm's law, the voltage difference across the resistor is therefore about 350~mV. The receiver senses the polarity of this voltage to determine the logic level.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{IMG/ch3/LVDS}
+	\caption{Basic LVDS circuit operation example}
+	\label{fig:lvds}
+\end{figure}
+\noindent In figure \ref{fig:lvds25} it can be seen a table with the DC voltages specifications for the Xilinx LVDS25 standard. This means that the voltage of the power rail for that IO bank is 2.5~V. The most important values to be observed are the \textit{Output Common-Mode Voltage}=~1.250~V and the \textit{Differential Output Voltage}=~0.350~V. This means that when probing the two wires of a LVDS25 signal the two voltages to be expected are $Q$=1.600~V and $\bar{Q}$=0.900~V.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch3/LVDS25SPEC}
+	\caption{LVDS25 DC specifications}
+	\label{fig:lvds25}
+\end{figure}
+\subsection{Debug tool implementation}
 This was my first contribution for the project.
-In order to create a easy to use debug tool for the FMC connectors of the board I created a completely new firmware that sets all the FMC pins as an output.
-With the use of an LVDS IP output buffer the pin pairs can be driven with a \textit{high}/\textit{low} logic signal. The user is able to change state with the use of a dip switch.
-In figure \ref{fig:debug1} it can be seen the first part of the output-pins declaration in the VHDL code. The code is divided into 5 "columns":
+In order to create a easy to use debug tool for the FMC connectors of the board I created a completely new firmware that sets every FMC pin as an output.
+With the use of an LVDS IP output buffer the pin pairs can be driven with a \textit{high}/\textit{low} logic signal.
+The user can also change between states with the use of a dip switch.
+In figure \ref{fig:debug1} it can be seen the first part of the output-pins declaration in the VHDL code.
+This code is divided into 5 "columns" in order to facilitate the pin of interest identification. Thus for each signal there is a:
 \begin{itemize}
 	\item \textbf{Pin name}: is the name given to each signal in the hdl code.
-	\item \textbf{Pin configuration}: std\_logic output.
+	\item \textbf{Pin configuration}: always std\_logic output in this case.
 	\item \textbf{J22 Pin-schematic Net Name}: pin name in the FPGA schematic documentation. 
 	\item \textbf{FPGA Pin}: pin name used in constraints file. 
 	\item \textbf{J4}: pin number in the FMC breakout board in figure \ref{fig:debug2}. 
@@ -545,7 +567,7 @@ In figure \ref{fig:debug1} it can be seen the first part of the output-pins decl
 	\item Check in the HDL, figure \ref{fig:debug1} to witch breakout pin leads the signal; in this case \textit{H30}$\rightarrow$P7 and \textit{G30}$\rightarrow$P8 in figure \ref{fig:debug2}.
 	\item Load on the board the debug firmware and check with a multimeter the voltages at the desired pins.    
 \end{itemize}
-\noindent If the channel is working properly the voltages should be LOW$\approx$0.75~V and HIGH$\approx$1.5~V for the LVDS25 specs.  
+\noindent If the channel is working properly the voltages should be \textit{low}$\approx$0.75~V and \textit{high}$\approx$1.5~V for this board.  
 
 
 

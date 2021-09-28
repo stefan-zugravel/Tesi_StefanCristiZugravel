@@ -459,7 +459,7 @@ The hearth of a time measuring device is a event generator with well defined per
 The first process implemented is a 500~MHz counter.
 This means that the period is 2~ns; using a 64~bit register means that the maximum time interval measurable is:
 \begin{equation}
-	2 \: ns \cdot \: 64 \: bit \: =\: 2 \: ns \cdot \: 18,44\cdot10^{18} \: = \: 36,6\cdot10^{9} \: s \approx 1170 \: years 
+	2 \: ns \cdot \: 64 \: bit \: =\: 2 \: ns \cdot \: 18.44\cdot10^{18} \: = \: 36.6\cdot10^{9} \: s \approx 1170 \: years 
 \end{equation}
 \noindent With a 64 bit counter the FPGA could stay ON for more than 1000 years and still count without resetting the register. Maybe it's a bit overkill, however the Xilinx Kintex 7 has many more resources than the project needs, thus the use of a 64 bit counter is acceptable.
 The counting process runs on a 500~MHz clock (used also for the de-serializer) while the \textit{tera10\_latch\_counter} module runs on a 125~MHz clock. In order to enable the data flow between the two domain, without causing time violation errors, I used a CDC (Clock Domain Crossing) FIFO memory IP, in figure \ref{fig:fifo_ip}.

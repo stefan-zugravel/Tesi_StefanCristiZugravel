@@ -4,7 +4,7 @@
 %\vspace{2cm}
 
 \chapter*{Abstract}
-Hadron therapy is a particular type of oncological radiotherapy for the treatment of solid tumors that uses proton or
+Hadron therapy is a type of oncological radiotherapy for the treatment of solid tumors that uses proton or
 ion beams instead of conventional X-rays. The usage of hadron particles allows a better control on the energy release,
 improving the precision of the treatment and the conservation of healthy tissues around the target.
 Particle beams are obtained by means of dedicated accelerators, requiring a precise control of particle flux and beam profile.
@@ -12,21 +12,20 @@ Thus beam-monitoring systems become of primary importance, demanding the usage o
 real-time the particle beam reaching the patient.\\
 
 In this context the Medical Physics group at University of Torino and INFN (the Italian National Institute for
-Nuclear and Particle Physics) is participating to
-the MoVeIT (Modeling and Verification for Ion beam Treatment planning) research project, which aims to develop new and
+Nuclear and Particle Physics) is participating to the MoVe\_IT (Modeling and Verification for Ion beam Treatment planning) research project, which aims to develop new and
 innovative models for biologically optimized Treatment Planning Systems (TPS) using ion beams in hadron therapy.
 As~part of the project the Torino group is involved in the development of solid state detectors and readout electronics for measuring with high precision
 the characteristics of the hadron beam for irradiation, such as number of particles delivered per unit time, energy and beam profile.\\
 
-Low-Gain Avalanche Diode (LGAD) thin silicon sensors segmented in strips have been selected as a~promising choice for the implementation
-of the final beam-monitoring system. Thanks to the internal gain mechanism in fact, this sensor technology allows to obtain a large
-signal-to-noise ratio (SNR) for very low amounts of deposited charge, thus allowing to detect and count single beam particles.
+Low-Gain Avalanche Diode (LGAD) thin silicon sensors segmented in strips have been selected as a promising choice for the implementation
+of the final beam-monitoring system. Thanks to the internal gain mechanism this sensor technology allows to obtain a large
+Signal-to-Noise Ratio (SNR) for very low amounts of deposited charge. This allows to detect and count single beam particles.
 
 \noindent Silicon strips are read out by a full-custom and optimized Application Specific Integrated Circuit (ASIC) designed by Torino INFN.
 The chip, named ABACUS (Asynchronous-logic-Based Analog Counter for Ultra fast Silicon strips), has been 
-designed using a commercial CMOS 110~nm and integrates 24 readout channels. Each channel includes a low-noise preamplifier 
-and a fast discriminator. The data acquisition system uses commercial Field Programmable Gate Array (FPGA) boards that receive
-the data from up to six readout chips.\\
+designed using a commercial CMOS 110~nm technology and integrates 24 readout channels. Each channel includes a low-noise charge preamplifier 
+and a fast discriminator. The external data acquisition system uses commercial Field Programmable Gate Array (FPGA) boards that receive
+the data from up to 6 readout chips.\\% A second version of the chip, refered as ABACUS\_v2 \\
 
 This thesis presents my personal contributions on the upgrade of the FPGA firmware used to characterize
 the second version of the ABACUS chip and measurement results.
@@ -34,11 +33,11 @@ The FPGA used to readout the chip is a Kintex-7 KC705 board by Xilinx programmed
 is responsible for both the chip configuration and sensor data readout.
 
 \noindent The first part of my work describes the upgraded VHDL firmware, which includes several new features such as:
-i) the creation of a debugging tool for malfunctioning channels on the board;
+i) the creation of a debugging tool for malfunctioning channels on the FPGA board;
 ii) the complete rewriting of the internal Digital to Analog Converter (DAC) configuration system for the new ABACUS chip, which
-now uses an address-based system instead of a serial method;
-iii) the addition of a timestamp in the data packets for a more accurate calculation of the particle rate;
-iv) the implementation of a latch for internal counters;
+now uses an address-based system with an I2C controller instead of a serial method;
+iii) the implementation of a latch for internal counters;
+iv) the addition of a timestamp generator for a more accurate calculation of the particle rate;
 \newline
 The second part of the thesis presents experimental results for the characterization of the second version of the ABACUS chip.
 Measurements include DAC-linearity studies and threshold scans to quantify the threshold dispersion between channels
@@ -47,16 +46,17 @@ Measurements include DAC-linearity studies and threshold scans to quantify the t
 This thesis is organized as follow:
 \vspace{0.25cm}
 \newline
-Chapter 1 describes the physical and biological mechanisms and advantages of hadrontherapy compared to conventional radiotherapy. The most advanced dose distribution systems and the detectors used are described. It also highlights how the use of innovative detectors based on a direct counting mechanism of the individual particles of the beam can be of benefit for innovative therapeutic approaches in the future.
+Chapter 1 describes the physical mechanisms and advantages of hadron-therapy compared to conventional radiotherapy. There is description of the most advanced dose distribution systems and the detectors used.
+%It also highlights how the use of innovative detectors based on a direct counting mechanism of the individual particles of the beam can be of benefit for innovative therapeutic approaches in the future.
 \vspace{0.25cm}
 \newline
-Chapter 2 describes the devices developed within MoVeIT for dose monitoring. In particular, the operating principle of the LGAD sensors used is shown, and their advantages for the application under study. The characteristics of the chip developed by the INFN of Turin for the amplification and discrimination of signals are also described.
+Chapter 2 describes the devices developed within MoVe\_IT for dose monitoring. In particular, the operating principle of the LGAD sensors used is shown, and their advantages for the application under study. The characteristics of the chip developed by the INFN of Turin for the amplification and discrimination of signals are also described.
 \vspace{0.25cm}
 \newline
-Chapter 3 describes the use and operation of an FPGA board, its main components, the hardware description language and the associated work flow.
+Chapter 3 describes contains a brief history of the FPGA, its main components and a comparison with ASICs and others programmable devices. After that there is a brief introduction to the hardware description language and the associated rtl design work flow. There is a brief explanation of the tools used for the development and lastly it is described the FMC debug tool that i implemented.
 \vspace{0.25cm}
 \newline
-Chapter 4 describes the core of the thesis work, thus the implementation of the control logic of the internal DACs, \textbf{ecc------------------}. The correct functioning of the VHDL code was verified both with complete simulations in the development environment used and on the board.
+Chapter 4 contains a description of the original firmware, the implementation of the trimming DACs configuration logic, of the counter latch system and of the timestamp generator. For each new addition there are software simulation and considerations on the implemented design and on the board utilization statistics.
 \vspace{0.25cm}
 \newline
-Chapter 5 is dedicated to final considerations and possible future developments.
+Chapter 5 describes the hardware devices involved in the project such as the test setup, the test board and the voltage translator. For each addition to the firmware tests on board have been performed and described.
