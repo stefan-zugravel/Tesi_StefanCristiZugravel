@@ -1,6 +1,6 @@
 \chapter{Experimental setup and tests on board}
 \section{Introduction}
-In section \ref{hardware} will be described a simple level translator built for simulation purposes while in sections \ref{testbench} and \ref{testboard} will be briefly analyzed the experimental setup.
+This chapter will focus on the firmware validation procedures and on the devices used for this purpose. The first half of the chapter will be dedicated to the test bench setup, the ABACUS\_v2 test board and other hardware devices involved. The second half will analyse how the new addition to the firmware perform in real world; this means that trimming DAC configuration test, latch data taking and timestamp measurement have been performed with success.
 
 \section{Test Bench}\label{testbench}
 \begin{figure}[H]
@@ -63,19 +63,20 @@ Moreover, the main components of the test board are:
 \end{itemize} 
 \noindent The 50 PIN connector is connected to the FMC port by means of a breakout board that can be seen attached to the FPGA in figure \ref{fig:testbench}. This PCB has no electrical components, only wiring to adapt one physical connector to another.
 \section{Hardware devices}\label{hardware}
-\noindent As described previously the ABACUS\_v2 chip, for the configuration and readout of the internal DACs, works on 1,2~V LVCMOS single-ended signal only. however the FPGA uses only one reference voltage for the entire FMC connector, this means that for how the board is configured it is impossible to send and receive 1,2~V signals.
+\noindent As described previously the ABACUS\_v2 chip, for the configuration and readout of the internal DACs, works on 1,2~V LVCMOS single-ended signal only. however the FPGA uses only one reference voltage for the entire FMC connector at 2.5~V, this means that for how the board is configured it is impossible to send and receive 1,2~V signals.
 In order to solve this problem two simple devices have been implemented; a voltage divider and a level translator device.
-\subsubsection{Voltage divider}
-On the one hand the data coming from the FPGA to the chip is at 2,5~V single-ended. To lower this value it has been implemented a simple voltage divider with 2 SMD (Surface-Mount Devices) resistors
-\subsubsection{Level translator}\label{leveltranslator}
-On the other hand the data coming from the chip is at 1.2~V. This value is too low and thus the board reads it always as \textit{low}. A voltage translation device is needed in order to boost the signal \textit{high} value. For this purpose I created the simple circuit in figure \ref{fig:diagram} using three 1~k$\Omega$ resistor and two classic \textit{2N2222} transistors that are configured in the standard common emitter mode.
+\subsection{Voltage divider}
+The data coming from the FPGA to the chip is at 2,5~V single-ended. To lower this value it has been implemented a simple voltage divider with 2 SMD (Surface-Mount Devices) resistors on the back of the test board in figure \ref{fig:testboard}.
+\subsection{Level translator}\label{leveltranslator}
+The data coming from the chip is at 1.2~V. This value is too low and thus the board reads it always as \textit{low}. A voltage translation device is mandatory in order to boost the signal \textit{high} value. For this purpose I created the simple circuit that can be seen in figure \ref{fig:diagram} using three 1~k$\Omega$ resistor and two classic \textit{2N2222} transistors that are configured in the standard common emitter mode.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{IMG/ch5/DIAGRAM}
 	\caption{Diagram of the level translation device}
 	\label{fig:diagram}
 \end{figure}
-\noindent This device has been simulated using LTspice simulator and the results can be seen in figure \ref{fig:transsimulation}. The green signal is the input data at 1.2~V while the purple one is the output signal at 2.5~V.
+\noindent This device has been simulated using LTspice simulator and the results can be seen in figure \ref{fig:transsimulation}.
+The green signal is the input data at 1.2~V while the purple one is the output signal at 2.5~V.
 According to the simulation the device works properly and thus it can be implemented in hardware.
 \begin{figure}[H]
 	\centering
@@ -102,19 +103,19 @@ It need to be powered externally with 2.45~V and, in order to assure the safety 
 \end{figure}
 
 \section{Firmware validation on board}
-The validation of the firmware was performed in two separate moments, the first one was done in May 2021 and validated the trimming DACs, while the second one was carried out in October 2021 and tested the latch system and the timestamp generator. 
+The validation of the firmware was performed in two separate moments, the first one was done in May 2021 and tested the trimming DACs, while the second one was carried out in October 2021 and validated the latch system and the timestamp generator. 
 \subsection{Trimming DAC test}\label{dactests}
 The trimming DAC validation process was divided into three parts, the verification of the clock period and the amplitude of the signal, the verification of the writing sequence and finally the verification of the reading process. 
-All this tests were performed with the FPGA connected to the ABACUS\_v2 test board and the relevant signals were probed with the oscilloscope. 
+All this tests were performed with the FPGA connected to the ABACUS\_v2 test board and the relevant signals were probed with the oscilloscope. The test board was powered with two 3.3~V rails.
 \subsubsection{Clock and amplitude}
-For this first part the goal was to validate the clock period and its amplitude. In order to do that a write command was sent while probing the \textit{baseline\_dac\_sck} signal. 
+For this first part the goal was to validate the clock period and its amplitude. In order to do that a write non-specified command was sent while probing the \textit{baseline\_dac\_sck} signal. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_clock-specks}
 	\caption{\textit{baseline\_dac\_sck}; period and amplitude measurements}
 	\label{fig:clockspecs}
 \end{figure}
-\noindent In section \ref{confing} it was said that the clock period should theoretically be 98.28~$\mu$s, in figure \ref{fig:clockspecs} it can be seen that the measured period is 98.44~$\mu$s. The difference between the two values is 160~ns which is approximately $\approx$0.16\% of the total. The period can thus be considered perfectly compatible considering that the cursor positioning was done manually and thus the human error must be considered too.
+\noindent In section \ref{confing} it was said that the clock period should theoretically be 98.28~$\mu$s, in figure \ref{fig:clockspecs} it can be seen that the measured period is 98.44~$\mu$s. The difference between the two values is 160~ns which is approximately $\approx$0.16\% of the total. The period can then be considered perfectly compatible considering that the cursor positioning was done manually and thus the human error must be considered too.
 The second value to be noted in figure \ref{fig:clockspecs} is that the amplitude of the signal is 1.22~V, this is perfectly safe for the chip. 
 
 \subsubsection{Write command}
@@ -205,13 +206,8 @@ The average difference between the two values for each channel is approximately 
 In conclusion, the ability to change the trimming DACs values allows to reduce the dis-uniformity between channels and thus to obtain a more accurate measurement of the particles rate.
 
 \subsection{Latching counters test}
-
+In order to test the new \textit{tera10\_latch\_counter} module a new LabVIEW panel (in figure \ref{}) was designed by the INFN researcher \textit{Simona Giordanengo}.
+This new piece of software allows a new type of measurements.
+To be noted that this addition to the firmware does not change at all the Input/Output allocation of the board, the only difference is in how the data is being treated; in this case saved into a memory.  
 \subsection{Timestamp generator test}
 
-\section{Esa-Abacus}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch5/EsaAbacus.png}
-	\caption{Esa-Abacus board}
-	\label{fig:esaabacus}
-\end{figure}
