@@ -13,7 +13,7 @@ This comprehends the solid state detector, the ASICs used to digitalise the sign
 The particle beam coming from the accelerators are detected by a LGAD (Low Gain Avalanche Diode) sensor that will be discussed in section \ref{lgad}, the current signal coming from the detector is the digitalized by the second version of a full custom circuit called ABACUS\_v2 that will be discussed in section \ref{chip}.
 This ASIC will be mounted on a full custom PCB named EsaAbacus that will be analysed in section \ref{esaabacus}.
 The data from the chip is then read by an FPGA board, a general purpose device that will be analysed in detail within chapter 3.
-The FPGA elaborates the data and finally sends them to a computer.
+The FPGA elaborates the data and finally sends them to a computer. In the final operational device the computer, on the base of the counted particles, should move and control the beam in a close and controlled loop. 
 
 \section{MoVe\_IT project}
 \begin{figure}[H]
@@ -80,7 +80,8 @@ significantly higher than this at least $\approx$~400~V.
 	\caption{Simulated detector signal}
 	\label{fig:signal}
 \end{figure}
-\noindent The output signal from a detector used in the project has a trapezoidal form, a duration of $\approx$ 1.5~ns and a current in the order of 1$\cdot$10$^{/5}$~A.
+\noindent The output signal from a detector used in the project has a trapezoidal form, a duration of $\approx$ 1.2~ns (rise and fall times of $\approx$~450~ps and a 
+flat region of $\approx$~300~ps) and a current in the order of 1$\cdot$10$^{/5}$~A.
 In figure \ref{fig:signal} can be seen a signal simulation, the most probable carry a 8~fC charge, however due to the Landau Fluctuations this value can change between 3 and 30~fC.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent The main risk in
@@ -97,20 +98,56 @@ to reach a stable behavior up to >1015~n$_{eq}$/cm2 fluencies in the next 1 or 2
 
 
 \section{ABACUS chip}\label{chip}
-\noindent The signal from figure \ref{fig:signal} of each detector strip is connected to an input channel of the new ABACUS\_v2 full custom chip\cite{abacus}\cite{dac}.
+\noindent The signal from figure \ref{fig:signal} of each detector strip is connected to an input channel of the new ABACUS\_v2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 26$^{th}$ 2020.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch2/ABACUS2.png}
 	\caption{ABACUS\_v2 chip die view}
 	\label{fig:abacus2}
 \end{figure}
+\noindent In figure \ref{fig:abacus2} it can be seen a schematic of the chip die area. Inside the black rectangle it can be seen a single channel. Its design will be analysed later in this section.
+This prototype is a 24 channels ASIC designed in UMC (United Microelectronics Corporation) 110~nm technology.
+The die size is 4.95~x~1.935~mm$^2$.
+The 24 channels are divided in two 12-channels groups. The two groups differs for the architecture of the first stage only.
+The first group (group A) is based on a TIA (Trans-Impedance Amplifier) architecture with a two stage core amplifier.
+The second group (group B) is based on a Regulated Common Gate (RCG) input stage followed by a single stage TIA.
+The pro and cons of the two architectures will not be a part of this thesis.\\
+As already discussed, the design goal of the counting device is to measure the number of protons with a maximum error of 1\% up to a fluxes of 10$^8$~p/(cm$^2$$\cdot$s).
+For a single particle the efficiency must be greater than 99\%, and this defines the range of charges the electronics must be able to accept.
+The ABACUS chip was optimized for an input capacitance between 5 and 20 pF and to cope with continuous signals up to 100 MHz rate.
+It can accept input charges from 3~fC to 140~fC, has a dead time <~10~ns and a SNR~>~10. 
 
+\subsection{Abacus Channel structure}
+In order to understand the measurements from chapter 5 and the goal of this thesis work it is extremely important to analyse how the ABACUS\_v2 channel works.
+In figure \ref{fig:abacuschannel} the block diagram of one channel is shown.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch2/Abacus_channel.png}
 	\caption{Single channel diagram of the ABACUS\_v2 chip}
 	\label{fig:abacuschannel}
 \end{figure}
+\noindent A low noise CSA (Charge Sensitive Amplifier) (1) is followed by a low-pass filter (2).
+The amplified signal is therefore fed to a leading-edge multistage discriminator (3 and 4) followed by a driver (5 and 6) which provides a logic pulse in Current Mode Logic (CML) format.
+The output of the discriminator is also used in a feedback circuit (7 and 8) to reset the CSA feedback capacitance. This feedback circuit was designed for a fast baseline restoring and to avoid signal saturation (fast-reset signal).
+The chip was heavily tested by INFN expertises; the output voltage from the amplifier and the noise were estimated by the measurement of the number of detected pulses as a function of the threshold value. The results are shown in figure \ref{fig:abacustest} for charges between 3 fC and 20 fC (measurement and analysis carried out by PhD \textit{Omar Hammad Ali}).
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{IMG/ch2/ABACUSTEST}
+	\caption{Amplitude of the amplifier output signal as a function of the charge injected at 1 MHz rate}
+	\label{fig:abacustest}
+\end{figure}
+\noindent The most important considerations concern the functioning of the discriminator.
+The threshold voltage (V$_{th}$) is the sum of two different voltages that are independently configurable:
+\begin{itemize}
+	\item An external 16~bit DAC (Digital to Analog Converter) for the global V$_{th}$ 
+	\item A per channel programmable 6~bit internal DAC for threshold tuning
+\end{itemize}
+
+\subsubsection{External DAC}
+This is an external device, available on the market.
+
+\subsubsection{Internal (Trimming) DAC}
+The Internal (Trimming) DAC is also called Baseline DAC in some reports.
 
 \section{Esa-Abacus}\label{esaabacus}
 \begin{figure}[H]
@@ -120,7 +157,4 @@ to reach a stable behavior up to >1015~n$_{eq}$/cm2 fluencies in the next 1 or 2
 	\label{fig:esaabacus}
 \end{figure}
 
-\section{FPGA board}
-
-%\section{Beam test with strip sensor}
-%\section{Verification of counting skills}
+\section{FPGA board tasks}
