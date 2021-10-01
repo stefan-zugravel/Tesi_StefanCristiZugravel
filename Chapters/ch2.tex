@@ -15,7 +15,7 @@ This ASIC will be mounted on a full custom PCB named EsaAbacus that will be anal
 The data from the chip is then read by an FPGA board, a general purpose device that will be analysed in detail within chapter 3.
 The FPGA elaborates the data and finally sends them to a computer. In the final operational device the computer, on the base of the counted particles, should move and control the beam in a close and controlled loop. 
 
-\section{MoVe\_IT project}
+\section{MoVe\_IT project}\label{moveit}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.35\linewidth]{IMG/ch2/Move_IT_logo}
@@ -82,22 +82,22 @@ significantly higher than this at least $\approx$~400~V.
 \end{figure}
 \noindent The output signal from a detector used in the project has a trapezoidal form, a duration of $\approx$ 1.2~ns (rise and fall times of $\approx$~450~ps and a 
 flat region of $\approx$~300~ps) and a current in the order of 1$\cdot$10$^{/5}$~A.
-In figure \ref{fig:signal} can be seen a signal simulation, the most probable carry a 8~fC charge, however due to the Landau Fluctuations this value can change between 3 and 30~fC.
+In figure \ref{fig:signal} can be seen a signal simulation, the most probable signal carry a 8~fC charge, however due to the Landau Fluctuations this value can change between 3~fC and 30~fC.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent The main risk in
 the use of LGAD silicon detectors for beam monitoring is related to the high radiation doses from
 therapeutic beams. The design of LGAD sensors has not been optimized yet for radiation
-resistance, and the measurements performed up to now indicate a stable behavior up to 1014~n$_{eq}$/cm2 for 300~$\mu$m thick detectors (this corresponds to a few hours of a therapeutical proton
+resistance, and the measurements performed up to now indicate a stable behavior up to 1014~n$_{eq}$/cm$^2$ for 300~$\mu$m thick detectors (this corresponds to a few hours of a therapeutical proton
 pencil beam with an current of 1~nA and a FWHM of $\approx$ 1~cm); at higher doses the internal gain
 of the sensors decreases and it is necessary to raise the bias voltage to keep a stable signal level.
 It is expected that the use of thinner sensors (50~$\mu$m thickness) will decrease the trapping
 probability in the sensors, therefore extending the operative time. Intense work is currently going
 on in the LGAD community to increase the radiation resistance of the sensors. Several
 approaches as alternative dopants and doping profiles are being investigated with the expectation
-to reach a stable behavior up to >1015~n$_{eq}$/cm2 fluencies in the next 1 or 2 years.
+to reach a stable behavior up to >1015~n$_{eq}$/cm$^2$ fluencies in the next 1 or 2 years.
 
 
-\section{ABACUS chip}\label{chip}
+\section{ABACUS\_v2 chip}\label{chip}
 \noindent The signal from figure \ref{fig:signal} of each detector strip is connected to an input channel of the new ABACUS\_v2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 26$^{th}$ 2020.
 \begin{figure}[H]
 	\centering
@@ -114,10 +114,10 @@ The second group (group B) is based on a Regulated Common Gate (RCG) input stage
 The pro and cons of the two architectures will not be a part of this thesis.\\
 As already discussed, the design goal of the counting device is to measure the number of protons with a maximum error of 1\% up to a fluxes of 10$^8$~p/(cm$^2$$\cdot$s).
 For a single particle the efficiency must be greater than 99\%, and this defines the range of charges the electronics must be able to accept.
-The ABACUS chip was optimized for an input capacitance between 5 and 20 pF and to cope with continuous signals up to 100 MHz rate.
+The ABACUS\_v2 chip was optimized for an input capacitance between 5 and 20 pF and to cope with continuous signals up to 100 MHz rate.
 It can accept input charges from 3~fC to 140~fC, has a dead time <~10~ns and a SNR~>~10. 
 
-\subsection{Abacus Channel structure}
+\subsection{ABACUS\_v2 Channel structure}
 In order to understand the measurements from chapter 5 and the goal of this thesis work it is extremely important to analyse how the ABACUS\_v2 channel works.
 In figure \ref{fig:abacuschannel} the block diagram of one channel is shown.
 \begin{figure}[H]
@@ -127,6 +127,7 @@ In figure \ref{fig:abacuschannel} the block diagram of one channel is shown.
 	\label{fig:abacuschannel}
 \end{figure}
 \noindent A low noise CSA (Charge Sensitive Amplifier) (1) is followed by a low-pass filter (2).
+The output signal from (2) has two components, a DC one, that is called Pedestal, and the actual amplified signal; this will be explained with more details in section \ref{considerations}.
 The amplified signal is therefore fed to a leading-edge multistage discriminator (3 and 4) followed by a driver (5 and 6) which provides a logic pulse in Current Mode Logic (CML) format.
 The output of the discriminator is also used in a feedback circuit (7 and 8) to reset the CSA feedback capacitance. This feedback circuit was designed for a fast baseline restoring and to avoid signal saturation (fast-reset signal).
 The chip was heavily tested by INFN expertises; the output voltage from the amplifier and the noise were estimated by the measurement of the number of detected pulses as a function of the threshold value. The results are shown in figure \ref{fig:abacustest} for charges between 3 fC and 20 fC (measurement and analysis carried out by PhD \textit{Omar Hammad Ali}).
@@ -136,25 +137,69 @@ The chip was heavily tested by INFN expertises; the output voltage from the ampl
 	\caption{Amplitude of the amplifier output signal as a function of the charge injected at 1 MHz rate}
 	\label{fig:abacustest}
 \end{figure}
-\noindent The most important considerations concern the functioning of the discriminator.
-The threshold voltage (V$_{th}$) is the sum of two different voltages that are independently configurable:
+\noindent The most important considerations concern the functioning of the discriminator (3).
+The threshold voltage (V$_{th}$) is the sum of two different components that are independently configurable:
 \begin{itemize}
 	\item An external 16~bit DAC (Digital to Analog Converter) for the global V$_{th}$ 
 	\item A per channel programmable 6~bit internal DAC for threshold tuning
 \end{itemize}
-
+\noindent The main external DAC provides the same threshold voltage for every channel, however due to manufacturing tolerances not every channel is the same. One may have a slightly higher or lower input capacitance, or the amplifier could have a extremely low, but measurable, difference in gain.    
+These inequalities may have a relevant impact on the measured particle rate, and thus on the dose given to the patient.
+In order to reduce these differences each channel has an independently programmable 6~bit DAC that is used to fine-tune (trim) the V$_{th}$ value.    
 \subsubsection{External DAC}
-This is an external device, available on the market.
-
+The external DAC is a commercially available Linear Technology LTC2604 Quad 16-bit Rail-to-Rail DAC.
+The device uses the $I^2C$ protocol and reads 24~bit words configured as in figure \ref{fig:extdactiming2}, more details are provided in the data-sheet \cite{LTC2604}.
+The main features are:
+\begin{itemize}
+	\item A guaranteed 16~Bit Monotonic Over Temperature
+	\item An ultra-low Cross-talk Between DACs (<~5~$\mu$V)
+	\item Separate Reference Inputs for each DAC
+	\item Wide 2.5~V to 5.5~V Supply Range
+	\item Low Power Operation: 250~$\mu$A per DAC at 3~V
+\end{itemize} 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.99\linewidth]{IMG/ch2/EXTDACTIMING2}
+	\caption{24~bit data sequence for the LTC2604 external DAC}
+	\label{fig:extdactiming2}
+\end{figure}
 \subsubsection{Internal (Trimming) DAC}
-The Internal (Trimming) DAC is also called Baseline DAC in some reports.
+The internal (Trimming) DACs, also called Baseline DACs in some papers, were designed specifically for this chip. Inside the die there is an $I^2C$ controller used to enable the communication between DAC and the world.
+The DACs are programmed using 16~bit serial words; the configuration process is explained in detail in section \ref{InternalDac}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{IMG/ch2/INTDACTABLE}
+	\caption{Internal DACs LSB values at different V$_{refLSB}$ settings}
+	\label{fig:intdactable}
+\end{figure}
+\noindent In figure \ref{fig:intdactable} it can be seen that with a reference voltage of 600~mV the LSB should be 0.94~mV, this means that, being this a 6~bit DAC, the maximum trimming voltage is $\approx$~59.2~mV. For reference, an usual value for the pedestal voltage in around $\approx$~560~mV. Thus these internal DACs are used to fine tune the threshold voltage of the discriminator, while the bulk of the work is done by the external one.   
 
-\section{Esa-Abacus}\label{esaabacus}
+\section{ESA-ABACUS}\label{esaabacus}
+\noindent As explained in section \ref{moveit} the final detector will have 144 strips, however each ABACUS\_v2 chip can read only 24 channels, this means that for the ultimate sensor read-out 6 chips are needed (24$\cdot$6~=~144).
+In order to utilize these device at the same time the Turin INFN group developed, built and tested a new board, called ESA-ABACUS, that can accommodate and handle 6 ABACUS\_v2 chips. The ESA-ABACUS board can be seen in figure \ref{fig:esaabacus}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch2/EsaAbacus.png}
-	\caption{Esa-Abacus board}
+	\caption{Esa-Abacus board, chips and detector are not yet bonded}
 	\label{fig:esaabacus}
 \end{figure}
+\noindent To be noted that each FPGA board used has enough Input/Output resources for two ABACUS\_v2 chips, this means that in order to utilize at his full potential the ESA-ABACUS three FPGA boards are needed (chapter 3 will explain in detail what an FPGA is).
+
 
 \section{FPGA board tasks}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

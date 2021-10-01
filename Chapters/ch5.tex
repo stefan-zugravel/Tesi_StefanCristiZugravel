@@ -168,7 +168,7 @@ The read value is the same as the configured one! this means that the firmware a
 It is interesting to consider that the trimming DACs does not retain their state, if the chip was configured and then powered off the configuration will be lost and at the next power on the DACs will start from their initial value.
 It is important to know that this initial value is NOT always zero, but some random value due to the manufacturing process.
 This behaviour makes the ability to read and configure these DACs even more important for every data taking. In appendix \ref{DacAppendix} there are more examples of write and read sequences. 
-\subsubsection{Considerations}
+\subsubsection{Considerations}\label{considerations}
 \noindent Before talking about the obtained results it is useful to remember what a threshold scan is and how it is used.
 The signal coming from the CSA (Charge Sensitive Amplifier) is a sum of two components, one in DC, that is called the pedestal and can be seen in figure \ref{fig:tscansketch} as a really noisy base, and the signal that is being amplified.
 The chip sends a logic signal each time the output of the CSA is greater than a selected threshold value.
