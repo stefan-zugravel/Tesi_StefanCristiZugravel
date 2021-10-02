@@ -61,21 +61,30 @@ Moreover, the main components of the test board are:
 		\label{fig:internaldacwiring}
 	\end{figure} 
 \end{itemize} 
-\noindent The 50 PIN connector is connected to the FMC port by means of a breakout board that can be seen attached to the FPGA in figure \ref{fig:testbench}. This PCB has no electrical components, only wiring to adapt one physical connector to another.
+\noindent The 50 PIN connector is connected to the FMC port by means of a breakout board that can be seen attached to the FPGA in figure \ref{fig:testbench}. This adapter PCB has no electrical components, only wiring to adapt one physical connector to another.
+To be noted that the ABACUS\_v2 test board has many trimmers and test pads. These are used to regulate and measure different voltages of the device. This is mandatory for a proper characterization of the ASIC.
 \section{Hardware devices}\label{hardware}
 \noindent As described previously the ABACUS\_v2 chip, for the configuration and readout of the internal DACs, works on 1,2~V LVCMOS single-ended signal only. however the FPGA uses only one reference voltage for the entire FMC connector at 2.5~V, this means that for how the board is configured it is impossible to send and receive 1,2~V signals.
 In order to solve this problem two simple devices have been implemented; a voltage divider and a level translator device.
 \subsection{Voltage divider}
-The data coming from the FPGA to the chip is at 2,5~V single-ended. To lower this value it has been implemented a simple voltage divider with 2 SMD (Surface-Mount Devices) resistors on the back of the test board in figure \ref{fig:testboard}.
+The data coming from the FPGA to the chip is at 2,5~V single-ended. To lower this value two simple voltage divider were implemented with 2 SMD (Surface-Mount Devices) and a $\frac{1}{4}$~W ceramic resistor each on the back of the test board; this can be seen in figure \ref{fig:voltagedivider} and \ref{fig:testboard}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{IMG/ch5/VOLTAGEDIVIDER}
+	\caption{Voltage dividers on the back of the test board, one is used for the clock signal and one for the data input}
+	\label{fig:voltagedivider}
+\end{figure}
+\noindent To obtain the 1.2~V output voltage three resistors were used; a 3.3~k$\Omega$ one for the first stage and a 6.8~k$\Omega$ and 5.6~k$\Omega$ placed in parallel for the second stage.
 \subsection{Level translator}\label{leveltranslator}
-The data coming from the chip is at 1.2~V. This value is too low and thus the board reads it always as \textit{low}. A voltage translation device is mandatory in order to boost the signal \textit{high} value. For this purpose I created the simple circuit that can be seen in figure \ref{fig:diagram} using three 1~k$\Omega$ resistor and two classic \textit{2N2222} transistors that are configured in the standard common emitter mode.
+The data coming from the chip is at 1.2~V. This value is too low and thus the board reads it always as \textit{low}. A voltage translation device is mandatory in order to boost the signal \textit{high} value.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{IMG/ch5/DIAGRAM}
 	\caption{Diagram of the level translation device}
 	\label{fig:diagram}
 \end{figure}
-\noindent This device has been simulated using LTspice simulator and the results can be seen in figure \ref{fig:transsimulation}.
+\noindent For this purpose I created the simple circuit that can be seen in figure \ref{fig:diagram} using three 1~k$\Omega$ resistor and two classic \textit{2N2222} transistors that are configured in the standard common emitter mode.
+This device has been simulated using LTspice simulator and the results can be seen in figure \ref{fig:transsimulation}.
 The green signal is the input data at 1.2~V while the purple one is the output signal at 2.5~V.
 According to the simulation the device works properly and thus it can be implemented in hardware.
 \begin{figure}[H]
