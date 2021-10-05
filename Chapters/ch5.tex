@@ -13,18 +13,19 @@ In order to properly validate the new additions of the FPGA firmware, after the 
 The setup used to perform the test is shown in figure \ref{fig:testbench} and it comprehends:
 \begin{itemize}
 	\item A keysight DSOS254A (Digital Storage Oscilloscope), 4-channels, 2.5~GHz, 20~GSa/s, 10~bit ADC professional oscilloscope
-	\item A power supply for the test board and the level translator
+	\item A power supply for the test board and the level translator device of section \ref{leveltranslator}
 	\item A Fast Pulse Generator used to simulate the signal coming from the detector
-	\item A computer with LabView
+	\item A computer with LabVIEW 
 	\item The FPGA board with the NEW firmware that needs to be tested
 	\item The test board with the ABACUS\_v2 bonded to it
-	\item A level translator device that will be explained better in section \ref{hardware}
+	\item A level translator device that will be explained better in the next pages
 \end{itemize}
+\noindent Those are the main devices involved in FPGA firmware test, however it is obvious that when dealing with complex electronics and prototype chips many more smaller and less important tools are used for debug purpose. Hand-tools, cables, switches and other less important things will be ignored in the future sections.
 
 \section{Test board}\label{testboard}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch5/TESTBOARD}
+	\includegraphics[width=0.9\linewidth]{IMG/ch5/TESTBOARD}
 	\caption{Test board top and bottom view}
 	\label{fig:testboard}
 \end{figure}
@@ -79,7 +80,7 @@ The data coming from the FPGA to the chip is at 2,5~V single-ended. To lower thi
 The data coming from the chip is at 1.2~V. This value is too low and thus the board reads it always as \textit{low}. A voltage translation device is mandatory in order to boost the signal \textit{high} value.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth]{IMG/ch5/DIAGRAM}
+	\includegraphics[width=0.6\linewidth]{IMG/ch5/DIAGRAM}
 	\caption{Diagram of the level translation device}
 	\label{fig:diagram}
 \end{figure}
@@ -215,8 +216,35 @@ The average difference between the two values for each channel is approximately 
 In conclusion, the ability to change the trimming DACs values allows to reduce the dis-uniformity between channels and thus to obtain a more accurate measurement of the particles rate.
 
 \subsection{Latching counters test}
-In order to test the new \textit{tera10\_latch\_counter} module a new LabVIEW panel (in figure \ref{}) was designed by the INFN researcher \textit{Simona Giordanengo}.
-This new piece of software allows a new type of measurements.
-To be noted that this addition to the firmware does not change at all the Input/Output allocation of the board, the only difference is in how the data is being treated; in this case saved into a memory.  
+\textbf{*Warning*} This validation process, as well as the next one, have been performed in a short period of time. This means that the software created for test purposes WON'T be the same used for the future measures. What it will be shown in this sections is a verification of the main features of the new \textit{tera10\_latch\_counter} module. The creation of a LabVIEW data acquisition panel that comprehends every command and control is a complex task that could be the subject of another thesis. \textbf{*Warning*}
+\newline
+To be noted that this addition to the firmware does not change at all the Input/Output allocation of the board, the only difference is in how the data is being treated; in this case saved into a memory.
+In order to test the new \textit{tera10\_latch\_counter} module a new LabVIEW panel (in figure \ref{}) was designed by me and the INFN researcher \textit{Simona Giordanengo}.
+This new piece of software allows new types of measurements that could not be done before.
+The first two commands tested were: \textit{do\_latch} and \textit{read\_latch\_counter}. The starting point was the already existing \textit{Tera10\_data\_acquisition\_panel}. This LabVIEW piece of software was programmed in such a way to give the user a "real time" reading of every counter.
+This means that every time the software is running it sends to the FPGA some command that can be: configure a DAC, read a channel, reset, enable or disable selected channels.
+When the \textit{DO LATCH} button is pressed a flag is raised, the LabVIEW logic sends the latching command and when it receives the response it goes back to the main state.
+In figure \ref{} it can be noted that there are two buttons, one for latching and one for reading the counters. For each button there is a green boolean controller that allows the selection between address 0 and 1.
+By combining the reading and latching addresses four possibilities emerge:
+\begin{itemize}
+	\item \textbf{LATCH~=~0} and \textbf{READ~=~0 $\rightarrow$} every time the \textit{do\_latch} button is pressed and then the reading command is sent the values displayed are being updated. The user is reading the latest saved latched values.
+	\item \textbf{LATCH~=~1} and \textbf{READ~=~0 $\rightarrow$} this time the data is being saved on address 1, however we are still reading from address 0, this means that the data on the screen should stay the same as the case before.
+	\item \textbf{LATCH~=~0} and \textbf{READ~=~1 $\rightarrow$} with this combination at the first reading command sent the read data value change, however this happens only the first time. Now the user is writing on address 0 and but reading from address 1. 
+	\item \textbf{LATCH~=~1} and \textbf{READ~=~1 $\rightarrow$} this case works as the first one, the user is reading from the same channel on which he is writing thus the data is always updated. 
+\end{itemize}
+\noindent By doing these four simple tests it turns out that the address system works as intended! The next step is to set the fast pulse generator to a known rate and measure it using the new and improved latch system.
 \subsection{Timestamp generator test}
+\noindent \textbf{*Warning*} This section, as the previous one, is not a demonstration of the complete capabilities of the new timestamp generator, instead it is a proof of the correct operation of the device. Future work on the project will expand the LabVIEW data acquisition system and use at his full extend this new module. \textbf{*Warning*}
+\newline
+As explained in chapter 4, the timestamp generator appears like a 64~bit that can be read in four 16~bit sections. With the help of INFN researcher \textit{Simona Giordanengo} I updated the data acquisition panel in order to implement the \textit{read\_timestamp}. The final LabVIEW piece of software can be seen in figure \ref{}.
+To be noted that
+
+
+
+
+
+
+
+
+
 
