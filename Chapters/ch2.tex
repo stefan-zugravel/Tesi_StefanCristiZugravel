@@ -190,6 +190,14 @@ To be noted that this board, on the contrary of the ABACUS\_v2 test board that w
 
 
 \section{FPGA board tasks}
+\noindent As explained in previous sections the digital data coming from the ABACUS\_v2 chip is analysed by an FPGA board. In this section it will be described what this devices is used for, what are its tasks and what I will implement in the new version of the firmware.
+The FPGA (Field Programmable Gate Array, chapter 3) board, is a programmable device that allows to build complex electronic circuits with multiples Input/Output ports and many LUTs, RAMs and FIFOs by "just typing" the desired logic on a computer.
+In this case the \textit{desired logic} does three main things: 
+\begin{itemize}
+	\item it de-serialize the input data from the chip with a 1~GHz sampling rate (500~MHz clock in DDR [Double Data Rate]), it counts the transitions from \textit{low} to \textit{high} using a manually written LUT (Look Up Table) and then it adds the result to a counter. This final value is the number of particles detected for a channel. The board does this process for each channel of the chip. In addition, by analysing the AND and OR logic combination serial data from two adjacent channels and using some maths it is possible to reduce the pile-up effects and extend the measurable rate range; this work (pile-up effect reduction) was done by \textit{Alessio Limardi} and it will be very briefly explained in section \ref{structure}.    
+	\item it configures the internal (trimming) DACs (see chapter 4) and the external DAC used to set the V$_{th}$. In addition, it controls the LCD display of the board, can read the board's switches and button and it can turn on or off the board's LED. 
+	\item it send the data to a computer using UDP (User Datagram Protocol) via a Ethernet (RJ45) cable.  
+\end{itemize}
 
 
 
