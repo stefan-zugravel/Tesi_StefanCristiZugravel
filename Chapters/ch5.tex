@@ -12,9 +12,9 @@ This chapter will focus on the firmware validation procedures and on the devices
 In order to properly validate the new additions of the FPGA firmware, after the simulations performed in the Vivado design suite, numerous tests have been carried out on the FPGA board and on chip.
 The setup used to perform the test is shown in figure \ref{fig:testbench} and it comprehends:
 \begin{itemize}
-	\item A keysight DSOS254A (Digital Storage Oscilloscope), 4-channels, 2.5~GHz, 20~GSa/s, 10~bit ADC professional oscilloscope
-	\item A power supply for the test board and the level translator device of section \ref{leveltranslator}
-	\item A Fast Pulse Generator used to simulate the signal coming from the detector
+	\item A \textit{KEYSIGHT DSOS254A} (Digital Storage Oscilloscope), 4-channels, 2.5~GHz, 20~GSa/s, 10~bit ADC professional oscilloscope
+	\item A \textit{BK PRECISION 9140} power supply for the test board and the level translator device of section \ref{leveltranslator}
+	\item A \textit{ACTIVE TECHNOLOGIES} Fast Pulse Generator (70~ps Pulse/Delay) used to simulate the signal coming from the detector
 	\item A computer with LabVIEW 
 	\item The FPGA board with the NEW firmware that needs to be tested
 	\item The test board with the ABACUS\_v2 bonded to it
@@ -219,12 +219,18 @@ In conclusion, the ability to change the trimming DACs values allows to reduce t
 \textbf{*Warning*} This validation process, as well as the next one, have been performed in a short period of time. This means that the software created for test purposes WON'T be the same used for the future measures. What it will be shown in this sections is a verification of the main features of the new \textit{tera10\_latch\_counter} module. The creation of a LabVIEW data acquisition panel that comprehends every command and control is a complex task that could be the subject of another thesis. \textbf{*Warning*}
 \newline
 To be noted that this addition to the firmware does not change at all the Input/Output allocation of the board, the only difference is in how the data is being treated; in this case saved into a memory.
-In order to test the new \textit{tera10\_latch\_counter} module a new LabVIEW panel (in figure \ref{}) was designed by me and the INFN researcher \textit{Simona Giordanengo}.
-This new piece of software allows new types of measurements that could not be done before.
-The first two commands tested were: \textit{do\_latch} and \textit{read\_latch\_counter}. The starting point was the already existing \textit{Tera10\_data\_acquisition\_panel}. This LabVIEW piece of software was programmed in such a way to give the user a "real time" reading of every counter.
+In order to test the new \textit{tera10\_latch\_counter} module a new LabVIEW panel (in figure \ref{fig:newlabviewpanel}) was designed by me and the INFN researcher \textit{Simona Giordanengo}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.99\linewidth]{IMG/ch5/latch_tests/fig1.PNG}
+	\caption{New LabVIEW data acquisition panel used for rate measurements}
+	\label{fig:newlabviewpanel}
+\end{figure}
+\noindent This new piece of software allows new types of measurements that could not be done before.
+The first two commands tested were: \textit{do\_latch} and \textit{read\_latch\_counter}. The starting point was the already existing \textit{Tera10\_data\_acquisition\_panel}. This LabVIEW piece of software was programmed in such a way to give the user a "real time" reading of every counter [Online singl ch rate (Hz)].
 This means that every time the software is running it sends to the FPGA some command that can be: configure a DAC, read a channel, reset, enable or disable selected channels.
 When the \textit{DO LATCH} button is pressed a flag is raised, the LabVIEW logic sends the latching command and when it receives the response it goes back to the main state.
-In figure \ref{} it can be noted that there are two buttons, one for latching and one for reading the counters. For each button there is a green boolean controller that allows the selection between address 0 and 1.
+In figure \ref{fig:newlabviewpanel} it can be noted that there are two buttons, one for latching and one for reading the counters. For each button there is a boolean controller that allows the selection between address 0 and 1.
 By combining the reading and latching addresses four possibilities emerge:
 \begin{itemize}
 	\item \textbf{LATCH~=~0} and \textbf{READ~=~0 $\rightarrow$} every time the \textit{do\_latch} button is pressed and then the reading command is sent the values displayed are being updated. The user is reading the latest saved latched values.
@@ -233,14 +239,93 @@ By combining the reading and latching addresses four possibilities emerge:
 	\item \textbf{LATCH~=~1} and \textbf{READ~=~1 $\rightarrow$} this case works as the first one, the user is reading from the same channel on which he is writing thus the data is always updated. 
 \end{itemize}
 \noindent By doing these four simple tests it turns out that the address system works as intended! The next step is to set the fast pulse generator to a known rate and measure it using the new and improved latch system.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{IMG/ch5/latch_tests/fig2.PNG}
+	\caption{Latch counter measurement on graph}
+	\label{fig:latchfigure}
+\end{figure}
+\noindent In figure \ref{fig:latchfigure} it can be seen the behaviour of the latch system. On the X axis there is the channel number and on the Y axis there is the total number of counts; the charge is being sent only to even channels, however it can be seen that not every channel is counting and others, for example \textit{ch23}, are suffering from cross talk problems. Some other channels, like \textit{ch12}, have counts almost doubled. This is known as "counting for after pulse" and happens when the threshold value is not perfectly setted and some noise is being counted.
+The key point in this figure is the red line. This is the last read latch value.
+When pressing the \textit{Do latch} button the "blue dots" value is saved into the FPGA, when reading the latch this data appears on the graph as "red dots".
+These last points are fixed, they do not move if the user does not sends another \textit{Do latch} and \textit{Read Latch counter} command. However, the blue line gradually rises.
+This means that doing a latch is like taking a photo of a bunch of moving gauges, it instantly fixes they value without stopping them.  
 \subsection{Timestamp generator test}
 \noindent \textbf{*Warning*} This section, as the previous one, is not a demonstration of the complete capabilities of the new timestamp generator, instead it is a proof of the correct operation of the device. Future work on the project will expand the LabVIEW data acquisition system and use at his full extend this new module. \textbf{*Warning*}
 \newline
-As explained in chapter 4, the timestamp generator appears like a 64~bit that can be read in four 16~bit sections. With the help of INFN researcher \textit{Simona Giordanengo} I updated the data acquisition panel in order to implement the \textit{read\_timestamp}. The final LabVIEW piece of software can be seen in figure \ref{}.
-To be noted that
+As explained in chapter 4, the timestamp generator appears like a 64~bit that can be read in four 16~bit sections.
+With the help of INFN researcher \textit{Simona Giordanengo} I updated the data acquisition panel in order to implement the \textit{read\_timestamp} command.
+The final LabVIEW piece of software that can be seen in figure \ref{fig:newlabviewpanel} has also a button to read the timestamp and a boolean controller to select the address.
+The read value is shown as an integer in indicators \textit{Time add 1} and \textit{Time add 2}. The last read timestamp is also converted in nanoseconds~(\textit{ns}) and in seconds~(\textit{s}).
+To be noted that the timestamp can NOT be restarted, it starts from zero when the boards turns on and always counts, thus the \textit{Time~(s)} could also be a "\textit{Wake time}" indicator.
+These values can be seen in figure \ref{fig:timestampfigure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{IMG/ch5/latch_tests/fig15.PNG}
+	\caption{Details of the Timestamp indicators values. For example in this case the timestamp measurement was done $\approx$~24~min after the board was turned on}
+	\label{fig:timestampfigure}
+\end{figure}
+\subsection{Rate measurements}
+\noindent In  
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig3.PNG}
+		\caption{Latch Rate calculation at 10~kHz impulse rate}
+		\label{fig:latchrate10}
+	\end{minipage}%
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig5.PNG}
+		\caption{Latch Rate calculation at 50~kHz impulse rate}
+		\label{fig:latchrate50}
+	\end{minipage}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig9.PNG}
+		\caption{Latch Rate calculation at 75~kHz impulse rate}
+		\label{fig:latchrate75}
+	\end{minipage}%
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig12.PNG}
+		\caption{Latch Rate calculation at 110~kHz impulse rate}
+		\label{fig:latchrate110}
+	\end{minipage}
+\end{figure}
 
 
-
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig16}
+		\caption{Pulsed rate=\\10~kHz}
+		\label{fig:10khz}
+	\end{minipage}
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig17}
+		\caption{Pulsed rate=\\50~kHz}
+		\label{fig:50khz}
+	\end{minipage}
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig18}
+		\caption{Pulsed rate=\\75~kHz}
+		\label{fig:75khz}
+	\end{minipage}
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig19}
+		\caption{Pulsed rate=\\110~kHz}
+		\label{fig:110khz}
+	\end{minipage}
+\end{figure}
 
 
 

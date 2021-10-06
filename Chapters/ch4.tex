@@ -606,7 +606,7 @@ It is interesting to consider how the power consumption is divided; almost 40\% 
 		\label{fig:flatpower}
 	\end{minipage}
 \end{figure}
-\subsubsection{Final utilization report}
+\subsubsection{Final utilization report}\label{UtilizationReport}
 \noindent In figures \ref{fig:noflatutilization} and \ref{fig:flatutilization} it can be seen the utilization report for each case. The two tables are almost identical, the only difference is that the flattened design uses three LUTs less. Not that big of a difference considering that the total available LUTs are 203800. This means that this design is already enough optimized as a hierarchy and the flattening does not affect so much the resources utilization.
 The two more used resources are the BRAM, used for the implementation of the latch and the timestamp, and the I/O ports, used to communicated with the testboards and thus with the chips.
 It should be noted that NO resource is used for more that 50\%, the KC705 board is extremely capable and it is underused for this project; with enough time many more feature could be added without any board limitation. 

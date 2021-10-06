@@ -1,4 +1,8 @@
-\chapter*{Conclusions and future developments}
+
+
+
+\newpage
+\section*{Conclusions and future developments}
 \pagestyle{plain}
 \noindent This thesis work was carried out inside the MoVe\_IT project.
 Along side my work on the FPGA firmware other students were involved on the chip characterisation, test\&data-analysis of the ESA-ABACUS board and time of flight measurements.
@@ -6,12 +10,24 @@ I personally designed, implemented and tested with success three additions to th
 In addition, I developed a debug tool for the verification of the working conditions of the FPGA channels.
 My job started with an already working project created by \textit{Richard Wheadon} and updated by \textit{Alessio Limardi}.
 For the lab tests I was helped by INFN researcher \textit{Simona Giordanengo} and thesis student \textit{Emanuele Data}.
+In this elaborate it was shown:
+\begin{itemize}
+	\item A new configuration logic for the internal (trimming) DACs of the ABACUS\_v2 chip, in section \ref{InternalDac}.
+	\item The creation of a latch system that generates a "picture" of the state of every counter and the new commands to reads this saved data, in section \ref{Latch}
+	\item The implementation of a 64 bit timestamp used to obtain a more precise measurement of the particle rate, section \ref{Timestamp}
+\end{itemize}
+\noindent All these additions were tested within chapter 5 with positive results.
+The main goal for the future is to write an optimized and fully capable data acquisition panel with LabVIEW able of using at his full extend the new features of the FPGA.  
+From section \ref{UtilizationReport} it emerges that the KC705 board is underused, thus many more additions could be implemented; the most important ones could be:
+\begin{itemize}
+	\item The creation of a software configurable mask that allows the hardware calculation of the sum of the counts of only the selected channels.  
+	\item The implementation of the particle rate calculation directly on board.
+\end{itemize}
 
 
-
-
-\section*{Greetings}
-I would like to dedicate this thesis to my parents, \textit{Cristina Staviri} and \textit{Nicolae Zugravel} who have always supported me during my university career.
+\chapter*{Greetings}
+\vspace*{3cm}
+\noindent I would like to dedicate this thesis to my parents, \textit{Cristina Staviri} and \textit{Nicolae Zugravel} who have always supported me during my university career.
 They kept me in Turin for five years and never put pressure on me.
 A thought of mine goes to my partner \textit{Giorgia Rista} on whom I have always been able to count.
 I would like to sincerely thank my supervisor \textit{Luca Pacher} who has always helped me and inspired to do better.
