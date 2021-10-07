@@ -143,6 +143,12 @@ The second value to be noted in figure \ref{fig:clockspecs} is that the amplitud
 	\caption{LabVIEW tool coded by \textit{Emanuele Data} for the configuration of the trimming DACs}
 	\label{fig:labview3}
 \end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-write63-baselinedac1}
+	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{green}green}= clock, {\color{yellow}yellow}= data out}
+	\label{fig:ch05write63}
+\end{figure}
 \noindent In figure \ref{fig:ch05write63} it can be seen a reading sequence being sent to the chip. In green there is the clock signal discussed previously while in yellow it can be seen the serial data being sent to the DAC controller.
 Each horizontal square is 0.5~ms, while each vertical square is 1~V (the signals were probed after the voltage divider). 
 Between the two markers there is the initialization sequence that needs to be always sent, this is 0xA5A5~=~0b1010-0101-1010-0101.
@@ -152,12 +158,7 @@ The remaining 5~bits are 0d5~=~0b0-0101 thus channel 5. The remaining 8~bits are
 In this case these bits are 0d63~=~0b0011-1111, the maximum possible value for a 6~bit DAC.
 After this the clock continues for 16 more cycles while the data stays \textit{low}.
 For the moment the user has no way of knowing if the chip was properly configured because it does not sends any feedback while writing. In order to verify if the DACs are properly setted a reading procedure needs to be carried out. This will be analysed in the next subsection.  
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-write63-baselinedac1}
-	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{green}green}= clock, {\color{yellow}yellow}= data out}
-	\label{fig:ch05write63}
-\end{figure}
+
 \subsubsection{Read command}
 \begin{figure}[H]
 	\centering
@@ -265,8 +266,25 @@ These values can be seen in figure \ref{fig:timestampfigure}
 	\caption{Details of the Timestamp indicators values. For example in this case the timestamp measurement was done $\approx$~24~min after the board was turned on}
 	\label{fig:timestampfigure}
 \end{figure}
-\subsection{Rate measurements}
-\noindent In  
+\subsection{Rate measurements}\label{RateMeasurements}
+\noindent In this section it will be shown the results of the rate measurements. in order to do so two instants (states) were saved with the latch system on the two different addresses. Using formula \ref{eq:rate} the rate was calculated for each channel and the plotted.
+\begin{equation}\label{eq:rate}
+	Rate\:=\: \frac{\Delta N_i}{\Delta T}
+\end{equation}
+\noindent With $N_i$ the number of counts at the $i^{th}$ channel and $\Delta T$ the difference between the two saved timestamps.
+In figures \ref{fig:latchrate10} \ref{fig:latchrate50} \ref{fig:latchrate75} \ref{fig:latchrate110} it can be seen a graph for each impulsed frequency. On the X axis there is the channel number and on the Y axis there is the calculated rate in kHz. It can be observed that the even channels that are counting have a measured rate that is perfectly compatible with the theoretical one.
+The biggest discrepancy appears in figure \ref{fig:50khz} where against a sent frequency of 50~kHz, one of 49.9998~kHz is measured. The difference is 0.2~Hz, which is less than the 1\% clinical tolerance. However much more measurements and test are needed in order to calculate the precision of those numbers.
+It is noteworthy the behaviour of \textit{ch23}. This is an odd channel, it does not receive any charge, however it is counting. This is due to cross-talk effects.
+From the figures shown earlier it emerges that this behaviour becomes less and less pronounced at higher rate.
+If in the first case (figures \ref{fig:latchrate10} and \ref{fig:10khz}) the measured rate is almost 100\% of the sent one, in the next tests this value drops to:
+63.1\% for the 50~kHz case (figures \ref{fig:latchrate50} and \ref{fig:50khz}),
+55,8\% for the 75~kHz case (figures \ref{fig:latchrate75} and \ref{fig:75khz}) and
+42.5\% for the 110~kHz case (figures \ref{fig:latchrate110} and \ref{fig:110khz}).
+\newline
+\noindent \textbf{*Warning*} These measurements where made by pressing in the proper order the three buttons of the \textit{Manual latch controls} tab of figure \ref{fig:newlabviewpanel}.
+This process is not yet automated, thus there is no consistency between the time difference ($\Delta T$) of the two latched states.
+In ideal conditions, like the ones of the lab, this is not a problem because the fast pulse generator sends always a constant rate.
+However the next important step is to create an automated rate calculation logic in LabVIEW that can automatically send the commands to the FPGA with a setted, precise and configurable delay. \textbf{*Warning*}
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{0.49\textwidth}
@@ -297,6 +315,11 @@ These values can be seen in figure \ref{fig:timestampfigure}
 		\label{fig:latchrate110}
 	\end{minipage}
 \end{figure}
+
+
+
+
+
 
 
 \begin{figure}[H]

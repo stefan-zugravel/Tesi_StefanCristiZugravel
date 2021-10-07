@@ -17,7 +17,8 @@ In this elaborate it was shown:
 	\item The implementation of a 64 bit timestamp used to obtain a more precise measurement of the particle rate, section \ref{Timestamp}
 \end{itemize}
 \noindent All these additions were tested within chapter 5 with positive results.
-The main goal for the future is to write an optimized and fully capable data acquisition panel with LabVIEW able of using at his full extend the new features of the FPGA.  
+The main goal for the future is to write an optimized and fully capable data acquisition panel with LabVIEW able of using at his full extend the new features of the FPGA.
+In addition, the rate calculation of the \textit{clock counters}, \textit{coincidence counters} and \textit{coincidence clock counters} still need to be tested and validated. Considering that the logic used is exactly the same as the "standard" counters; in this thesis I preferred to concentrate the small amount of time remaining into a proper analysis of one set of counters, in section \ref{RateMeasurements}.
 From section \ref{UtilizationReport} it emerges that the KC705 board is underused, thus many more additions could be implemented; the most important ones could be:
 \begin{itemize}
 	\item The creation of a software configurable mask that allows the hardware calculation of the sum of the counts of only the selected channels.  
