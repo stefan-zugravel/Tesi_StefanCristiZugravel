@@ -2,11 +2,11 @@
 \section{Introduction}
 This chapter will focus on the firmware validation procedures and on the devices used for this purpose. The first half of the chapter will be dedicated to the test bench setup, the ABACUS\_v2 test board and other hardware devices involved. The second half will analyse how the new addition to the firmware perform in real world; this means that trimming DAC configuration test, latch data taking and timestamp measurement have been performed with success.
 
-\section{Test Bench}\label{testbench}
+\section{Experimental setup}\label{testbench}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/TESTBENCH}
-	\caption{Test bench setup and devices}
+	\caption{Experimental setup and devices}
 	\label{fig:testbench}
 \end{figure}
 In order to properly validate the new additions of the FPGA firmware, after the simulations performed in the Vivado design suite, numerous tests have been carried out on the FPGA board and on chip.
@@ -179,14 +179,52 @@ The read value is the same as the configured one! this means that the firmware a
 It is interesting to consider that the trimming DACs does not retain their state, if the chip was configured and then powered off the configuration will be lost and at the next power on the DACs will start from their initial value.
 It is important to know that this initial value is NOT always zero, but some random value due to the manufacturing process.
 This behaviour makes the ability to read and configure these DACs even more important for every data taking. In appendix \ref{DacAppendix} there are more examples of write and read sequences. 
-\subsubsection{Considerations}\label{considerations}
-\noindent Before talking about the obtained results it is useful to remember what a threshold scan is and how it is used.
+\subsubsection{Threshold scan}\label{considerations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Brief theory}
+\noindent In a binary system, any signal crossing the threshold is processed as a good event\cite{rivetti}.
+Therefore, it is important to minimize the number of hits due to noise, which requires a proper setting of the comparator threshold. It can be proven that the frequency of noisy hits can be estimated as:
+\begin{equation}
+	f_n=\frac{1}{4 \sqrt{3} \tau} e^{- \frac{V^2_{th}}{2V^2_n}} 
+\end{equation}
+\noindent where $f_n$ is the number of noisy hits per second, while $V_{th}$ is the applied threshold voltage measured from the front-end amplifier baseline and $V_{n}$ is the rms noise voltage measured at the front-end amplifier output.
+For example a time constant $\tau$ of 50~ns and a threshold-to-noise
+ratio of four tell that there are 968 noisy hits per second in one channel.
+This number drops to $5.5\cdot10^{-16}$ if the threshold-to-noise ratio is ten.
+As a rule of thumb, a signal-to noise ratio of between 10 and 15 on the minimum signal of interest allows to work with thresholds high enough to suppress almost completely the noise while preserving a good efficiency.
+A binary system is usually tested with the method of the “S-curve”.
+\newline
+The probability that a signal with a given average amplitude exceeds
+the threshold can be calculated as following:
+\begin{equation}
+	P(V>V_{TH}) = \frac{1}{\sqrt{2\pi}\sigma} \int_{V_{TH}}^{\infty} e^{- \frac{(V-\mu)^2}{2\sigma^2}} dV
+\end{equation}
+The number of times the comparator fires is counted and the efficiency $\eta$
+is calculated as:
+\begin{equation}
+	\eta = \frac{Number \: of \: answers}{Number \: of \: sent \: signals}
+\end{equation}
+The data can be thus fitted with a sigmoid function:
+\begin{equation}\label{erf}
+	\eta (V) = \frac{1}{2} [erf(\frac{V-\mu}{\sqrt{2}\sigma})+1]
+\end{equation}
+The point $\eta$ = 0.5 corresponds to input signals generating an output whose average is identical to the threshold. The parameters $\mu$ and $\sigma$ need to be extracted from the fit.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.65\linewidth]{IMG/ch5/THexample}
+	\caption{Example of “S-curve” obtained by scanning the threshold voltage at fixed signal amplitude.}
+	\label{fig:thexample}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Measurements}
+\noindent
+%Before talking about the obtained results it is useful to remember what a threshold scan is and how it is used.
 The signal coming from the CSA (Charge Sensitive Amplifier) is a sum of two components, one in DC, that is called the pedestal and can be seen in figure \ref{fig:tscansketch} as a really noisy base, and the signal that is being amplified.
-The chip sends a logic signal each time the output of the CSA is greater than a selected threshold value.
+As explained before, the chip sends a logic signal each time the output of the CSA is greater than a selected threshold value.
 If the threshold voltage is less than the pedestal the output of the chip will always be \textit{low}, thus the measured rate will be zero.
-If the V$_{th}$ is approximately equal to the pedestal the chip is sampling noise and the rate will explode.
+If the V$_{th}$ is approximately equal to the pedestal the chip will sample noise and the rate will explode.
 When the V$_{th}$ is greater than the pedestal the chip is sampling only signal, this can be seen in figure \ref{fig:tscansketch}.
-Incrementing even more the threshold voltage will cause a gradual death of the rate, due to the noise. This decrease in the rate can be fitted with an error function.
+Incrementing even more the threshold voltage will cause a gradual death of the rate, due to the noise. This decrease in the rate can be fitted with an error function, in equation \ref{erf}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/tscan_sketch}
@@ -197,14 +235,15 @@ Incrementing even more the threshold voltage will cause a gradual death of the r
 The measurement was performed with the fast pulse generator setted at 600~mV at 10~KHz on the odd channels. The data was extracted from ch1.
 It can be observed the conduct described before, at first, for low V$_{th}$, the rate is 0, then in explodes when it reaches the noise; after that it samples the signal, in this case at exactly 10~KHz and lastly it gradually dies. 
 By fitting the last part of the threshold scan with and error function it is possible to calculate the pedestal value of the curve.
+\noindent The most important thing to observe in figure \ref{fig:thscanch0} is that a change of the trimming DAC value leads to a translation of the threshold scan curve.
+This translations is approximately 20~mV.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/ThScan_ch0.pdf}
 	\caption{Data analysed by \textit{Emanuele Data}, {\color{blue}blue}= trimming DAC at 0d00,\\{\color{green}green}= trimming DAC at 0d63}
 	\label{fig:thscanch0}
 \end{figure}
-\noindent The most important thing to observe in figure \ref{fig:thscanch0} is that a change of the trimming DAC value leads to a translation of the threshold scan curve.
-This translations is approximately 20~mV.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/DAC_V_REF_600mv-Copia.pdf}
@@ -215,7 +254,7 @@ This translations is approximately 20~mV.
 In figure \ref{fig:pedestal} is can be seen a distribution of the pedestal voltages for some channels with trimming DAC configured at 0d00 (blue) and at 0d63 (green).
 The average difference between the two values for each channel is approximately 20,9~mV.
 In conclusion, the ability to change the trimming DACs values allows to reduce the dis-uniformity between channels and thus to obtain a more accurate measurement of the particles rate.
-
+\newpage
 \subsection{Latching counters test}
 \textbf{*Warning*} This validation process, as well as the next one, have been performed in a short period of time. This means that the software created for test purposes WON'T be the same used for the future measures. What it will be shown in this sections is a verification of the main features of the new \textit{tera10\_latch\_counter} module. The creation of a LabVIEW data acquisition panel that comprehends every command and control is a complex task that could be the subject of another thesis. \textbf{*Warning*}
 \newline
@@ -266,6 +305,16 @@ These values can be seen in figure \ref{fig:timestampfigure}
 	\caption{Details of the Timestamp indicators values. For example in this case the timestamp measurement was done $\approx$~24~min after the board was turned on}
 	\label{fig:timestampfigure}
 \end{figure}
+\noindent A proper performance test of this new feature is presented in the next subsection. However, a simple measurement was performed in order to check if the timestamp counter runs at a "reasonable speed".
+This was done simply by saving the timestamp data and starting a chronometer at the same time. After a defined time, in this case half an hour (1800~s), the new timestamp reading should be incremented of the same 1800~s.
+This is exactly what happened, thus the timestamp module is working as intended.  
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.35\linewidth]{IMG/ch5/latch_tests/fig20.PNG}
+	\caption{Timestamp measured after 30 min = 1800 s\\initial time $\approx$ 74.1 s}
+	\label{fig:timestamptest}
+\end{figure}
+
 \subsection{Rate measurements}\label{RateMeasurements}
 \noindent In this section it will be shown the results of the rate measurements. in order to do so two instants (states) were saved with the latch system on the two different addresses. Using formula \ref{eq:rate} the rate was calculated for each channel and the plotted.
 \begin{equation}\label{eq:rate}
@@ -285,6 +334,7 @@ If in the first case (figures \ref{fig:latchrate10} and \ref{fig:10khz}) the mea
 This process is not yet automated, thus there is no consistency between the time difference ($\Delta T$) of the two latched states.
 In ideal conditions, like the ones of the lab, this is not a problem because the fast pulse generator sends always a constant rate.
 However the next important step is to create an automated rate calculation logic in LabVIEW that can automatically send the commands to the FPGA with a setted, precise and configurable delay. \textbf{*Warning*}
+%%% [!htpb]
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{0.49\textwidth}
