@@ -315,7 +315,7 @@ This is exactly what happened, thus the timestamp module is working as intended.
 	\label{fig:timestamptest}
 \end{figure}
 
-\subsection{Rate measurements}\label{RateMeasurements}
+\subsection{Rate measurements for multiple channels}\label{RateMeasurements}
 \noindent In this section it will be shown the results of the rate measurements. in order to do so two instants (states) were saved with the latch system on the two different addresses. Using formula \ref{eq:rate} the rate was calculated for each channel and the plotted.
 \begin{equation}\label{eq:rate}
 	Rate\:=\: \frac{\Delta N_i}{\Delta T}
@@ -334,6 +334,33 @@ If in the first case (figures \ref{fig:latchrate10} and \ref{fig:10khz}) the mea
 This process is not yet automated, thus there is no consistency between the time difference ($\Delta T$) of the two latched states.
 In ideal conditions, like the ones of the lab, this is not a problem because the fast pulse generator sends always a constant rate.
 However the next important step is to create an automated rate calculation logic in LabVIEW that can automatically send the commands to the FPGA with a setted, precise and configurable delay. \textbf{*Warning*}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig16}
+		\caption{Pulsed rate=\\10~kHz}
+		\label{fig:10khz}
+	\end{minipage}
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig17}
+		\caption{Pulsed rate=\\50~kHz}
+		\label{fig:50khz}
+	\end{minipage}
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig18}
+		\caption{Pulsed rate=\\75~kHz}
+		\label{fig:75khz}
+	\end{minipage}
+	\begin{minipage}{0.24\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig19}
+		\caption{Pulsed rate=\\110~kHz}
+		\label{fig:110khz}
+	\end{minipage}
+\end{figure}
 %%% [!htpb]
 \begin{figure}[H]
 	\centering
@@ -366,39 +393,130 @@ However the next important step is to create an automated rate calculation logic
 	\end{minipage}
 \end{figure}
 
+\subsection{Rate measurement for single channel}\label{RateMeasurements2}
+\noindent In order to study the new rate measurement accuracy and to compare it with the previous method, the following tests were performed.
+The fast pulse generator was configured at 1~MHz and the rate was measured with four different integration times (100~ms, 200~ms, 300~ms and 500~ms). This was performed with the "old" method, that uses the computer CPU time to calculate the rate (in figures \ref{fig:CPU-time-rate-1MHz-100ms}, \ref{fig:CPU-time-rate-1MHz-200ms}, \ref{fig:CPU-time-rate-1MHz-300ms} and \ref{fig:CPU-time-rate-1MHz-500ms}), and with the new timestamp method (in figures \ref{fig:FPGA-time-rate-1MHz-100ms}, \ref{fig:FPGA-time-rate-1MHz-200ms}, \ref{fig:FPGA-time-rate-1MHz-300ms} and \ref{fig:FPGA-time-rate-1MHz-500ms}). For each measurement an histogram was generated and a Gaussian fit was performed in order to quantify the standard deviation~$\sigma$. 
+The results are divided for each integration time.
+To be noted that with the "CPU" method the lowest possible integration time is 100~ms due to the used LabVIEW panel.
+A lower $\sigma$ means that the measurements at equal integration time are less spread apart.
+Each histogram contains 999 entries.
+All measurements were performed on data from ch16.
+%The lowest is $\sigma$ the better it is.
 
-
-
-
-
-
+\subsubsection{1MHz 100ms}
 \begin{figure}[H]
 	\centering
-	\begin{minipage}{0.24\textwidth}
+	\begin{minipage}{0.49\textwidth}
 		\centering
-		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig16}
-		\caption{Pulsed rate=\\10~kHz}
-		\label{fig:10khz}
-	\end{minipage}
-	\begin{minipage}{0.24\textwidth}
+		\includegraphics[width=.95\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-100ms}
+		\caption{1 MHz pulsed rate\\100 ms integration time\\CPU time method}
+		\label{fig:CPU-time-rate-1MHz-100ms}
+	\end{minipage}%
+	\begin{minipage}{0.49\textwidth}
 		\centering
-		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig17}
-		\caption{Pulsed rate=\\50~kHz}
-		\label{fig:50khz}
-	\end{minipage}
-	\begin{minipage}{0.24\textwidth}
-		\centering
-		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig18}
-		\caption{Pulsed rate=\\75~kHz}
-		\label{fig:75khz}
-	\end{minipage}
-	\begin{minipage}{0.24\textwidth}
-		\centering
-		\includegraphics[width=.75\linewidth]{IMG/ch5/latch_tests/fig19}
-		\caption{Pulsed rate=\\110~kHz}
-		\label{fig:110khz}
+		\includegraphics[width=.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-100ms}
+		\caption{1 MHz pulsed rate\\100 ms integration time\\FPGA time method}
+		\label{fig:FPGA-time-rate-1MHz-100ms}
 	\end{minipage}
 \end{figure}
+\noindent CPU measured $\sigma_{CPU}$ = 340.6 Hz
+\newline
+FPGA measured $\sigma_{FPGA}$ = 4.0 Hz
+\begin{equation}
+	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 85.2
+\end{equation}
+
+
+\subsubsection{1MHz 200ms}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-200ms}
+		\caption{1 MHz pulsed rate\\200 ms integration time\\CPU time method}
+		\label{fig:CPU-time-rate-1MHz-200ms}
+	\end{minipage}%
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-200ms}
+		\caption{1 MHz pulsed rate\\200 ms integration time\\FPGA time method}
+		\label{fig:FPGA-time-rate-1MHz-200ms}
+	\end{minipage}
+\end{figure}
+\noindent CPU measured $\sigma_{CPU}$ = 237.9 Hz
+\newline
+FPGA measured $\sigma_{FPGA}$ = 2.1 Hz
+\begin{equation}
+	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 113.3
+\end{equation}
+
+\subsubsection{1MHz 300ms}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-300ms}
+		\caption{1 MHz pulsed rate\\300 ms integration time\\CPU time method}
+		\label{fig:CPU-time-rate-1MHz-300ms}
+	\end{minipage}%
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-300ms}
+		\caption{1 MHz pulsed rate\\300 ms integration time\\FPGA time method}
+		\label{fig:FPGA-time-rate-1MHz-300ms}
+	\end{minipage}
+\end{figure}
+\noindent CPU measured $\sigma_{CPU}$ = 114.0 Hz
+\newline
+FPGA measured $\sigma_{FPGA}$ = 1.4 Hz
+\begin{equation}
+	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 81.4
+\end{equation}
+
+\subsubsection{1MHz 500ms}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-500ms}
+		\caption{1 MHz pulsed rate\\500 ms integration time\\CPU time method}
+		\label{fig:CPU-time-rate-1MHz-500ms}
+	\end{minipage}%
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-500ms}
+		\caption{1 MHz pulsed rate\\500 ms integration time\\FPGA time method}
+		\label{fig:FPGA-time-rate-1MHz-500ms}
+	\end{minipage}
+\end{figure}
+\noindent CPU measured $\sigma_{CPU}$ = 72.7 Hz
+\newline
+FPGA measured $\sigma_{FPGA}$ = 0.8 Hz
+\begin{equation}
+	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 90.9
+\end{equation}
+\newline
+\noindent \textbf{The average gain in standard deviation is 92.7.}
+\subsubsection{1MHz 50ms}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-50ms}
+	\caption{1 MHz pulsed rate\\50 ms integration time\\FPGA time method}
+	\label{fig:FPGA-time-rate-1MHz-50ms}
+\end{figure}
+
+
+\subsubsection{1MHz 1ms}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-1ms}
+	\caption{1 MHz pulsed rate\\1 ms integration time\\FPGA time method}
+	\label{fig:FPGA-time-rate-1MHz-1ms}
+\end{figure}
+
+
+
+
 
 
 
