@@ -146,10 +146,10 @@ The second value to be noted in figure \ref{fig:clockspecs} is that the amplitud
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-write63-baselinedac1}
-	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{green}green}= clock, {\color{yellow}yellow}= data out}
+	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{magenta}purple}= clock, {\color{blue}blue}= data out}
 	\label{fig:ch05write63}
 \end{figure}
-\noindent In figure \ref{fig:ch05write63} it can be seen a reading sequence being sent to the chip. In green there is the clock signal discussed previously while in yellow it can be seen the serial data being sent to the DAC controller.
+\noindent In figure \ref{fig:ch05write63} it can be seen a reading sequence being sent to the chip. In purple there is the clock signal discussed previously while in blue it can be seen the serial data being sent to the DAC controller.
 Each horizontal square is 0.5~ms, while each vertical square is 1~V (the signals were probed after the voltage divider). 
 Between the two markers there is the initialization sequence that needs to be always sent, this is 0xA5A5~=~0b1010-0101-1010-0101.
 Immediately after that there are the two command bits, in this case (Writing) their are 0b11.
@@ -163,11 +163,11 @@ For the moment the user has no way of knowing if the chip was properly configure
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-read63-baselinedac1}
-	\caption{Reading sequence, channel 5, word 63, DAC 1\\{\color{green}green}= clock, {\color{yellow}yellow}= data out,\\{\color{red}red}= data in, {\color{blue}blue}= data from chip}
+	\caption{Reading sequence, channel 5, word 63, DAC 1\\{\color{magenta}purple}= clock, {\color{blue}blue}= data out,\\{\color{cyan}cyan}= data in, {\color{orange}orange}= data from chip}
 	\label{fig:ch05read63}
 \end{figure}
 \noindent In figure \ref{fig:ch05read63} it can be seen a reading sequence being performed on the same channel as before (ch05).
-In green there is the clock signal, in yellow it can be seen the serial data being to the chip, in blue there is the data going from from the chip to the level translator and in red there is the data from the level translator to the FPGA.
+In purple there is the clock signal, in blue it can be seen the serial data being sent to the chip, in orange there is the data going from from the chip to the level translator and in cyan there is the data from the level translator to the FPGA.
 Each horizontal square is 0.5~ms, while each vertical square is 1~V for the green and yellow signals and 2~V for the red and blue signals.
 Between the two markers there is the initialization sequence 0xA5A5~=~0b1010-0101-1010-0101, after that there is the 2-bit read command 0b10 and next there is the address to be read, in this case channel 5, thus 0d5~=~0b0-0101 as before.
 When sending a read command the 8~bit data are not considered; this firmware drives them \textit{low}.
@@ -498,6 +498,7 @@ FPGA measured $\sigma_{FPGA}$ = 0.8 Hz
 \newline
 \noindent \textbf{The average gain in standard deviation is 92.7.}
 \subsubsection{1MHz 50ms}
+\noindent In addition 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-50ms}
