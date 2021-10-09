@@ -400,8 +400,7 @@ The results are divided for each integration time.
 To be noted that with the "CPU" method the lowest possible integration time is 100~ms due to the used LabVIEW panel.
 A lower $\sigma$ means that the measurements at equal integration time are less spread apart.
 Each histogram contains 999 entries.
-All measurements were performed on data from ch16.
-%The lowest is $\sigma$ the better it is.
+All measurements were performed on data from \textit{ch16}.
 
 \subsubsection{1MHz 100ms}
 \begin{figure}[H]
@@ -419,9 +418,9 @@ All measurements were performed on data from ch16.
 		\label{fig:FPGA-time-rate-1MHz-100ms}
 	\end{minipage}
 \end{figure}
-\noindent CPU measured $\sigma_{CPU}$ = 340.6 Hz
+\noindent CPU method $\rightarrow$ measured $\sigma_{CPU}$ = 340.6 Hz
 \newline
-FPGA measured $\sigma_{FPGA}$ = 4.0 Hz
+FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 4.0 Hz
 \begin{equation}
 	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 85.2
 \end{equation}
@@ -443,9 +442,9 @@ FPGA measured $\sigma_{FPGA}$ = 4.0 Hz
 		\label{fig:FPGA-time-rate-1MHz-200ms}
 	\end{minipage}
 \end{figure}
-\noindent CPU measured $\sigma_{CPU}$ = 237.9 Hz
+\noindent CPU method $\rightarrow$ measured $\sigma_{CPU}$ = 237.9 Hz
 \newline
-FPGA measured $\sigma_{FPGA}$ = 2.1 Hz
+FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 2.1 Hz
 \begin{equation}
 	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 113.3
 \end{equation}
@@ -466,9 +465,9 @@ FPGA measured $\sigma_{FPGA}$ = 2.1 Hz
 		\label{fig:FPGA-time-rate-1MHz-300ms}
 	\end{minipage}
 \end{figure}
-\noindent CPU measured $\sigma_{CPU}$ = 114.0 Hz
+\noindent CPU method $\rightarrow$ measured $\sigma_{CPU}$ = 114.0 Hz
 \newline
-FPGA measured $\sigma_{FPGA}$ = 1.4 Hz
+FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 1.4 Hz
 \begin{equation}
 	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 81.4
 \end{equation}
@@ -489,16 +488,20 @@ FPGA measured $\sigma_{FPGA}$ = 1.4 Hz
 		\label{fig:FPGA-time-rate-1MHz-500ms}
 	\end{minipage}
 \end{figure}
-\noindent CPU measured $\sigma_{CPU}$ = 72.7 Hz
+\noindent CPU method $\rightarrow$ measured $\sigma_{CPU}$ = 72.7 Hz
 \newline
-FPGA measured $\sigma_{FPGA}$ = 0.8 Hz
+FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 0.8 Hz
 \begin{equation}
 	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 90.9
 \end{equation}
 \newline
 \noindent \textbf{The average gain in standard deviation is 92.7.}
+\newline
+This means that the new way to measure the rate is almost 90 times more precise than the old one. This is even better than expected.
+
 \subsubsection{1MHz 50ms}
-\noindent In addition 
+\noindent Moreover, with the new method it was possible to overcome the 100~ms integration time limit. Thus two more test have been performed, one with 50~ms integration time in figure \ref{fig:FPGA-time-rate-1MHz-50ms} and one with 1~ms in figure \ref{fig:FPGA-time-rate-1MHz-1ms}.
+For the 50~ms case $\sigma_{FPGA}$~=~8.0~Hz, this is still almost 10 times lower than the $\sigma_{CPU}$ at 500~ms (72.7~Hz).   
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-50ms}
@@ -508,6 +511,7 @@ FPGA measured $\sigma_{FPGA}$ = 0.8 Hz
 
 
 \subsubsection{1MHz 1ms}
+\noindent Lowering the integration time even more, down to 1~ms, makes the measurement less accurate ($\sigma_{FPGA}$~=~408.7~Hz), however the error is still less than 1\% which is perfectly compatible with the required precision.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-1ms}
