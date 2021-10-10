@@ -307,7 +307,7 @@ These values can be seen in figure \ref{fig:timestampfigure}
 \end{figure}
 \noindent A proper performance test of this new feature is presented in the next subsection. However, a simple measurement was performed in order to check if the timestamp counter runs at a "reasonable speed".
 This was done simply by saving the timestamp data and starting a chronometer at the same time. After a defined time, in this case half an hour (1800~s), the new timestamp reading should be incremented of the same 1800~s.
-This is exactly what happened, thus the timestamp module is working as intended.  
+This is exactly what happened, thus the timestamp module is working as intended, with no huge drifts or obvious problems.  
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.35\linewidth]{IMG/ch5/latch_tests/fig20.PNG}
@@ -402,7 +402,7 @@ A lower $\sigma$ means that the measurements at equal integration time are less 
 Each histogram contains 999 entries.
 All measurements were performed on data from \textit{ch16}.
 
-\subsubsection{1MHz 100ms}
+\subsubsection{1 MHz, 100 ms}
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{0.49\textwidth}
@@ -426,7 +426,7 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 4.0 Hz
 \end{equation}
 
 
-\subsubsection{1MHz 200ms}
+\subsubsection{1 MHz, 200 ms}
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{0.49\textwidth}
@@ -449,7 +449,7 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 2.1 Hz
 	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 113.3
 \end{equation}
 
-\subsubsection{1MHz 300ms}
+\subsubsection{1 MHz, 300 ms}
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{0.49\textwidth}
@@ -472,7 +472,7 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 1.4 Hz
 	\frac{\sigma_{CPU}}{\sigma_{FPGA}} = 81.4
 \end{equation}
 
-\subsubsection{1MHz 500ms}
+\subsubsection{1 MHz, 500 ms}
 \begin{figure}[H]
 	\centering
 	\begin{minipage}{0.49\textwidth}
@@ -499,7 +499,7 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 0.8 Hz
 \newline
 This means that the new way to measure the rate is almost 90 times more precise than the old one. This is even better than expected.
 
-\subsubsection{1MHz 50ms}
+\subsubsection{1 MHz, 50 ms and 1 ms}
 \noindent Moreover, with the new method it was possible to overcome the 100~ms integration time limit. Thus two more test have been performed, one with 50~ms integration time in figure \ref{fig:FPGA-time-rate-1MHz-50ms} and one with 1~ms in figure \ref{fig:FPGA-time-rate-1MHz-1ms}.
 For the 50~ms case $\sigma_{FPGA}$~=~8.0~Hz, this is still almost 10 times lower than the $\sigma_{CPU}$ at 500~ms (72.7~Hz).   
 \begin{figure}[H]
@@ -508,9 +508,6 @@ For the 50~ms case $\sigma_{FPGA}$~=~8.0~Hz, this is still almost 10 times lower
 	\caption{1 MHz pulsed rate\\50 ms integration time\\FPGA time method}
 	\label{fig:FPGA-time-rate-1MHz-50ms}
 \end{figure}
-
-
-\subsubsection{1MHz 1ms}
 \noindent Lowering the integration time even more, down to 1~ms, makes the measurement less accurate ($\sigma_{FPGA}$~=~408.7~Hz), however the error is still less than 1\% which is perfectly compatible with the required precision.
 \begin{figure}[H]
 	\centering
