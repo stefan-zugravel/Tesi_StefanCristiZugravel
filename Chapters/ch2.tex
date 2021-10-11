@@ -1,8 +1,8 @@
-\chapter{Development of a device for direct counting of the number of particles in the beam}
+\chapter{Development of a device for direct counting of the number of beam particles}
 
 \section{Introduction}
-This chapter will focus on the devices used within the MoVe\_IT project in order to obtain a single proton counting device.
-This comprehends the solid state detector, the ASICs used to digitalise the signal and the final read-out board.
+This chapter will focus on the devices under development within the MoVe\_IT project in order to obtain a single proton counting device.
+This comprehends a solid state detector, the ASICs used to digitalise the signal and the final read-out board.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.99\linewidth]{IMG/ch2/BLOCK}
@@ -12,7 +12,7 @@ This comprehends the solid state detector, the ASICs used to digitalise the sign
 \noindent In figure \ref{fig:block} it can be seen a diagram with the "data flow" of the Project.
 The particle beam coming from the accelerators are detected by a LGAD (Low Gain Avalanche Diode) sensor that will be discussed in section \ref{lgad}, the current signal coming from the detector is the digitalized by the second version of a full custom circuit called ABACUS\_v2 that will be discussed in section \ref{chip}.
 This ASIC will be mounted on a full custom PCB named EsaAbacus that will be analysed in section \ref{esaabacus}.
-The data from the chip is then read by an FPGA board, a general purpose device that will be analysed in detail within chapter 3.
+The data from the chip is then read by an FPGA board, a general purpose device that will be described in detail within chapter 3.
 The FPGA elaborates the data and finally sends them to a computer. In the final operational device the computer, on the base of the counted particles, should move and control the beam in a close and controlled loop. 
 
 \section{MoVe\_IT project}\label{moveit}
@@ -30,7 +30,7 @@ As~part of the project the Torino group is involved in the development of solid 
 the characteristics of the hadron beam for irradiation, such as number of particles delivered per unit time, energy and beam profile.
 The final goal is to prove the ability of LGAD detectors to discriminate individual protons and to count their number up to fluxes of 100~MHz/cm$^2$ with an uncertainty of less than 1\% which is the clinical tolerance required.
 In order to do that a custom detector was built ad hoc for this purpose. It is a LGAD type sensor with an area of $\approx$ 3x3~cm$^2$ and 144 strips. It has a thickness of the active region of 50~$\mu$m.
-The final goal is to use two of this sensors in orthogonal directions in order to obtain a greater spatial resolution.
+The final goal is to use two of this sensors in orthogonal directions in order to obtain a precise information on the beam position and profile.
 A strip detector is limited in the maximum flux that can be monitored with accuracy, however it is useful in radiobiological experiments, for which it is not needed to reach therapeutic fluxes and often laterally spread-out beams are used\cite{hammad}.
 The main key-points of the final design are:
 \begin{itemize}
@@ -42,9 +42,9 @@ The main key-points of the final design are:
 
 
 \section{Low Gain Avalanche Diode (LGAD)}\label{lgad}
-\noindent The first device involved is the detector. In order to be able to detect a single particle and to reduce the pile-up effects (that have been discussed with great detail in Limardi's masters degree thesis\cite{limardi}) short signals are mandatory. To obtain a short signal the active region of the sensor needs to be the as thin as possible. However the thinner the detector is the lower is the SNR (Signal to Noise Ratio).
-To solve this problem the INFN decided to use a new type of sensors known as LGAD.
-\noindent Low-Gain Avalanche Detectors (LGADs) are innovative detectors developed in collaboration with the Fondazione Bruno Kessler (FBK, Trento) which feature a moderate ($\approx$10) internal charge multiplication achieved through an additional p+ doping layer few microns depth. The increase signal-to-noise ratio allows designing very thin Ultra Fast Silicon Detectors (UFSD) designed for fast signal collection times, high rates and very good time resolution\cite{lgad}.
+\noindent The first device involved is the detector. In order to be able to detect a single particle and to reduce the pile-up effects short signals are mandatory. To obtain a short signal the active region of the sensor needs to be the as thin as possible. However the thinner the detector the lower is the SNR (Signal to Noise Ratio).
+To solve this problem it was decided to use a new type of sensors known as LGAD.
+\noindent Low-Gain Avalanche Detectors (LGADs) are innovative detectors developed in collaboration with the Fondazione Bruno Kessler (FBK, Trento) which feature a moderate ($\approx$10) internal charge multiplication achieved through an additional p+ doping layer few microns depth. The increased signal-to-noise ratio allows designing very thin Ultra Fast Silicon Detectors (UFSD) designed for fast signal collection times, high rates and very good time resolution\cite{lgad}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The basic doping profiles of the LGAD structure, based on a standard PIN detector, is shown in
 figure \ref{fig:ufsdlgad}, showing a n++/p+/p/p++ structure.
@@ -61,9 +61,9 @@ on the backside.
 	\caption{Schematic cross-section of the LGAD pad design. A p+ type layer is diffused below the n++ electrode to form the n++/p+/p junction where the multiplication takes place}
 	\label{fig:ufsdlgad}
 \end{figure}
-\noindent The LGAD device is operated with the bulk over depleted. Incident radiation produces electron-hole
-pairs in the detector with drift towards the cathode and anode respectively. The maximum
-electric field in the device is between the n++ cathode and the p+ type multiplication electrode and is
+\noindent The LGAD device is operated with the bulk fully depleted. Incident radiation produces electron-hole
+pairs in the detector which drift towards the cathode and anode respectively. The maximum
+electric field in the device is in the junction formed between the n++ cathode and the p+ type multiplication layer and is
 proportional to the square root of the p+ type doping density and proportional to the square root of the
 external bias voltage for an abrupt junction approximation.
 The radiation induced electrons in the detector cross this high field region. For sufficiently
@@ -81,24 +81,25 @@ significantly higher than this at least $\approx$~400~V.
 	\label{fig:signal}
 \end{figure}
 \noindent The output signal from a detector used in the project has a trapezoidal form, a duration of $\approx$ 1.2~ns (rise and fall times of $\approx$~450~ps and a 
-flat region of $\approx$~300~ps) and a current in the order of 1$\cdot$10$^{/5}$~A.
-In figure \ref{fig:signal} can be seen a signal simulation, the most probable signal carry a 8~fC charge, however due to the Landau Fluctuations this value can change between 3~fC and 30~fC.
+flat region of $\approx$~300~ps) and a current in the order of 1$\cdot$10$^{-5}$~A.
+In figure \ref{fig:signal} it can be seen a signal simulation, the most probable signal carry a 8~fC charge, however due to the Landau Fluctuations this value can change between 3~fC and 30~fC.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent The main risk in
 the use of LGAD silicon detectors for beam monitoring is related to the high radiation doses from
-therapeutic beams. The design of LGAD sensors has not been optimized yet for radiation
-resistance, and the measurements performed up to now indicate a stable behavior up to 1014~n$_{eq}$/cm$^2$ for 300~$\mu$m thick detectors (this corresponds to a few hours of a therapeutical proton
-pencil beam with an current of 1~nA and a FWHM of $\approx$ 1~cm); at higher doses the internal gain
-of the sensors decreases and it is necessary to raise the bias voltage to keep a stable signal level.
-It is expected that the use of thinner sensors (50~$\mu$m thickness) will decrease the trapping
-probability in the sensors, therefore extending the operative time. Intense work is currently going
-on in the LGAD community to increase the radiation resistance of the sensors. Several
-approaches as alternative dopants and doping profiles are being investigated with the expectation
-to reach a stable behavior up to >1015~n$_{eq}$/cm$^2$ fluencies in the next 1 or 2 years.
+therapeutic beams. The design of LGAD sensors was optimized for radiation
+resistance, and the measurements performed up to now indicate a stable behavior up to 10$^{15}$~n$_{eq}$/cm$^2$ for 50~$\mu$m thick detectors
+(this corresponds to a few days of continous irradiation of a therapeutical proton pencil beam);
+in general the internal gain
+of the sensors decreases with the dose, but this can be compensated by raising the bias voltage.
+%It is expected that the use of thinner sensors (50~$\mu$m thickness) will decrease the trapping
+%probability in the sensors, therefore extending the operative time. Intense work is currently going
+%on in the LGAD community to increase the radiation resistance of the sensors. Several
+%approaches as alternative dopants and doping profiles are being investigated with the expectation
+%to reach a stable behavior up to >1015~n$_{eq}$/cm$^2$ fluencies in the next 1 or 2 years.
 
 
 \section{ABACUS\_v2 chip}\label{chip}
-\noindent The signal from figure \ref{fig:signal} of each detector strip is connected to an input channel of the new ABACUS\_v2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 26$^{th}$ 2020.
+\noindent The signal from each detector strip, that can be seen in figure \ref{fig:signal}, is connected to an input channel of the new ABACUS\_v2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 26$^{th}$ 2020.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch2/ABACUS2.png}
@@ -130,7 +131,7 @@ In figure \ref{fig:abacuschannel} the block diagram of one channel is shown.
 The output signal from (2) has two components, a DC one, that is called Pedestal, and the actual amplified signal; this will be explained with more details in section \ref{considerations}.
 The amplified signal is therefore fed to a leading-edge multistage discriminator (3 and 4) followed by a driver (5 and 6) which provides a logic pulse in Current Mode Logic (CML) format.
 The output of the discriminator is also used in a feedback circuit (7 and 8) to reset the CSA feedback capacitance. This feedback circuit was designed for a fast baseline restoring and to avoid signal saturation (fast-reset signal).
-The chip was heavily tested by INFN expertises; the output voltage from the amplifier and the noise were estimated by the measurement of the number of detected pulses as a function of the threshold value. The results are shown in figure \ref{fig:abacustest} for charges between 3 fC and 20 fC (measurement and analysis carried out by PhD \textit{Omar Hammad Ali}).
+The chip was heavily tested by INFN expertises; the output voltage from the amplifier and the noise were estimated by the measurement of the number of detected pulses as a function of the threshold value. The results, in terms of amplifier otutput voltage ad a function of the input charge, are shown in figure \ref{fig:abacustest} for charges between 3 fC and 20 fC\cite{abacus}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch2/ABACUSTEST}
@@ -141,14 +142,14 @@ The chip was heavily tested by INFN expertises; the output voltage from the ampl
 The threshold voltage (V$_{th}$) is the sum of two different components that are independently configurable:
 \begin{itemize}
 	\item An external 16~bit DAC (Digital to Analog Converter) for the global V$_{th}$ 
-	\item A per channel programmable 6~bit internal DAC for threshold tuning
+	\item A programmable 6~bit internal DAC for threshold tuning for each individual channel
 \end{itemize}
-\noindent The main external DAC provides the same threshold voltage for every channel, however due to manufacturing tolerances not every channel is the same. One may have a slightly higher or lower input capacitance, or the amplifier could have a extremely low, but measurable, difference in gain.    
-These inequalities may have a relevant impact on the measured particle rate, and thus on the dose given to the patient.
+\noindent The main external DAC provides the same threshold voltage for every channel, however due to manufacturing tolerances not every channel behaves in the same way. One may have a slightly higher or lower input capacitance, or the amplifier could have a extremely low, but measurable, difference in gain or in the baseline.    
+These inequalities may have a relevant impact on the measured particle rate.
 In order to reduce these differences each channel has an independently programmable 6~bit DAC that is used to fine-tune (trim) the V$_{th}$ value.    
 \subsubsection{External DAC}
 The external DAC is a commercially available Linear Technology LTC2604 Quad 16-bit Rail-to-Rail DAC.
-The device uses the $I^2C$ protocol and reads 24~bit words configured as in figure \ref{fig:extdactiming2}, more details are provided in the data-sheet \cite{LTC2604}.
+The device uses the $I^2C$ protocol and reads 24~bit words configured as in figure \ref{fig:extdactiming2}; more details are provided in the data-sheet \cite{LTC2604}.
 The main features are:
 \begin{itemize}
 	\item A guaranteed 16~Bit Monotonic Over Temperature
@@ -164,7 +165,7 @@ The main features are:
 	\label{fig:extdactiming2}
 \end{figure}
 \subsubsection{Internal (Trimming) DAC}
-The internal (Trimming) DACs, also called Baseline DACs in some papers, were designed specifically for this chip. Inside the die there is an $I^2C$ controller used to enable the communication between DAC and the world.
+The internal (Trimming) DACs, also called Baseline DACs, were designed specifically for this chip. Inside the die there is an $I^2C$ controller used to enable the communication between DAC and the external world.
 The DACs are programmed using 16~bit serial words; the configuration process is explained in detail in section \ref{InternalDac}.
 \begin{figure}[H]
 	\centering
@@ -173,9 +174,9 @@ The DACs are programmed using 16~bit serial words; the configuration process is 
 	\label{fig:intdactable}
 \end{figure}
 \noindent In figure \ref{fig:intdactable} it can be seen that with a reference voltage of 600~mV the LSB should be 0.94~mV, this means that, being this a 6~bit DAC, the maximum trimming voltage is $\approx$~59.2~mV. For reference, an usual value for the pedestal voltage in around $\approx$~560~mV. Thus these internal DACs are used to fine tune the threshold voltage of the discriminator, while the bulk of the work is done by the external one.   
-
+\newpage
 \section{ESA-ABACUS}\label{esaabacus}
-\noindent As explained in section \ref{moveit} the final detector will have 144 strips, however each ABACUS\_v2 chip can read only 24 channels, this means that for the ultimate sensor read-out 6 chips are needed (24$\cdot$6~=~144).
+\noindent As explained in section \ref{moveit} the final detector will have 144 strips, however each ABACUS\_v2 chip can read only 24 channels; this means that for the ultimate sensor read-out 6 chips are needed (24$\cdot$6~=~144).
 In order to utilize these device at the same time the Turin INFN group developed, built and tested a new board, called ESA-ABACUS, that can accommodate and handle 6 ABACUS\_v2 chips. The ESA-ABACUS board can be seen in figure \ref{fig:esaabacus}.
 \begin{figure}[H]
 	\centering
@@ -186,15 +187,15 @@ In order to utilize these device at the same time the Turin INFN group developed
 \noindent To be noted that each FPGA board used has enough Input/Output resources for two ABACUS\_v2 chips, this means that in order to utilize at his full potential the ESA-ABACUS three FPGA boards are needed (chapter 3 will explain in detail what an FPGA is).
 The final goal is to use two of these devices placed in an orthogonal way in order to acquire the horizontal and vertical dispersion of the particle beam.
 To be noted that this board, on the contrary of the ABACUS\_v2 test board that will be described in section \ref{testboard}, is not intended for the validation of the chip, in fact it has no trimmers for any voltage regulation, instead it was made in order to test and utilize the 144 strip detector.
-
+The output signals from the ABACUS\_v2 chips use CML logic standard, however the FPGA boards used for the readout only support LVDS logic signals. In order to make the chip and FPGA communicate each ESA-ABACUS board has CML-LVDS converters installed.
 
 
 \section{FPGA board tasks}
-\noindent As explained in previous sections the digital data coming from the ABACUS\_v2 chip is analysed by an FPGA board. In this section it will be described what this devices is used for, what are its tasks and what I will implement in the new version of the firmware.
-The FPGA (Field Programmable Gate Array, chapter 3) board, is a programmable device that allows to build complex electronic circuits with multiples Input/Output ports and many LUTs, RAMs and FIFOs by "just typing" the desired logic on a computer.
+\noindent As explained in previous sections the digital data coming from the ABACUS\_v2 chip is analysed by an FPGA board. In this section it will be described what this devices is used for, which are its tasks and what I will implement in the new version of the firmware.
+The FPGA (Field Programmable Gate Array, chapter 3) board, is a programmable device that allows to build complex electronic logic circuits with multiples Input/Output ports and many LUTs, RAMs and FIFOs by "just typing" the desired logic on a computer.
 In this case the \textit{desired logic} does three main things: 
 \begin{itemize}
-	\item it de-serialize the input data from the chip with a 1~GHz sampling rate (500~MHz clock in DDR [Double Data Rate]), it counts the transitions from \textit{low} to \textit{high} using a manually written LUT (Look Up Table) and then it adds the result to a counter. This final value is the number of particles detected for a channel. The board does this process for each channel of the chip. In addition, by analysing the AND and OR logic combination serial data from two adjacent channels and using some maths it is possible to reduce the pile-up effects and extend the measurable rate range; this work (pile-up effect reduction) was done by \textit{Alessio Limardi} and it will be very briefly explained in section \ref{structure}.    
+	\item it de-serialize the input data from the chip with a 1~GHz sampling rate (500~MHz clock in DDR [Double Data Rate]), it counts the transitions from \textit{low} to \textit{high} using a manually written LUT (Look Up Table) and then it adds the result to a counter. This final value is the number of particles detected for a channel. The board does this process for each channel of the chip. In addition, by analysing the AND and OR logic combination serial data from two adjacent channels and using some maths it is possible to reduce the pile-up effects and extend the measurable rate range; this will be very briefly explained in section \ref{structure}.    
 	\item it configures the internal (trimming) DACs (see chapter 4) and the external DAC used to set the V$_{th}$. In addition, it controls the LCD display of the board, can read the board's switches and button and it can turn on or off the board's LED. 
 	\item it send the data to a computer using UDP (User Datagram Protocol) via a Ethernet (RJ45) cable.  
 \end{itemize}

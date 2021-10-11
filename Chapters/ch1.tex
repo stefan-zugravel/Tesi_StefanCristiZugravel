@@ -16,7 +16,9 @@ Radiation therapy is the medical use of ionizing radiation to treat cancer. In c
 When the irradiating beams are made of charged particles (protons and other ions, such as carbon), radiation therapy is called hadron therapy\cite{radiationtherapy}. The strength of hadron therapy lies in the unique physical and radiobiological properties of these particles; they can penetrate the tissues with little diffusion and deposit the maximum energy just before stopping. This allows a precise definition of the specific region to be irradiated. The peaked shape of the hadron energy deposition is called Bragg peak and has become the symbol of hadron therapy. With the use of hadrons the tumour can be irradiated while the damage to healthy tissues is less than with X-rays.
 
 \section{Interaction between matter and charged particles}
-Charged particles with mass greater than the one of the electron lose energy in matter through ionization.
+Charged particles
+%with mass greater than the one of the electron
+lose energy in matter through ionization.
 A classic calculation for the energy lost in ionization can be done taking into account two assumptions:
 \begin{itemize}
 	\item the speed of the atomic electron is negligible compared to the one of the incident particle;
@@ -47,14 +49,14 @@ The classic calculation results in the Bethe-Block formula in equation \ref{eq:b
 \begin{equation}\label{eq:stoppingpower}
 	\delta = - \frac{1}{\rho} \frac{dE}{dx}
 \end{equation}
-\noindent In figure \ref{fig:massicstoppingpower} it can be seen the trend of the massic stopping power of a $\mu^+$ passing through a copper layer.
+\noindent Figure \ref{fig:massicstoppingpower} shows the massic stopping power of a $\mu^+$ passing through a copper layer as a function of the muon momentum.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/MassicStoppingPower}
-	\caption{Massic Stopping power in function of the $\mu^+$ momentum passing through a copper layer}
+	\caption{Massic Stopping power as a function of the $\mu^+$ momentum passing through a copper layer}
 	\label{fig:massicstoppingpower}
 \end{figure}
-\noindent In the trend of the stopping power in function of the momentum can be noted a de-growth for low momentum values that is due to the term $\frac{1}{\beta^2}$ in equation \ref{eq:bethe}; the stopping power decreases until it reaches a minimum, and then slowly grows back.
+\noindent In the trend of the stopping power as a function of the momentum it can be noted a de-growth for low momentum values that is due to the term $\frac{1}{\beta^2}$ in equation \ref{eq:bethe}; the stopping power decreases until it reaches a minimum, and then slowly grows back.
 \newline
 The average path (range) of a charged particle can be calculated by integrating the stopping power along the "walk".
 \begin{equation}\label{eq:range}
@@ -62,16 +64,15 @@ The average path (range) of a charged particle can be calculated by integrating 
 \end{equation}
 \noindent The range depends approximately on the A / Z ratio of the material and grows approximately with the square of the initial kinetic energy of the charged particle. The accrual
 of energy loss increases as the kinetic energy of the particle decreases with the depth of penetration, with a rapid ascent at the end of the path. The density of ionization of the charged particles along their path in the medium is therefore
-characterized by a plateau followed by a pronounced maximum towards the end of range, called Bragg peak, which is located at an energy-dependent depth initial kinetics of the incident particle, as shown in figure \ref{fig:braggpeak}.
+characterized by a plateau followed by a pronounced maximum towards the end of range, called Bragg peak, which is located at a depth depending on the initial energy of the incident particle, as shown in figure \ref{fig:braggpeak}.
+\newline
 If more particles are considered then it should be kept in mind
-the statistical fluctuations on the collisions of the particles and on the energy transferred for each collision: these fluctuations are well described by the Landau distribution \cite{landau}
-, generate uncertainty about the distance reached by the particles ("straggling"). Beyond all these considerations we must not neglect the possible interactions with the nuclear components of the matter crossed. One effect is enlargement
-lateral of the beam due to the interaction with the Coulomb fields of the nuclei that it is inversely proportional to the mass of the incident particle. The second effect it is due to the fragmentation of the primary bundle and/or of the nuclei of the material passed through due to nuclear interactions. The fragmentation cross section becomes relevant for ions heavier than the proton, such as carbon ions or heavier, and causes a decrease in the number of particles incident along the path
+the statistical fluctuations on the collisions of the particles and on the energy transferred for each collision: these fluctuations, well described by the Landau distribution \cite{landau}, generate uncertainty about the distance reached by the particles ("straggling"). Beyond all these considerations we must not neglect the possible interactions with the nuclear components of the matter crossed. One effect is lateral enlargement of the beam due to the interaction with the Coulomb fields of the nuclei that it is inversely proportional to the mass of the incident particle. The second effect is due to the fragmentation of the primary bundle and/or of the nuclei of the passed-though material due to nuclear interactions. The fragmentation cross section becomes relevant for ions heavier than the proton, such as carbon ions or heavier, and causes a decrease in the number of particles incident along the path
 and the development of secondary fragments. The fragments produced deposit theirs energy deeper than the Bragg peak giving rise to a queue in the distribution.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/BraggPeak}
-	\caption{Dose profile for a 21MeV electron, 270MeV/u carbon ion and photon beam}
+	\caption{Dose profile for a 21~MeV electron, 270~MeV/u carbon ion and photon beam}
 	\label{fig:braggpeak}
 \end{figure}  
 
@@ -83,18 +84,18 @@ and the development of secondary fragments. The fragments produced deposit their
 \section{Effects of radiations on biological systems}
 Radiation is energy. A charged particle when it interacts with the human body loses its energy. The measurement and calculation of the ionizing radiation dose absorbed by an object is called radiation dosimetry.
 \newline
-Thus the dose (D) can be defined as the energy absorbed divided by the object mass.
+The dose (D) can be defined as the energy absorbed divided by the object mass.
 \begin{equation}\label{eq:dose}
 	D\left[Gy \right] =\frac{dE}{dm}
 \end{equation}
-In the I.S. the unit of measure is the Gray(Gy)[JKg${}^{-1}$]=1J/1Kg.
+In the I.S. the unit of measure is the Gray(Gy), with 1~Gy~=~1~J/Kg.
 \newline
-It is also common the use of an equivalent dose (H=DxW$_1$) where W$_1$ is a weight that depends on the type of particle (photon, electron, neutron, proton, heavy charged particle, ecc...). The unit of measure of the equivalent dose is the Sievert(Sv)[JKg${}^{-1}$], although in the past it was used the rem[1Sv=100rem].
+It is also common the use of an equivalent dose (H=DxW$_1$) where W$_1$ is a weight that depends on the type of particle (photon, electron, neutron, proton, heavy charged particle, ecc...). The unit of measure of the equivalent dose is the Sievert(Sv) (1~Sv~=~1~J/Kg), although in the past it was used the rem (1~Sv~=~100~rem).
 \newline
-When monitoring the dose absorbed by an human body it must me considered that not every organ has the same resistance to radiation, thus it is used the effective dose (E=HxW$_2$) which is the equivalent dose multiplied by the weight W$_2$ which depends on the part of the body interested by the radiations.
+When monitoring the dose absorbed by an human body it must be considered that not every organ has the same resistance to radiation, thus it is used the effective dose (E~=~HxW$_2$) which is the equivalent dose multiplied by the weight W$_2$ which depends on the part of the body interested by the radiations.
 \newline
-\noindent The energy deposition is strictly dependent by the type of radiation like photons, electrons or heavy charged particles. As shown in figure \ref{fig:braggpeak} the relative dose percentage delivered by the photons is maximum at low depth and then has an exponential decrease as the thickness of the tissue increases.
-The dose profile in function of the depth for heavy charged particles (as carbon ions) is characterized by a low dose at the beginning of the tissue and then by a extremely peaked spike at the end of their travel (Bragg peak).
+\noindent The energy deposition is strictly dependent by the type of radiation like photons, electrons or heavy charged particles. As shown in figure \ref{fig:braggpeak} the relative dose percentage delivered by the photons is maximum at low depth and then has an exponential decrease as the depth in the tissue increases.
+The dose profile as a function of the depth for heavy charged particles (as carbon ions) is characterized by a low dose at the beginning of the tissue and then by a extremely peaked spike at the end of their travel (Bragg peak).
 Since the depth of this peak depends by the beam energy, this can be tuned to deliver the dose at different depths.
 Moreover, thanks to the high mass of the particles, it is possible to greatly reduce the lateral diffusion effects thus saving the healthy tissues and the critical structures near the target.
 \begin{figure}[H]
@@ -105,7 +106,7 @@ Moreover, thanks to the high mass of the particles, it is possible to greatly re
 \end{figure} 
 \noindent With heavy charged particles is therefore possible to accurately focus the beam for a selected depth; this is not possible with other sources of radiation.
 \newline
-The different rates of energy loss at different depths for photons and heavy charged particles produce different dose distributions as shown in figure \ref{fig:Dose}.
+The different rates of energy loss at different depths for photons and heavy charged particles produce different dose distributions as shown in figure \ref{fig:Dose}, for a single beam direction.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/Dose}
@@ -115,8 +116,8 @@ The different rates of energy loss at different depths for photons and heavy cha
 
 \noindent The energy released by the charged particles can cause both direct and indirect effects.
 The direct ones are the interactions between the radiation and the biological molecules; this generates breaking points in the nucleotide chain of the DNA.
-The indirect effects are the interactions, with production of free radicals, between radiations and water molecules inside the cell.
-After that the free radicals interact with the biological molecules producing chemical alterations that can generate the inactivation of the cell cycle.
+The indirect effects are the interactions between radiations and water molecules inside the cell with production of free radicals.
+After the free radicals diffuse and interact with the biological molecules producing chemical alterations that can generate the inactivation of the cell cycle.
 Damage to DNA molecules is considered the most important since it can lead to the cell's inability to reproduce and cell death\cite{cells}.
 \newline
 Irradiation can produce various types of alterations in the DNA structure:
@@ -136,7 +137,7 @@ The cellular response to radiation depends in a complex way on the absorbed dose
 \end{equation}
 \noindent The LTE is defined as the average ionization density along the trail of a particle and is measured in keV/$\mu m$.
 Radiations with high LET have, considering fixed the absorbed dose, a greater biological effect compared to the ones with low LET.
-This happens because a higher ionization density imply a greater probability of unrepairable damages, like DSB.
+This happens because a higher ionization density implies a greater probability of unrepairable damages, like DSB.
 The biological effect of a radiation is quantified in terms of Relative Biological Efficiency (RBE), defined as the ratio between the dose required to obtain a specific effect respectively with a reference radiation and with the radiation in question.
 \begin{equation}\label{eq:rbe}
 	RBE=\frac{D_{ref}}{D_{test}}
@@ -148,7 +149,7 @@ The biological effect of a radiation is quantified in terms of Relative Biologic
 	\caption{RBE in function of the LET}
 	\label{fig:rbe}
 \end{figure}
-\noindent In figure \ref{fig:rbe} it can be seen how the RBE changes i function of the radiation LET. From the graph it can be noted that the RBE growth, in function of the LET, starts for values near 1 keV/$\mu m$ and reaches a maximum near 100 keV/$\mu m$. For even higher LET values the RBE decreases, this is caused by a biological saturation effect that happens for high dose (overkill). 
+\noindent In figure \ref{fig:rbe} it can be seen how the RBE changes as a function of the radiation LET. From the graph it can be noted that the RBE growth, as a function of the LET, starts for values near 1 keV/$\mu m$ and reaches a maximum near 100 keV/$\mu m$. For even higher LET values the RBE decreases; this is caused by a biological saturation effect that happens for high dose (overkill). 
 10 MeV carbon ions have a LET of 170 keV/$\mu m$, this correspond to a RBE of 7. This is one of the reasons why therapies based on the use of carbon ions have been developed, which at the same dose, produce greater biological effects and are more effective in the treatment of radio-resistant tumors.
 
 
@@ -159,17 +160,16 @@ The number of patients treated with protons or carbon ions is growing each year 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/PatientsTreated}
-	\caption{Number of patients treated with annually with protons and carbon ions}
+	\caption{Number of patients treated annually with protons and carbon ions}
 	\label{fig:patientstreated}
 \end{figure}
-\noindent This numbers, even if are growing, are still a small fraction of the total number of tumors treated with external radiation; X-ray being the main therapy method. 
-The main reason lies in the need for complex accelerators (cyclotrons or synchrotrons) fundamental to accelerate the ions to
+\noindent This numbers, even if growing, are still a small fraction of the total number of tumors treated with external radiation, X-ray being the main therapy method. 
+The main reason lies in the need for complex accelerators (cyclotrons or synchrotrons) to accelerate the ions to
 the energies needed to penetrate deeply into the tissues and a sophisticated dose distribution system that guarantees the achievable precision in delivering the dose in the various regions of the patient.
-Charged particles beams used id hadron therapy are accelerated by synchrotrons or cyclotrons.
 \newline
 Cyclotrons take up less space and are cheaper to build and to maintain, however the accelerated particles have fixed energy that can not be changed. It can only be reduced using absorbent elements called range shifter.
 On the contrary, a synchrotron can accelerate ions at different energies, but it need much more space and money to operate.
-Typically a medical purpose synchrotron like the one in figure \ref{fig:sincrotrone} has a ring of at least 10m in diameter and needs one or two linear accelerators in series.
+Typically a medical purpose synchrotron like the one in figure \ref{fig:sincrotrone} has a ring of at least 10m in diameter and needs one or two linear accelerators in series to inject the particles in the main ring.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/Sincrotrone}
@@ -202,26 +202,26 @@ The beam lateral profile is adapted to the form of the tumor with the use of col
 The dose is set in accordance with the shape of the tumor with the use of range compensators.
 \newline
 The advantages of this technique are the simplicity, safety, wide diffusion in existential hadrontherapy centers and low sensitivity to the temporal dynamics of the beam. 
-On the other hand there is the reduced flexibility in the three dimensional conformation of the dose, the need to use customized collimators, the difficulty of obtaining a truly parallel beam, the low efficiency of use of the beam and the contamination of the patient due to the production of secondary fragments (for example neutrons) in nuclear interactions with absorbent elements.
+On the other hand there is the reduced flexibility in the three dimensional conformation of the dose, the need to use customized collimators, the difficulty of obtaining a truly parallel beam, the low efficiency of use of the beam and the additional dose to the patient due to the production of secondary fragments (for example neutrons) in nuclear interactions with absorbent elements.
 
 \subsection{Active dose distribution systems}
-\noindent Unlike passive systems in which the beam is spread to cover the entire tumor area, in active distribution systems the tumor volume is divided into a grid of points, called spots, that are grouped into several mono-energetic layers, where each layer corresponds to the position of the Bragg peak of fixed energy beam, called pencil beam.
+\noindent Unlike passive systems in which the beam is spread to cover the entire tumor area, in active distribution systems the tumor volume is divided into a grid of points, called spots, that are grouped into several mono-energetic layers, where each layer corresponds to the position of the Bragg peak of a narrow, fixed energy beam, called pencil beam.
 The lateral conformation is obtained with a magnetic deflection, while the energy of the beam is changed to move the Bragg peak from one layer to the other.
-In active systems based on cyclotrons, the energy of the beam is changed using absorbent materials (range shifters) of appropriate thickness, while in synchrotron-based centers, directly changing the energy at which the beam is accelerated between one spill and the next.
+In active systems based on cyclotrons, the energy of the beam is changed using absorbent materials (range shifters) of appropriate thickness, followed by magnetic energy selection systems, while in synchrotron-based centers, directly changing the energy at which the beam is accelerated between one spill and the next.
 Scanning in the direction orthogonal to the beam is performed with two perpendicular magnets.
 \newline
-There are two modes of active distribution: in one the beam is moved continuously along the scanning lines and the transverse dose distribution is modulated by adjusting the scanning speed (raster scanning). A second mode (spot scanning)\cite{cnao} consists in keeping the beam fixed on a spot until the predetermined dose is reached, and then moving it, without turning it off, to the adjacent spot until the whole mono-energetic slice is is completely irradiated, as shown in figure \ref{fig:active}.
+There are two modes of active distribution: in one the beam is moved continuously along the scanning lines and the transverse dose distribution is modulated by adjusting the scanning speed (raster scanning). A second mode (spot scanning)\cite{cnao} consists in keeping the beam fixed on a spot until the predetermined dose is reached, and then moving it, without turning it off, to the adjacent spot until the whole mono-energetic slice is completely irradiated, as shown in figure \ref{fig:active}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch1/Active}
-	\caption{Basic design of active dose distribution system for hadron therapy used to adapt the dose to the form of the tumor. Modulated dose distribution in the transverse plane by scanning magnets (top) and on the longitudinal axis with the superposition of energy beams different (bottom)}
+	\caption{Basic design of active dose distribution system for hadron therapy used to adapt the dose to the form of the tumor. Dose distribution in the transverse plane is modulated by scanning magnets (top) and on the longitudinal axis with the superposition of energy beams different (bottom)}
 	\label{fig:active}
 \end{figure}
-\noindent This last technique provides the enormous advantage of being able to perform an extremely precise and homogeneous irradiation that adapts to the shape of the tumor which is in most cases irregular.
+\noindent This last technique provides the enormous advantage of being able to perform an extremely precise and homogeneous irradiation that adapts to the shape of the tumor which is in most cases irregular without the use of patient-specific passive elements.
 Another advantage compared to passive systems is the absence of material on the beam line, a lower lateral penumbra due to the absence of collimators, a high efficiency of use of the beam and the possibility to synchronize the radiation with the respiratory phase of the patient.
 
 \subsection{Treatment Planning System}
-\noindent The Treatment Planning System (TPS) is software that simulates patient dose distribution and calculates the optimal beam configuration to achieve clinical dose specifications for the tumor and healthy organs.
+\noindent The Treatment Planning System (TPS) is a software that simulates patient dose distribution and calculates the optimal beam configuration to achieve clinical dose specifications for the tumor and healthy organs.
 It is a complex tool, which uses information on the patient's anatomy as input provided by computed tomography (CT) images, with physician-designated contours of the tumor and surrounding organs.
 Based on this information and the specifications of the desired target dose and the maximum tolerable dose on other organs, the TPS performs a minimization procedure (called "reverse planning") to determine the treatment parameters.
 The output of the TPS provides the parameters corresponding to the number of particles, energies and directions of the pencil beam for each spot necessary to best meet the specifications.
@@ -232,8 +232,8 @@ If the result meets the specifications, the TPS can terminate the execution and 
 \section{Beam monitoring}
 \noindent The accuracy of the dose distribution obtained with the active pencil beam scanning technique is based on a precise online measurement of the beam position and the number of particles irradiated at each point.
 The Dose Distribution System (DDS)\cite{pencil} must control the scanning system, consisting of two power supplies connected to two orthogonal bipolar magnets to deflect the beam horizontally and vertically.
-Once the required number of particles are irradiated in one spot, the DDS vary the currents in the magnets in order to move the beam to the next point.
-Moreover, the DDS must be interfaced with the accelerator control to request a quick stop of the beam when a slice is completed or to request new energy values for the treatment of the next slice.
+Once the required number of particles are irradiated in one spot, the DDS changes the currents in the magnets in order to move the beam to the next point.
+Moreover, the DDS must be interfaced with the accelerator control to request a quick stop of the beam when a slice is completed or to request a new energy value for the treatment of the next slice.
 The operations of the DDS are all based on the online measurement of the number of irradiated particles and the direction of the beam carried out with dedicated detectors.
 \newline
 The most commonly used monitor detectors are based on ionization chambers (ICs).
@@ -255,7 +255,7 @@ Another limitation of the ionization chambers is their limited sensitivity: due 
 Furthermore, the collection times of the charge in the gas are relatively long (of the order of hundreds of $\mu$s) and therefore their response is rather slow.
 These limitations prevent their use in treatment modalities where rapid changes in position are required or when a limited number of particles must be irradiated at each spot.
 \newline
-To overcome the limitations of ionization chambers as monitoring devices in hadrontherapy, as their limited sensitivity, the dependence of the measurable number of particles on the energy of the beam and environmental parameters, slow response times, the Medical Physics group of the University of Turin is studying a new approach for beam monitoring based on the solid state detector.
+To overcome the limitations of ionization chambers as monitoring devices in hadrontherapy, as their limited sensitivity, the dependence of the measurable number of particles on the energy of the beam and environmental parameters, slow response times, the Medical Physics group of the University of Turin is studying a new approach for beam monitoring based on solid state detectors.
 In particular, segmented silicon detectors are considered as an alternative to IC chambers to count the number of particles in a therapeutic beam.
 \newline
 In the next paragraph it is described the operation of a silicon detector, while in the next chapter it will be shown how their characteristics can compensate for the limitations of the ionization chambers.
@@ -281,7 +281,7 @@ An example of a silicon strip detector is shown in figure \ref{fig:detector}. It
 The substrate n is completely emptied by applying a positive voltage on the electrode n++ with respect to the strips.
 An ionizing particle penetrates the emptied substrate and generates electron-hole pairs that migrate along the electric field generated by the applied voltage and induces a current signal on the aluminum strips.
 In this example, the aluminum electrodes are separated by a thin SiO2 capacitive layer (AC coupling), but configurations with direct connection of the aluminum to the n ++ electrode (DC coupling) are also possible.
-In a typical strip detector, the thickness of the emptying region is about 300~$\mu$m to produce a sufficient charge detectable by the reading electronics. 
+In a typical strip detector, the thickness of the depleted region is about 300~$\mu$m to produce a sufficient charge detectable by the reading electronics. 
 The typical collection time of electrons and holes varies from 3~ns to 6~ns, depending on the applied voltage.
 \begin{figure}[H]
 	\centering

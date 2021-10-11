@@ -1,0 +1,120 @@
+%\appendix
+\chapter{Code examples}\label{codeexamples}
+\noindent \textbf{Example 1:} Internal DACs reading system, shift register and pattern detection. 
+\begin{verbatim}
+	baseline_dac0_shift_reg_output_proc : process (baseline_dac_sck_i)
+	begin
+	if falling_edge(baseline_dac_sck_i) then 
+	shift_register_baseline_dac0(15) <= shift_register_baseline_dac0(14);
+	shift_register_baseline_dac0(14) <= shift_register_baseline_dac0(13);
+	shift_register_baseline_dac0(13) <= shift_register_baseline_dac0(12);
+	shift_register_baseline_dac0(12) <= shift_register_baseline_dac0(11);
+	shift_register_baseline_dac0(11) <= shift_register_baseline_dac0(10);
+	shift_register_baseline_dac0(10) <= shift_register_baseline_dac0(9);
+	shift_register_baseline_dac0(9) <= shift_register_baseline_dac0(8);
+	shift_register_baseline_dac0(8) <= shift_register_baseline_dac0(7);
+	shift_register_baseline_dac0(7) <= shift_register_baseline_dac0(6);
+	shift_register_baseline_dac0(6) <= shift_register_baseline_dac0(5);
+	shift_register_baseline_dac0(5) <= shift_register_baseline_dac0(4);
+	shift_register_baseline_dac0(4) <= shift_register_baseline_dac0(3);
+	shift_register_baseline_dac0(3) <= shift_register_baseline_dac0(2);
+	shift_register_baseline_dac0(2) <= shift_register_baseline_dac0(1);
+	shift_register_baseline_dac0(1) <= shift_register_baseline_dac0(0);
+	shift_register_baseline_dac0(0) <= baseline_dac0_miso;
+	end if;
+	end process baseline_dac0_shift_reg_output_proc;
+	
+	baseline_dac0_response_ctrl_proc : process (clk)
+	begin
+	if rising_edge(clk) then 
+	if (shift_register_baseline_dac0(15 downto 8) = ("11" & fifo_data(14 downto 9))) then
+	output_data_baseline_dac0 <= shift_register_baseline_dac0(7 downto 0);
+	elsif hdw_busy = '0' then	
+	output_data_baseline_dac0 <= "00000000";
+	end if;
+	end if;
+	end process baseline_dac0_response_ctrl_proc;
+\end{verbatim}
+\newpage
+\noindent \textbf{Example 2:} Latch system, RAM IP module port map for ch00 latch counter.
+\begin{verbatim}
+	latch_counter_ram_ch00_counter : latch_counter_ram
+	port map(
+	clka		=> tera10_clk,
+	ena		=> latch_counter_ram_ena,
+	wea		=> latch_counter_ram_write_en,
+	addra		=> latch_counter_ram_address_write,
+	dina		=> ch00_counter,
+	clkb		=> tera10_clk,
+	enb		=> latch_counter_ram_enb,
+	addrb		=> latch_counter_ram_address_read,
+	doutb		=> latch_counter_ram_output00
+	);
+\end{verbatim}
+\noindent \textbf{Example 3:} Latch system, reading RAM logic, delay generator FSM.
+\begin{verbatim}
+	ctrl_delay_latch_ram_proc : process(tera10_clk)
+	begin
+	if (rising_edge (tera10_clk)) then
+	if (ctrl_delay_latch_ram = "01") then
+	if (ctrl_delay_latch_ram_counter < "111") then
+	ctrl_delay_latch_ram_counter <= ctrl_delay_latch_ram_counter + 1;
+	else 
+	ctrl_delay_latch_ram_counter <= "000";
+	end if;
+	else 
+	ctrl_delay_latch_ram_counter <= "000";
+	end if;
+	end if;
+	end process ctrl_delay_latch_ram_proc;
+\end{verbatim}
+\noindent \textbf{Example 4:} Timestamp generator, do timestamp FSM.
+\begin{verbatim}
+	timestamp_signal_proc : process(serdes_clk)
+	begin
+	if rising_edge(serdes_clk) then
+	case timestamp_state is
+	when idle =>
+	if do_timestamp = '1' then
+	timestamp_state <= dotimestamp1;
+	else
+	timestamp_state <= idle;
+	timestamp_fifo_cdc_wr_en <= '0';
+	end if;
+	
+	when dotimestamp1 =>
+	timestamp_signal <= std_logic_vector(timestamp_counter_ctrl);
+	timestamp_state <= dotimestamp2;
+	
+	when dotimestamp2 =>
+	if do_timestamp = '0' then
+	timestamp_state <= idle;
+	else
+	timestamp_state <= dotimestamp2;
+	timestamp_fifo_cdc_wr_en <= '1';
+	end if;
+	
+	end case;
+	end if;
+	end process timestamp_signal_proc;
+\end{verbatim}
+\noindent \textbf{Example 5:} Timestamp generator, read timestamp logic.
+\begin{verbatim}
+	read_timestamp_reply_proc : process(tera10_clk)
+	begin
+	if rising_edge(tera10_clk) then
+	case cmd_to_latch_counter_fifo_dout(7 downto 0) is
+	when b"0000_0000" =>
+	read_timestamp_reply <= timestamp_ram_output(15 downto 0);
+	when b"0000_0001" =>
+	read_timestamp_reply <= timestamp_ram_output(31 downto 16);
+	when b"0000_0010" =>
+	read_timestamp_reply <= timestamp_ram_output(47 downto 32);
+	when b"0000_0011" =>
+	read_timestamp_reply <= timestamp_ram_output(63 downto 48);
+	when others =>
+	read_timestamp_reply <= x"0000";
+	end case;
+	end if;
+	end process read_timestamp_reply_proc;
+\end{verbatim}
