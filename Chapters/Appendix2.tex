@@ -1,5 +1,6 @@
 %\appendix
-\chapter{Code examples}\label{codeexamples}
+\chapter{VHDL code examples}\label{codeexamples}
+\section{Internal DACs configuration examples}
 \noindent \textbf{Example 1:} Internal DACs reading system, shift register and pattern detection. 
 \begin{verbatim}
 	baseline_dac0_shift_reg_output_proc : process (baseline_dac_sck_i)
@@ -36,6 +37,7 @@
 	end process baseline_dac0_response_ctrl_proc;
 \end{verbatim}
 \newpage
+\section{Latch module examples}
 \noindent \textbf{Example 2:} Latch system, RAM IP module port map for ch00 latch counter.
 \begin{verbatim}
 	latch_counter_ram_ch00_counter : latch_counter_ram
@@ -68,6 +70,7 @@
 	end if;
 	end process ctrl_delay_latch_ram_proc;
 \end{verbatim}
+\section{Timestamp module examples}
 \noindent \textbf{Example 4:} Timestamp generator, do timestamp FSM.
 \begin{verbatim}
 	timestamp_signal_proc : process(serdes_clk)
