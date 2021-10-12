@@ -315,7 +315,6 @@ plus any combination of these three. There is the data-flow model, the behaviour
 	\item \textbf{data-flow model}:
 	In the data-flow approach, circuits are described by showing the input and output relationships between the various built-in components of the VHDL language. The built-in components of VHDL include operators such as AND, OR, XOR, etc.
 	It is good that it can be seen the flow of data in the circuit by examining the VHDL code, however data-flow modelling works fine for small and relatively simple circuits; as circuits become more complicated, it is often advantageous to switch to behavioural style models.
-	This coding style is also called RTL (Register Transfer Logic).
 	\item \textbf{behavioural model}:
 	The behavioural style architecture provides no details as to how the design is implemented in actual hardware.
 	Instead, the behavioural style models how the circuit outputs will react to the circuit inputs.
@@ -326,9 +325,10 @@ plus any combination of these three. There is the data-flow model, the behaviour
 	The term structural model is the term that VHDL uses for the modular design.
 	When designing a complex project, it should always be split in two or more simple design in order to better handle the complexity.
 	The benefits of modular design in VHDL are similar to the benefits that modular design or object-oriented design provides for higher-level computer languages.
-	\item \textbf{hybrid style}:
-	In VHDL hardware design coding is possible to use any combination of the previous design styles. This case is generally called hybrid style model.
-	
+	\item \textbf{hybrid style / RTL}:
+	In VHDL hardware design coding it is possible to use any combination of the previous design styles.
+	This case is generally called hybrid style model and it is usually the most used.
+	This coding style is also called RTL (Register Transfer Logic) and over the years became a synonymous for synthesizable code.    
 \end{itemize}
 
 \subsection{VHDL Process}
