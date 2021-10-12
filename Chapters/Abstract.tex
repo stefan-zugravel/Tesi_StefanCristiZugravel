@@ -16,7 +16,7 @@ in real-time the particle beam reaching the patient.\\
 In this context the Medical Physics group at University of Turin and INFN (the Italian National Institute for
 Nuclear and Particle Physics) is participating to the MoVeIT (Modeling and Verification for Ion beam Treatment planning) research project, which aims to develop new and
 innovative models for biologically optimized Treatment Planning Systems (TPS) using ion beams in hadron therapy.
-As~part of the project the Torino group is involved in the development of solid state detectors and readout electronics for measuring with high precision
+As part of the project the Turin group is involved in the development of solid state detectors and custom readout electronics for measuring with high precision
 the characteristics of the hadron beam before and during the irradiation, such as number of particles delivered per unit time, energy and beam profile.\\
 
 Low-Gain Avalanche Diode (LGAD) thin silicon sensors segmented in strips have been selected as a promising choice for the implementation
@@ -34,7 +34,7 @@ the data from up to 6 readout chips.\\% A second version of the chip, refered as
 This thesis presents my personal contributions on the upgrade of the FPGA firmware used to characterize
 the second version of the ABACUS chip and measurement results.
 The FPGA used to readout the chip is a Kintex-7 KC705 board by Xilinx programmed using the VHDL Hardware Description Language. The FPGA
-is responsible for both the chip configuration and sensor data readout.
+is responsible for both the chip configuration and data readout.
 
 \noindent The first part of my work describes the upgraded VHDL firmware, which includes several new features such as:
 i) the creation of a debugging tool for malfunctioning channels on the FPGA board;
@@ -43,24 +43,29 @@ now uses an address-based system with an I2C controller instead of a serial meth
 iii) the implementation of a latch for internal counters;
 iv) the addition of a timestamp generator for a more accurate calculation of the particle rate.
 \newline
-The second part of the thesis presents experimental results for validation of the new FPGA firmware.
+The second part of the thesis presents obtained experimental results that validated the new FPGA firmware extensions.
 Measurements include threshold scans studies to quantify the threshold dispersion between channels and rate calculations.
 \vspace{1cm}
 \newline
 This thesis is organized as follow:
 \vspace{0.25cm}
 \newline
-Chapter 1 describes the physical mechanisms and advantages of hadron-therapy compared to conventional radiotherapy. There is description of the most advanced dose distribution systems and the detectors used.
-%It also highlights how the use of innovative detectors based on a direct counting mechanism of the individual particles of the beam can be of benefit for innovative therapeutic approaches in the future.
+Chapter 1 describes the physical mechanisms and advantages of hadron-therapy compared to conventional radiotherapy. The most advanced dose distribution systems and the detectors used are described.
 \vspace{0.25cm}
 \newline
-Chapter 2 describes the devices developed within MoVeIT for dose monitoring. In particular, the operating principle of the LGAD sensors used is shown, and their advantages for the application under study. The characteristics of the chip developed by the INFN of Turin for the amplification and discrimination of signals are also described.
+Chapter 2 describes the devices developed within the MoVeIT project for dose monitoring.
+In particular it is shown the operating principle of the LGAD sensors used and their advantages for the application under study.
+The characteristics of the chip developed by the INFN section of Turin for the amplification and discrimination of signals are also described.
 \vspace{0.25cm}
 \newline
-Chapter 3 describes contains a brief history of the FPGA, its main components and a comparison with ASICs and others programmable devices. After that there is a brief introduction to the hardware description language and the associated rtl design workflow. There is a brief explanation of the tools used for the development and lastly it is described the FMC debug tool that I implemented.
+Chapter 3 contains a brief history of the FPGA, its main components and a comparison with ASICs and others programmable devices.
+After that there is a short introduction to the hardware description languages and the associated design workflow.
+There is a brief discussion on the tools used for the development and lastly it is described the FMC debug tool that I implemented.
 \vspace{0.25cm}
 \newline
-Chapter 4 contains a description of the original firmware, the implementation of the trimming DACs configuration logic, of the counter latch system and of the timestamp generator. For each new addition software simulation and considerations on the implemented design and on the board utilization statistics are included.
+Chapter 4 contains a description of the FPGA firmware and a detailed explanation of the implemented extensions, which are: the trimming DACs configuration logic, the counter latch system and of the timestamp generator.
+For each new addition software simulation and considerations on the implemented design are included.
 \vspace{0.25cm}
 \newline
-Chapter 5 describes the hardware devices involved in the project such as the test setup, the test board and the voltage translator. For each addition to the firmware tests on board have been performed and described.
+Chapter 5 describes the hardware devices involved in the project such as the test setup, the test board and the voltage translator.
+For each addition to the firmware tests on board have been performed and described.
