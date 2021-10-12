@@ -3,8 +3,8 @@ digraph G {
     //newrank=true;
     //nodesep=0.666;
     
-    Iddle [shape=box, label= "Iddle"];
-    Iddle2 [shape=box, label= "Iddle"];
+    Iddle [shape=box, label= "Idle"];
+    Iddle2 [shape=box, label= "Idle"];
     //ReadFifo1 [label= "Read FIFO"];
     //ReadFifo2 [label= "Read FIFO 2"];
     CmdSel [label= "Command\nSelect"];

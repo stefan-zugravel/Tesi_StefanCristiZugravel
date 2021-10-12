@@ -1,48 +1,40 @@
-\part{Work on the kc705\_tera10 FPGA firmware}
+\part{Work on the KC705 FPGA firmware}
 
-\chapter{FPGA: historical introduction, structure, design flow, VHDL and use in the MoVe\_IT project}
+\chapter{Research tools: FPGAs, VHDL and LabVIEW}
 \section{Introduction}
 \noindent Digital electronics is concerned with circuits which represent information using a finite set of output
-states. Most of the applications use in fact just two states, which are often labelled ‘0’ and ‘1’.
+states. Most of the applications use in fact just two states, which are often referred as ‘\textit{0}’ and ‘\textit{1}’.
 Behind this choice is the fact that the whole Boolean formalism then becomes available for the
 solution of logic problems, and also that arithmetic using binary representations of numbers is a very
 mature field\cite{fpga1}.
 \newline
-In addition, having only two
-different values for the voltages or currents used to represent states is the safest choice in terms of
+In addition, having only two different values for the voltages or currents used to represent states is the safest choice in terms of
 design margins in order to protect the data from the noise.
 
 
 
 \section{Programmable Logic Devices history}
-\noindent Historically, TTL (Transistor–Transistor Logic) chips fuelled an initial wave of digital system designs in
+\noindent Historically, TTL (Transistor–Transistor Logic) chips were the base of every digital system designs in
 the 1970s.
 %This section will focus on the separate branches that evolved to satisfy the demand
 %for programmability of different logic functions.
-By programmability, it is meant the ability of a
+By programmability it is meant the ability of a
 designer to affect the logic behaviour of a chip after it has been produced in the factory.
 \newline
 \noindent A first improvement in the direction of programmability came with the introduction of gate
-arrays, which were nothing else than a chip filled with NAND gates that the designer could
-interconnect as needed to generate any logic function he desired.
+arrays, which were chips filled with NAND gates that the designer could
+interconnect as needed to generate any desired logic function.
 This interconnection had to happen
 at the chip design stage, thus before production, but it was already a convenient improvement over
 designing everything from scratch. Until the introduction of Programmable Logic
-Arrays (PLAs) in the 1980s no real programmable solution was available. These were two-level AND-OR
+Arrays (PLAs) in the 1980s no real programmable solution was available. These devices were two-level AND-OR
 structures with user-programmable connections.
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=0.7\linewidth]{IMG/ch3/PLD}
-%	\caption{Unprogrammed PROM (Fixed AND Array, Programmable OR Array)}
-%	\label{fig:pld}
-%\end{figure}
-
+\newline 
 \noindent Programmable Array Logic (PAL) devices were an
 improvement in performance and cost over the PLA structure. Today, these devices are collectively
 called Programmable Logic Devices (PLDs).
-
-\noindent The next stage in sophistication resulted in Complex PLDs (CPLDs), which were nothing else
-than a collection of multiple PLDs with programmable interconnections. FPGAs, in turn, contain a
+\newline
+\noindent The next stage in sophistication resulted in Complex PLDs (CPLDs), which were a collection of multiple PLDs with programmable interconnections. FPGAs, in turn, contain a
 much larger number of simpler blocks with the attendant increase in interconnect logic, which in fact
 dominates the entire chip.
 \begin{figure}[H]
@@ -62,7 +54,7 @@ caused observable changes in the device characteristics
 and tools. Each age is eight years long and each
 became apparent only in retrospect. The three ages are:
 \begin{itemize}
-	\item Age of Invention 1984–1991
+	\item Age of Invention (1984–1991)
 	\newline
 	In the Age of Invention, FPGAs were small, so the design problem was small. Though they were desirable, synthesis
 	and even automated placement and routing were not considered essential. Many deemed it impractical even to
@@ -76,15 +68,15 @@ became apparent only in retrospect. The three ages are:
 	\newline
 	In the Age of Invention, FPGAs were much smaller than the applications that users wanted to put into them. As a
 	result multiple-FPGA systems became popular and automated multi-chip partitioning software was identified as
-	an important component of an FPGA design suite, even as automatic placement and routing were not.
-	\item Age of Expansion 1992–1999
+	an important component of an FPGA design suite, despite automatic placement and routing were not.
+	\item Age of Expansion (1992–1999)
 	\newline
 	Through the Age of Expansion, Moore’s Law rapidly increased the capacity of FPGAs, leading to a demand for
 	design automation and permitting longer interconnect segmentation.
-	FPGAs encroached on ASIC territory as FPGA device capacity grew more rapidly than the
+	FPGAs invaded on ASIC territory as FPGA device capacity grew more rapidly than the
 	demand from applications. No longer did users clamor for multi-FPGA partitioning software.
 	As FPGAs became more popular, EDA companies became interested in providing tools for them.
-	\item Age of Accumulation 2000–2007
+	\item Age of Accumulation (2000–2007)
 	\newline
 	The biggest change in FPGAs in the Age of Accumulation was the change in the target application. The FPGA
 	business grew not from general ASIC replacement, but from adoption by the communications infrastructure. Companies
@@ -96,16 +88,16 @@ became apparent only in retrospect. The three ages are:
 
 \section{FPGA Versus PAL}
 \noindent Programmable logic was well established before the
-FPGA. EPROM-programmed Programmable Array Logic
-(PAL) had carved out a market niche in the early 1980s.
+FPGA. Programmable Array Logic
+(PAL) had earned a market niche in the early 1980s.
 However, FPGAs had an architectural advantage. To understand
 the FPGA advantage, we first look at the simple
 programmable logic structures of these early 1980s devices.
 A PAL device, as depicted in figure \ref{fig:pal}, consists of a two level
 logic structure. Inputs are shown entering at
-the bottom. On the left side, a programmable and array
+the bottom. On the left side, a programmable AND array
 generates product terms, ands of any combination of the
-inputs and their inverses. A fixed or gate in the block at
+inputs and their inverses. A fixed OR gate in the block at
 the right completes the combinational logic function of the
 macrocell’s product terms. Every macrocell output is an
 output of the chip.
@@ -120,26 +112,26 @@ The delay through the PAL array is the same regardless of the function performed
 PALs had simple fitting software that mapped logic quickly to arbitrary locations in the array with no performance concerns.
 PALs were very efficient from a manufacturing point of view.
 However, the architectural issue with PALs is evident when one considers scaling. The number of programmable points in
-the and array grows with the square of the number of inputs. PAL input and product-term lines are also
+the AND array grows with the square of the number of inputs. PAL input and product-term lines are also
 heavily loaded, so delay grows rapidly as size increases. To maintain speed, power consumption rose dramatically. Large PALs were
 impractical in both area and performance.
 \newline
-The FPGA innovation was the elimination of the and array that provided the programmability. Instead, configuration
-memory cells were distributed around the array to control functionality and wiring. This change gave up the
+The FPGA innovation was the elimination of the AND array that provided the programmability. Instead, configuration
+memory cells were distributed around the array to control functionality and wiring. This change eliminated the
 memory-array-like efficiency of the PAL structure in favor of architectural scalability. The architecture of the FPGA,
 shown in figure 4, consists of an array of programmable logic blocks and interconnect with field-programmable switches.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch3/FPGA}
-	\caption{Generic array FPGA architecture. 4x4 array with three wiring
+	\caption{Generic FPGA architecture. 4x4 array with three wiring
 		tracks per row and column. Switches are at the circles at intersections.
 		Device inputs and outputs are distributed around the array.}
 	\label{fig:fpga}
 \end{figure}
 \noindent The consequences of this change were:
 \begin{itemize}
-	\item FPGA architecture could look nothing like a memory. Design and manufacturing were very different than memory.
-	\item The logic blocks were smaller. There was no guarantee that a single function would fit into one. Therefore, it was difficult to determine ahead of time how much logic would fit into the FPGA.
+	\item FPGA architecture could look extremely different from a memory. Design and manufacturing were also nothing like a memory.
+	\item The logic blocks were smaller. There was no guarantee that a single function would fit into one. Therefore, it was difficult to determine before how much logic would fit into the FPGA.
 	\item The performance of the FPGA depended on where the logic was placed in the FPGA. FPGAs required placement and routing, so the performance of the finished design was not easy to predict in advance.
 	\item Complex EDA (Electronic Design Automation) software was required to fit a design into an FPGA.
 \end{itemize}
@@ -156,7 +148,7 @@ ASICs, and in the fierce competition, the winning attributes
 were low cost, high capacity and high speed.When
 FPGAs appeared, they compared poorly on all of these
 measures, yet they thrived. The ASIC functionality was determined by custom mask
-tooling. ASIC customers paid for those masks!
+tooling and ASIC customers paid for those masks.
 Because they had no custom tooling, FPGAs reduced the up-front
 cost and risk of building custom digital logic. By making
 one custom silicon device that could be used by hundreds or
@@ -169,11 +161,10 @@ amortized the costs over all customers.
 		versus number of units. FPGA lines are darker and start at the lower
 		left corner. With the adoption of the next process node (arrows
 		from the earlier node in dashed lines to later node in solid lines),
-		the crossover point, indicated by the vertical dotted line, grew larger.
-		NRE (non-recurring engineering cost).}
+		the crossover point, indicated by the vertical dotted line, grew larger.}
 	\label{fig:cost}
 \end{figure}     
-\noindent  An FPGA has no NRE charge, but each unit costs more than the
+\noindent  An FPGA has no NRE (Non-Recurring Engineering cost) charge, however each unit costs more than the
 functionally equivalent ASIC, hence the steeper line. The
 two lines meet at the crossover point. If fewer than that
 number of units is required, the FPGA solution is cheaper;
@@ -182,7 +173,7 @@ lower overall cost.
 \newline
 Today, device cost is less of a driver in the FPGA
 versus ASIC decision than performance, time-to-market,
-power consumption, I/O capacity and other capabilities. Many ASIC customers use older process technology,
+power consumption, I/O capabilities and other features. Many ASIC customers use older process technology,
 lowering their NRE cost, but reducing the per-chip cost
 advantage. Not only did FPGAs eliminate the up-front masking
 charges and reduce inventory costs, but they also reduced
@@ -198,57 +189,57 @@ clock distribution.
 	\caption{Internal structure of a generic FPGA}
 	\label{fig:fpga2}
 \end{figure}
-\noindent A typical modern FPGA, like in figure \ref{fig:fpga2}, provides the user with programmable logic blocks that
+\noindent A typical modern FPGA, as depicted in figure \ref{fig:fpga2}, provides the user with programmable logic blocks that
 contain the pool of combinatorial blocks and flip-flops to be used in the design. In addition, vendors
 acknowledge the fact that logic is often used with memory, and typically include
-variable amounts of static Random Access Memory (RAM) inside their chips. Clock conditioning has
+variable amounts of Static Random Access Memory (SRAM) inside their chips. Clock management has
 also become commonplace, and support in the form of Delay Locked Loops (DLLs) and Phase Locked
 Loops (PLLs) is also provided inside the same silicon chip. Finally, an FPGA chip needs to be easily interfaced to other chips or
 external signals. In order to make this interfacing easier, FPGA vendors have invested a great deal of
 effort in enhancing the flexibility of the input/output blocks behind the chip pads. Each pad can serve
 as an input, an output, or both. The list of electrical standards supported is extensive, and novel
-techniques for maximizing bandwidth, such as clocking data in using both edges of the clock, are
-widely supported.
+techniques for maximizing bandwidth, such as Double Data Rate (DDR), are widely supported.
 \newline
 All the components shown in figure \ref{fig:fpga2}, however, typically account for less than 20\% of the silicon
-inside an FPGA chip. What is not shown is the large amounts of programmable interconnect and the
-auxiliary circuits which ‘program’ the generic blocks to become a well-defined piece of logic.
+inside an FPGA chip. What is not shown is the large amounts of programmable interconnections and the
+auxiliary circuits which ‘program’ the generic blocks to become a well defined piece of logic.
 To overcome the silicon inefficiency problem, FPGA vendors often include hardwired
 Intellectual Property (IP) cores inside the chips for functions identified as recurrent in many designs.
 These non-programmable blocks include general-purpose processors, high-speed serial interfaces,
-arithmetic blocks and Ethernet Medium Access Control (MAC) units.
+arithmetic blocks and Ethernet Medium Access Control (MAC) units, Block Random Access Memories (BRAMs), Digital Signal Processors (DSPs) and more.
 \\
 FPGAs are truly parallel in nature so different processing operations do not have to compete for the same resources. As a result, the performance of one part of the application is not affected when additional processing is added.
 \newline
-\noindent In figure \ref{fig:fpga} it can be seen that the three more important blocks that made a FPGA chip are: Configurable logic Blocks (CBLs, blue squares); Input/Output Blocks (IOBs, green rectangles); Programmable Switch Matrixs (PSMs, blue octagon).
+\noindent In figure \ref{fig:fpga} it can be seen that the three more important blocks that made a FPGA chip are: Configurable Logic Blocks (CBLs, blue squares); Input/Output Blocks (IOBs, green rectangles); Programmable Switch Matrixs (PSMs, blue octagon).
 \begin{itemize}
-	\item \textbf{CBLs}: Each CLB consists of n-input Lookup table and a pair of programmable flip flops. In Xilinx logic block, figure \ref{fig:clb}, a Look up table is used to implement any number of different functionality. The output of the lookup table gives the result of the logic function that it implements. Lookup table is implemented using SRAM (Static Random Access Memory).
+	\item \textbf{CBLs}: Each CLB consists of n-input LookUp Table and a pair of programmable flip flops. In Xilinx devices Logic Blocks, figure \ref{fig:clb}, a LookUp Table is used to implement any number of combinational functionality. The output of the LookUp Table gives the result of the logic function that it implements. LookUp Tables are implemented using SRAM (Static Random Access Memory).
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.7\linewidth]{IMG/ch3/CLB}
-		\caption{Xilinx - LUT based configurable logic block}
+		\caption{Xilinx - LUT based Configurable Logic Block}
 		\label{fig:clb}
 	\end{figure}
-	\item \textbf{IOBs}: I/O blocks control functions such as tri-state buffer control, output transition speed (Slew Rate).
-	\newline
-	Provides to the chip a minimum of over-current and over-voltage protection and the right termination for each specific type of signalling.
+	\item \textbf{IOBs}: I/O blocks control functions such as tri-state buffer control and output transition speed (Slew Rate).
+	This type of block provides to the chip over-current and over-voltage protection and the right termination for each specific type of signalling.
 	\item \textbf{PSMs}: Interconnects provide routing path. Using 6 CMOS switches controlled by a 6-bit data can be controlled a  wire intersection. Being \textbf{A}, \textbf{B}, \textbf{C} and \textbf{D} the  end of the routing the following connections can be made: \textbf{AB}, \textbf{AC}, \textbf{AD}, \textbf{BC}, \textbf{BD} and \textbf{CD}.
-	\newline
 	The data for each PSM is stored in a SRAM.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.25\linewidth]{IMG/ch3/PSM}
+		\caption{PSM design structure}
+		\label{fig:psm}
+	\end{figure}
 \end{itemize}
-\noindent Thus a board its configured in two ways:
-\begin{itemize}
-	\item By setting the intersections (SMBs) between the logic blocks.
-	\item By setting the function of each logic block.
-\end{itemize}
-\section{FPGA design flow and tools}
-\noindent The most common flow nowadays used in the design of FPGAs involves the following
+\noindent Thus a board its configured in two ways: by setting the intersections (PSMs) between the logic blocks and by setting the function of each logic block.
+
+\section{FPGA design flow and EDA tools}
+\noindent The most common flow used nowadays in the design of FPGAs involves the following
 subsequent phases:
 \begin{itemize}
 	\item \textbf{Design entry}: This step consists in transforming the design ideas into some form of
 	computerized representation. This is most commonly accomplished using Hardware Description
 	Languages (HDLs). The two most popular HDLs are Verilog and the Very High Speed
-	Integrated Circuit HDL (VHDL), used fot my thesis work. It should be noted that an HDL, as its name implies, is only
+	Integrated Circuit HDL (VHDL), used for my thesis work. It should be noted that an HDL, as its name implies, is only
 	a tool to describe a design that pre-existed in the mind, notes, and sketches of a designer. Another point to note is that HDLs differ from
 	conventional software programming languages in the sense that they don’t support the concept
 	of sequential execution of statements in the code. This is easy to understand if one considers the
@@ -273,7 +264,7 @@ subsequent phases:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\linewidth]{IMG/ch3/FLOW}
+	\includegraphics[width=0.4\linewidth]{IMG/ch3/FLOW}
 	\caption{Programmable logic, in this case FPGA, design process}
 	\label{fig:flow}
 \end{figure}
@@ -288,10 +279,10 @@ In 1985 Gateway Design Automation introduced Verilog and Intermetrics released t
 VHDL was developed at the behest of the United States Department of Defence's VHSIC program.
 Within a few years, VHDL and Verilog emerged as the dominant HDLs in the electronics industry.
 \subsection{VHDL}
-\noindent The biggest part of the FPGA firmware used in the MoVe\_IT project is written in VHDL\cite{vhdl}. This HDL was invented to describe hardware and in fact VHDL is a concurrent language. What this means is that, normally, VHDL instructions are all executed at the same time (concurrently), regardless of the size of the needed implementation. Thus the VHDL model can be translated into a form that can be used to generate actual working circuits.
+\noindent The biggest part of the FPGA firmware used in the MoVeIT project is written in VHDL\cite{vhdl}. This HDL was invented to describe hardware and in fact VHDL is a concurrent language. What this means is that, normally, VHDL instructions are all executed at the same time (concurrently), regardless of the size of the needed implementation. Thus the VHDL model can be translated into a form that can be used to generate actual working circuits.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch3/VHDL}
+	\includegraphics[width=0.6\linewidth]{IMG/ch3/VHDL}
 	\caption{The structure of a VHDL design description}
 	\label{fig:vhdl}
 \end{figure}
@@ -380,7 +371,7 @@ There are two main type of constraints:
 \section{Development tools}
 
 \subsection{Vivado}
-\noindent In the MoVe\_IT project for the simulation, synthesis and implementation of the firmware it was used only Xilinx Vivado software.
+\noindent In the MoVeIT project for the simulation, synthesis and implementation of the firmware it was used only Xilinx Vivado software.
 \newline
 Vivado Design Suite is a software suite produced by Xilinx for synthesis and analysis of HDL designs. It has also its own text editor, however it is not the most efficient tool for writing code.
 Vivado includes a in-built logic simulator, high-level synthesis, an IP (Intellectual Property) Integrator, and a toolchain that converts C code into programmable logic\cite{vivado}.
@@ -461,7 +452,7 @@ challenges.
 	technology.
 \end{itemize}
 \subsection{Kintex 7 kc705}
-\noindent In the MoVe\_IT project are used FPGA boards like the one in figure \ref{fig:kintex}, a Xilinx Kintex 7 kc705 development board\cite{kintex7}.
+\noindent In the MoVeIT project are used FPGA boards like the one in figure \ref{fig:kintex}, a Xilinx Kintex 7 kc705 development board\cite{kintex7}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch3/KINTEX}

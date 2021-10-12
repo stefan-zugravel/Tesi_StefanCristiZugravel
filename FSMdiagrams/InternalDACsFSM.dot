@@ -3,9 +3,9 @@ digraph G {
 	newrank=true;
 	nodesep=0.655;
 	
-	Iddle [shape=box];
+	Idle [shape=box];
 	WaitFirstClock [label="Wait First\nClock"];
-	Iddle -> WaitFirstClock;
+	Idle -> WaitFirstClock;
 	WaitFirstClock -> SetData;
 	
 	subgraph cluster_0 {
@@ -37,7 +37,7 @@ digraph G {
 		ClearClockEndComm -> EndComm [label="Clock Number < 64"];
 	}
 	
-	EndComm -> Iddle [label="Clock Number = 64"];
+	EndComm -> Idle [label="Clock Number = 64"];
 	
 	{ rank=same; SetData; EndComm; }
 }

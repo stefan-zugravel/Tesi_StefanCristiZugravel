@@ -1,7 +1,7 @@
 \chapter{Development of a device for direct counting of the number of beam particles}
 
 \section{Introduction}
-This chapter will focus on the devices under development within the MoVe\_IT project in order to obtain a single proton counting device.
+This chapter will focus on the devices under development within the MoVeIT project in order to obtain a single proton counting device.
 This comprehends a solid state detector, the ASICs used to digitalise the signal and the final read-out board.
 \begin{figure}[H]
 	\centering
@@ -10,12 +10,12 @@ This comprehends a solid state detector, the ASICs used to digitalise the signal
 	\label{fig:block}
 \end{figure}
 \noindent In figure \ref{fig:block} it can be seen a diagram with the "data flow" of the Project.
-The particle beam coming from the accelerators are detected by a LGAD (Low Gain Avalanche Diode) sensor that will be discussed in section \ref{lgad}, the current signal coming from the detector is the digitalized by the second version of a full custom circuit called ABACUS\_v2 that will be discussed in section \ref{chip}.
+The particle beam coming from the accelerators are detected by a LGAD (Low Gain Avalanche Diode) sensor that will be discussed in section \ref{lgad}, the current signal coming from the detector is the digitalized by the second version of a full custom circuit called ABACUS2 that will be discussed in section \ref{chip}.
 This ASIC will be mounted on a full custom PCB named EsaAbacus that will be analysed in section \ref{esaabacus}.
 The data from the chip is then read by an FPGA board, a general purpose device that will be described in detail within chapter 3.
 The FPGA elaborates the data and finally sends them to a computer. In the final operational device the computer, on the base of the counted particles, should move and control the beam in a close and controlled loop. 
 
-\section{MoVe\_IT project}\label{moveit}
+\section{MoVeIT project}\label{moveit}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.35\linewidth]{IMG/ch2/Move_IT_logo}
@@ -23,7 +23,7 @@ The FPGA elaborates the data and finally sends them to a computer. In the final 
 	%\label{fig:moveit}
 \end{figure}
 \noindent Currently the Medical Physics group at University of Torino and INFN (the Italian National Institute for
-Nuclear and Particle Physics) is participating to the MoVe\_IT\cite{moveit} (Modeling and Verification for Ion beam Treatment planning)
+Nuclear and Particle Physics) is participating to the MoVeIT\cite{moveit} (Modeling and Verification for Ion beam Treatment planning)
 research project, which aims to develop new and
 innovative models for biologically optimized Treatment Planning Systems (TPS) using ion beams in hadron therapy.
 As~part of the project the Torino group is involved in the development of solid state detectors and readout electronics for measuring with high precision
@@ -98,12 +98,12 @@ of the sensors decreases with the dose, but this can be compensated by raising t
 %to reach a stable behavior up to >1015~n$_{eq}$/cm$^2$ fluencies in the next 1 or 2 years.
 
 
-\section{ABACUS\_v2 chip}\label{chip}
-\noindent The signal from each detector strip, that can be seen in figure \ref{fig:signal}, is connected to an input channel of the new ABACUS\_v2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 26$^{th}$ 2020.
+\section{ABACUS2 chip}\label{chip}
+\noindent The signal from each detector strip, that can be seen in figure \ref{fig:signal}, is connected to an input channel of the new ABACUS2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 26$^{th}$ 2020.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch2/ABACUS2.png}
-	\caption{ABACUS\_v2 chip die view}
+	\caption{ABACUS2 chip die view}
 	\label{fig:abacus2}
 \end{figure}
 \noindent In figure \ref{fig:abacus2} it can be seen a schematic of the chip die area. Inside the black rectangle it can be seen a single channel. Its design will be analysed later in this section.
@@ -115,16 +115,16 @@ The second group (group B) is based on a Regulated Common Gate (RCG) input stage
 The pro and cons of the two architectures will not be a part of this thesis.\\
 As already discussed, the design goal of the counting device is to measure the number of protons with a maximum error of 1\% up to a fluxes of 10$^8$~p/(cm$^2$$\cdot$s).
 For a single particle the efficiency must be greater than 99\%, and this defines the range of charges the electronics must be able to accept.
-The ABACUS\_v2 chip was optimized for an input capacitance between 5 and 20 pF and to cope with continuous signals up to 100 MHz rate.
+The ABACUS2 chip was optimized for an input capacitance between 5 and 20 pF and to cope with continuous signals up to 100 MHz rate.
 It can accept input charges from 3~fC to 140~fC, has a dead time <~10~ns and a SNR~>~10. 
 
-\subsection{ABACUS\_v2 Channel structure}
-In order to understand the measurements from chapter 5 and the goal of this thesis work it is extremely important to analyse how the ABACUS\_v2 channel works.
+\subsection{ABACUS2 Channel structure}
+In order to understand the measurements from chapter 5 and the goal of this thesis work it is extremely important to analyse how the ABACUS2 channel works.
 In figure \ref{fig:abacuschannel} the block diagram of one channel is shown.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch2/Abacus_channel.png}
-	\caption{Single channel diagram of the ABACUS\_v2 chip}
+	\caption{Single channel diagram of the ABACUS2 chip}
 	\label{fig:abacuschannel}
 \end{figure}
 \noindent A low noise CSA (Charge Sensitive Amplifier) (1) is followed by a low-pass filter (2).
@@ -176,22 +176,22 @@ The DACs are programmed using 16~bit serial words; the configuration process is 
 \noindent In figure \ref{fig:intdactable} it can be seen that with a reference voltage of 600~mV the LSB should be 0.94~mV, this means that, being this a 6~bit DAC, the maximum trimming voltage is $\approx$~59.2~mV. For reference, an usual value for the pedestal voltage in around $\approx$~560~mV. Thus these internal DACs are used to fine tune the threshold voltage of the discriminator, while the bulk of the work is done by the external one.   
 \newpage
 \section{ESA-ABACUS}\label{esaabacus}
-\noindent As explained in section \ref{moveit} the final detector will have 144 strips, however each ABACUS\_v2 chip can read only 24 channels; this means that for the ultimate sensor read-out 6 chips are needed (24$\cdot$6~=~144).
-In order to utilize these device at the same time the Turin INFN group developed, built and tested a new board, called ESA-ABACUS, that can accommodate and handle 6 ABACUS\_v2 chips. The ESA-ABACUS board can be seen in figure \ref{fig:esaabacus}.
+\noindent As explained in section \ref{moveit} the final detector will have 144 strips, however each ABACUS2 chip can read only 24 channels; this means that for the ultimate sensor read-out 6 chips are needed (24$\cdot$6~=~144).
+In order to utilize these device at the same time the Turin INFN group developed, built and tested a new board, called ESA-ABACUS, that can accommodate and handle 6 ABACUS2 chips. The ESA-ABACUS board can be seen in figure \ref{fig:esaabacus}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch2/EsaAbacus.png}
 	\caption{Esa-Abacus board, chips and detector are not yet bonded}
 	\label{fig:esaabacus}
 \end{figure}
-\noindent To be noted that each FPGA board used has enough Input/Output resources for two ABACUS\_v2 chips, this means that in order to utilize at his full potential the ESA-ABACUS three FPGA boards are needed (chapter 3 will explain in detail what an FPGA is).
+\noindent To be noted that each FPGA board used has enough Input/Output resources for two ABACUS2 chips, this means that in order to utilize at his full potential the ESA-ABACUS three FPGA boards are needed (chapter 3 will explain in detail what an FPGA is).
 The final goal is to use two of these devices placed in an orthogonal way in order to acquire the horizontal and vertical dispersion of the particle beam.
-To be noted that this board, on the contrary of the ABACUS\_v2 test board that will be described in section \ref{testboard}, is not intended for the validation of the chip, in fact it has no trimmers for any voltage regulation, instead it was made in order to test and utilize the 144 strip detector.
-The output signals from the ABACUS\_v2 chips use CML logic standard, however the FPGA boards used for the readout only support LVDS logic signals. In order to make the chip and FPGA communicate each ESA-ABACUS board has CML-LVDS converters installed.
+To be noted that this board, on the contrary of the ABACUS2 test board that will be described in section \ref{testboard}, is not intended for the validation of the chip, in fact it has no trimmers for any voltage regulation, instead it was made in order to test and utilize the 144 strip detector.
+The output signals from the ABACUS2 chips use CML logic standard, however the FPGA boards used for the readout only support LVDS logic signals. In order to make the chip and FPGA communicate each ESA-ABACUS board has CML-LVDS converters installed.
 
 
 \section{FPGA board tasks}
-\noindent As explained in previous sections the digital data coming from the ABACUS\_v2 chip is analysed by an FPGA board. In this section it will be described what this devices is used for, which are its tasks and what I will implement in the new version of the firmware.
+\noindent As explained in previous sections the digital data coming from the ABACUS2 chip is analysed by an FPGA board. In this section it will be described what this devices is used for, which are its tasks and what I will implement in the new version of the firmware.
 The FPGA (Field Programmable Gate Array, chapter 3) board, is a programmable device that allows to build complex electronic logic circuits with multiples Input/Output ports and many LUTs, RAMs and FIFOs by "just typing" the desired logic on a computer.
 In this case the \textit{desired logic} does three main things: 
 \begin{itemize}
