@@ -1,6 +1,8 @@
 \chapter{Experimental setup and test results}
 \section{Introduction}
-This chapter will focus on the firmware validation procedures and on the devices used for this purpose. The first half of the chapter will introduce the test bench setup, the ABACUS2 test board and other hardware devices involved. The second half will analyse how the new addition to the firmware perform on real hardware; trimming DAC configuration test, latch data taking and timestamp measurement have been performed with success.
+This chapter will focus on the firmware validation procedures and on the devices used for this purpose.
+The first half of the chapter will introduce the test bench setup, the ABACUS2 test board and other hardware devices involved.
+The second half will analyse how the new firmware extensions perform on real hardware; this was done by performing trimming DACs configuration tests, and rate measurements using the new latch system and timestamp generator.
 
 \section{Experimental setup}\label{testbench}
 \begin{figure}[H]
@@ -76,7 +78,7 @@ The data coming from the FPGA to the chip is at 2.5~V single-ended. To lower thi
 \end{figure}
 \noindent To obtain the 1.2~V output voltage three resistors were used: a 3.3~k$\Omega$ one for the first stage and a 6.8~k$\Omega$ and 5.6~k$\Omega$ placed in parallel for the second stage.
 \subsection{Level translator}\label{leveltranslator}
-The data coming from the ABACUS2 internal DACs I2C controller are at 1.2~V. This value is too low and thus the board reads it as a logic \textit{low} value. A voltage translation circuit is mandatory in order to boost the signal \textit{high} value.
+The data coming from the ABACUS2 internal DACs I2C controller are 1.2~V CMOS. This value is too low and thus the board reads it as a logic \textit{low} value. A voltage translation circuit is mandatory in order to boost the signal \textit{high} value.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch5/DIAGRAM}

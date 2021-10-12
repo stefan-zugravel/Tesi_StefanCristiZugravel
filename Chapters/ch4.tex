@@ -294,8 +294,7 @@ If \textit{shift\_register\_baseline\_dac(15 downto 8) = 11 + fifo\_data(14 down
 	\caption{}
 	\label{fig:fsmshiftregister}
 \end{figure}
-\noindent In figure \ref{fig:fsmshiftregister} the read command was \textit{"000 "10" "000100" "00000000" "0"} (read command on channel 4 ) and it can be seen that when the first 8~bits of the shift register are \textit{"11000100"} it means that the last 8 bits are the data, in this case \textit{"00110011"}~=~\textit{0x33};
-\newline
+\noindent In figure \ref{fig:fsmshiftregister} the read command was \textit{"000 "10" "000100" "00000000" "0"} (read command on channel 4 ) and it can be seen that when the first 8~bits of the shift register are \textit{"11000100"} it means that the last 8 bits are the data, in this case \textit{"00110011"}~=~\textit{0x33}.
 On board tests will be analysed  in section \ref{dactests}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -304,7 +303,7 @@ On board tests will be analysed  in section \ref{dactests}.
 The main one was the fact that the firmware could not read the value of two or more counters at the same time.
 This means that it was not possible to have a global photography of each counter.
 In order to solve the problem I implemented a latch system that saves into a memory the current state of every counter of the firmware and generates a timestamp.
-I then created a new module, called \textit{tera10\_latch\_counter} that contains all the memory and the logic needed for the latch system and for the timestamp generation. This last part will be explained in section \ref{Timestamp}.
+I thus created a new module, called \textit{tera10\_latch\_counter} that contains all the memory and the logic needed for the latch system and for the timestamp generation. This last part will be explained in section \ref{Timestamp}.
 The firmware has a total of 192 counters that needs to be latched, which are divided as follows:
 \begin{itemize}
 	\item 48 hit counters
@@ -441,16 +440,11 @@ In figure \ref{fig:allcounters} the number of used RAM blocks doubled, it is not
 	\end{minipage}
 \end{figure}
 \subsubsection{Timing}
-\noindent When writing RTL (Register Transfer Level)\cite{timing}, the design is described in terms of what happens between registers. “What happens” is combinational logic. In FPGAs, that combinational logic is implemented as networks of look-up tables (LUTs). Data is "waiting" at the output of some registers. It flows through a combinational network of LUTs until a stable result is achieved and is presented to the inputs of the next register. Then, the next clock edge arrives and clocks that result into the register.
-What often happens in practice is that the data takes too long to propagate through the combinational logic, and it isn’t ready by the time the clock edge arrives to clock the data into the next register.
-Instead, what gets clocked in is some transient result that almost certainly is wrong. This is known as \textit{TIMING VIOLATION}.
-The design tools can estimate how long data will take to flow through the combinational logic and arrive at those inputs, and it will let know that the design has a problem. It does so by adding up the expected delay from all the LUTs (and the wiring that interconnects them) and compares that with the clock period.
-If the combinational delay is less than the clock period, the difference is called the “slack”. When the combinational delay is more than the clock period, it appears the “negative slack”. Negative slack is bad.
-The Vivado design suite has a Design Timing Report Summary that allows the user to easily rate the timing behaviour of the design.
+\noindent The Vivado design suite has a Design Timing Report Summary that allows the user to easily rate the timing behaviour of the design.
 In figure \ref{fig:timingperfect} it can be seen such report.
 The Worst Negative Slack (WNS) is the slack value, in nano-seconds (ns), of the path with the worst timing. In this case this value is 0.122~ns which is greater than zero. This means that the path with the worst timing still meets the constraints.
 The Total Negative Slack (TNS) is the slack sum of every path that do not met timing constraints. In this case it is 0,000~ns; this means that there are NO problematic paths in the implemented design.
-%When minimizing the timing Slack the placer needs also to consider every physical constraint such as Input and output pins.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/TIMING_perfect}

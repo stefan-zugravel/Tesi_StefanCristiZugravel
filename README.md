@@ -1,4 +1,4 @@
-# Tesi_StefanCristiZugravel
+# Stefan Cristi Zugravel
 
 Tesi di Laurea Magistrale di **Stefan Cristi Zugravel**
 
@@ -10,7 +10,7 @@ Curricula in Fisica delle Tecnologie Avanzate
 
 Anno Accademico 2020/2021
 
-Laurea prevista per 27/28 ottobre 2021
+Laurea discussa il 27 ottobre 2021
 
 ## Instructions
 
@@ -27,8 +27,5 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dNOPAUSE -dQUIET -dBATCH -dPrinte
 ```
 
 ## TO DO LIST
-1. Write a better descriptoin for the FMC debug tool
-2. Write chapter 5
-3. Write chapter 2
-4. Do the latch and Timestamp tests
-5. Add resistor value in section 5.4.1
+1. Rewrite conclusions
+2. Add references

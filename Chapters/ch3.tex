@@ -54,8 +54,7 @@ caused observable changes in the device characteristics
 and tools. Each age is eight years long and each
 became apparent only in retrospect. The three ages are:
 \begin{itemize}
-	\item Age of Invention (1984–1991)
-	\newline
+	\item \textbf{Age of Invention (1984–1991)}:
 	In the Age of Invention, FPGAs were small, so the design problem was small. Though they were desirable, synthesis
 	and even automated placement and routing were not considered essential. Many deemed it impractical even to
 	attempt design automation on the personal computers of the time, since ASIC placement and routing was being
@@ -69,15 +68,13 @@ became apparent only in retrospect. The three ages are:
 	In the Age of Invention, FPGAs were much smaller than the applications that users wanted to put into them. As a
 	result multiple-FPGA systems became popular and automated multi-chip partitioning software was identified as
 	an important component of an FPGA design suite, despite automatic placement and routing were not.
-	\item Age of Expansion (1992–1999)
-	\newline
+	\item \textbf{Age of Expansion (1992–1999)}:
 	Through the Age of Expansion, Moore’s Law rapidly increased the capacity of FPGAs, leading to a demand for
 	design automation and permitting longer interconnect segmentation.
 	FPGAs invaded on ASIC territory as FPGA device capacity grew more rapidly than the
 	demand from applications. No longer did users clamor for multi-FPGA partitioning software.
 	As FPGAs became more popular, EDA companies became interested in providing tools for them.
-	\item Age of Accumulation (2000–2007)
-	\newline
+	\item \textbf{Age of Accumulation (2000–2007)}:
 	The biggest change in FPGAs in the Age of Accumulation was the change in the target application. The FPGA
 	business grew not from general ASIC replacement, but from adoption by the communications infrastructure. Companies
 	such as Cisco Systems used FPGAs to make custom data paths for steering huge volumes of internet and packetized
@@ -138,7 +135,7 @@ shown in figure 4, consists of an array of programmable logic blocks and interco
 
 
 
-
+\newpage
 \section{FPGA vs ASIC}
 \noindent In the 1980s, Application-Specific Integrated Circuit
 (ASIC) companies brought an amazing product to the
@@ -156,7 +153,7 @@ thousands of customers, the FPGA vendor effectively
 amortized the costs over all customers.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch3/COST}
+	\includegraphics[width=0.75\linewidth]{IMG/ch3/COST}
 	\caption{FPGA versus ASIC Crossover Point. Graph shows total cost
 		versus number of units. FPGA lines are darker and start at the lower
 		left corner. With the adoption of the next process node (arrows
@@ -246,19 +243,19 @@ subsequent phases:
 	alternative schematic representation of an HDL file: what one sees in the upper part of the
 	schematic cannot be said to happen before or after what one sees in the lower part.
 	This is the only human-labour intensive part of the design process.
-	\item \textbf{Simulation}: Typically, the design entry step is followed or interspersed with periods of functional simulation. That's where a simulator is used to execute the design and confirm that the correct outputs are produced for a given set of test inputs\cite{fpga4}. This section will be analyzed in more detail later on in this chapter.
-	\item \textbf{Synthesis}: The synthesis tool receives HDL and a choice of FPGA vendor and model. From
-	these two pieces of information, it generates a netlist which uses the primitives proposed by the
+	\item \textbf{Simulation}: The design entry step is always followed with periods of functional simulation. That is where a digital simulator software is used to execute the design and confirm that the correct outputs are produced for a given set of test inputs\cite{fpga4}. This section will be analysed in more detail later on in this chapter.
+	\item \textbf{Synthesis}: The synthesis tool receives the HDL code, a FPGA vendor and model and timing information constraints. From
+	these three pieces of information, it generates a netlist which uses the primitives proposed by the
 	vendor in order to satisfy the logic behaviour specified in the HDL files.
 	\item \textbf{Place and route}: The placer takes the synthesized netlist and chooses a place for each of the
-	primitives inside the chip. The router’s task is then to interconnect all these primitives together
+	primitives inside the chip. The router task is then to interconnect all these primitives together
 	satisfying the timing constraints. The most obvious constraint for a design is the frequency of
 	the system clock, but there are more involved constraints one can impose on a design using the
 	software packages supported by the vendors.
-	\item \textbf{Bit stream generation (Download)}: FPGAs are typically configured at power-up time from some sort of
+	\item \textbf{Bit stream generation (Device programming)}: FPGAs are typically configured at power-up time from some sort of
 	external permanent storage device, typically a flash memory. Once the place and route process is
 	finished, the resulting choices for the configuration of each programmable element in the FPGA
-	chip, be it logic or interconnect, must be stored in a file to program the flash.
+	chip, be it logic or interconnect, must be stored in a binary file to program the flash.
 	
 \end{itemize}
 
@@ -269,17 +266,17 @@ subsequent phases:
 	\label{fig:flow}
 \end{figure}
 
-\section{Hardware Description Language}
-\noindent Hardware description language (HDL) is a specialized computer language used to describe the structure and behaviour of electronic circuits, and most commonly, digital logic circuits\cite{hdl}. A hardware description language looks like a programming language similar to C; it is a textual description consisting of expressions, statements and control structures. One important difference between most programming languages and HDLs is that HDLs explicitly include the notion of time.
+\section{Hardware Description Languages}
+\noindent Hardware Description Languages (HDLs) are a specialized computer languages used to describe and simulate the structure and behaviour of electronic circuits, and most commonly, digital logic circuits\cite{hdl}. A hardware description language looks like a software programming language; it is a textual description consisting of expressions, statements and control structures. One important difference between most programming languages and HDLs is that HDLs explicitly include the notion of time.
 HDLs form an integral part of EDA systems, especially for complex circuits, such as ASICs, PLDs and FPGAs.
 \newline
 The first hardware description languages appeared in the late 1960s, looking like more traditional languages.
 By the late 1970s, design using PLDs became popular, although these designs were primarily limited to designing finite-state machines.
-In 1985 Gateway Design Automation introduced Verilog and Intermetrics released the first completed version of the VHSIC (Very High Speed Integrated Circuit) Hardware Description Language (VHDL).
-VHDL was developed at the behest of the United States Department of Defence's VHSIC program.
+In 1985 Gateway Design Automation (now Cadence Design Systems) introduced Verilog and Intermetrics released the first completed version of the VHSIC (Very High Speed Integrated Circuit) Hardware Description Language (VHDL).
+VHDL was developed at the behest of the United States Department of Defence VHSIC program.
 Within a few years, VHDL and Verilog emerged as the dominant HDLs in the electronics industry.
 \subsection{VHDL}
-\noindent The biggest part of the FPGA firmware used in the MoVeIT project is written in VHDL\cite{vhdl}. This HDL was invented to describe hardware and in fact VHDL is a concurrent language. What this means is that, normally, VHDL instructions are all executed at the same time (concurrently), regardless of the size of the needed implementation. Thus the VHDL model can be translated into a form that can be used to generate actual working circuits.
+\noindent The biggest part of the FPGA firmware used in the MoVeIT project is written in VHDL\cite{vhdl}. This HDL was invented to describe hardware and in fact VHDL is a concurrent language. What this means is that, normally, VHDL instructions are all executed at the same time (concurrently), regardless of the size of the needed implementation. Thus the VHDL model can be translated into a form that can be used to generate actual working circuits. In the following the most important language features are briefly discussed. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch3/VHDL}
@@ -288,8 +285,8 @@ Within a few years, VHDL and Verilog emerged as the dominant HDLs in the electro
 \end{figure}
 
 \subsection{Entity}
-\noindent A digital system is structured as a hierarchic collection of modules. Each module, that can be  has a series of ports that enables him to communicate with the external world. The VHDL entity provides a simple wrapper for the
-lower-level circuitry. This wrapper effectively describes how the black box interfaces with the outside world. Since VHDL describes digital circuits, the entity simply lists the various inputs and outputs of the underlying circuitry.
+\noindent A digital system is structured as a hierarchical collection of modules. Each module has a series of ports that enables it to communicate with the external world. The VHDL entity provides a simple wrapper for the lower-level circuitry.
+This wrapper effectively describes how the black box interfaces with the outside world. Since VHDL describes digital circuits, the entity simply lists the various inputs and outputs of the underlying circuitry.
 \begin{figure}
 	\centering
 	\begin{minipage}{.5\textwidth}
@@ -305,7 +302,7 @@ lower-level circuitry. This wrapper effectively describes how the black box inte
 		\label{fig:entity1}
 	\end{minipage}
 \end{figure}
-\noindent In figure \ref{fig:entity2} it can be seen that each port matches an arrow in figure \ref{fig:entity1}; the arrow goes inside the black box for an input and outside for an output. The data type std\_logic is what the IEEE has standardized for the representation of digital signals. 
+\noindent In figure \ref{fig:entity2} it can be seen that each port matches an arrow in figure \ref{fig:entity1}; the arrow goes inside the black box for an input and outside for an output. The data type \textit{std\_logic} is what the IEEE has standardized for the representation of digital signals. 
 
 \subsection{Architecture}
 \noindent The VHDL entity declaration, introduced before, describes the interface or the external representation of the circuit. The architecture describes what the circuit actually does.
@@ -316,32 +313,32 @@ An architecture can be written by means of three modelling techniques
 plus any combination of these three. There is the data-flow model, the behavioural model and the structural model.
 \begin{itemize}
 	\item \textbf{data-flow model}:
-	\newline
 	In the data-flow approach, circuits are described by showing the input and output relationships between the various built-in components of the VHDL language. The built-in components of VHDL include operators such as AND, OR, XOR, etc.
-	It is good that it can be seen the flow of data in the circuit by examining the VHDL code, however data-flow modelling works fine for small and relatively simple circuits; as circuits become more complicated, it is often advantageous
-	to switch to behavioural style models.
+	It is good that it can be seen the flow of data in the circuit by examining the VHDL code, however data-flow modelling works fine for small and relatively simple circuits; as circuits become more complicated, it is often advantageous to switch to behavioural style models.
+	This coding style is also called RTL (Register Transfer Logic).
 	\item \textbf{behavioural model}:
-	\newline
 	The behavioural style architecture provides no details as to how the design is implemented in actual hardware.
 	Instead, the behavioural style models how the circuit outputs will react to the circuit inputs.
-	Behavioural modelling is considered higher up on the circuit abstraction level as compared to data-flow models. It is the
-	VHDL synthesizer tool that decides the actual circuit implementation.
-	The heart of the behavioural style architecture is the process statement.
+	Behavioural modelling is considered higher up on the circuit abstraction level as compared to data-flow models.
+	It is the synthesiser tool that decides the actual circuit implementation.
+	The heart of the behavioural style architecture is the \textit{process} statement.	
 	\item \textbf{structural model}:
-	\newline
-	As digital designs become more complex, it becomes less likely that any one design can be implemented with any one of the three types of VHDL models. Most complex designs could be considered structural models. Modular designs promote understandability by packing low-level functionality into modules.
-	The VHDL structural model supports the reuse of design units. This includes units that have been previously designed as well as the ability to use predefined module libraries.
+	The term structural model is the term that VHDL uses for the modular design.
+	When designing a complex project, it should always be split in two or more simple design in order to better handle the complexity.
+	The benefits of modular design in VHDL are similar to the benefits that modular design or object-oriented design provides for higher-level computer languages.
+	\item \textbf{hybrid style}:
+	In VHDL hardware design coding is possible to use any combination of the previous design styles. This case is generally called hybrid style model.
 	
 \end{itemize}
 
-\subsection{Process}
-\noindent The process statement is a statement which contains a certain number of instructions that, when the process statement is executed, are executed sequentially. In other words, the process statement is a tool that can be used any time it is needed to execute a certain number of instructions in a sequential manner, one instruction after the other, from top to bottom.
+\subsection{VHDL Process}
+\noindent The \textit{process} statement is a statement which contains a certain number of instructions that are executed sequentially. In other words, the \textit{process} statement is a tool that can be used any time it is needed to execute a certain number of instructions in a sequential manner, one instruction after the other, from top to bottom.
 \newline
-The process statement in itself is a concurrent statement and therefore will be executed together with the other concurrent statements in the body of the architecture where it sits, like in figure \ref{fig:vhdl}.
+The \textit{process} statement is a concurrent element and therefore will be executed together with the other concurrent statements in the body of the architecture where it sits, like in figure \ref{fig:vhdl}.
 
-\subsection{Constraints}
-\noindent Constraints\cite{constraints1} are used to influence the FPGA design implementation tools including the
-synthesizer, and place-and-route tools. They allow the user to specify the design
+\subsection{Design Constraints}
+\noindent Design constraints\cite{constraints1} are used to guide synthesis and placement tools in the FPGA design implementation.
+They allow the user to specify the design
 performance requirements and guide the tools toward meeting those requirements. The
 implementation tools prioritize their actions based on the optimization levels of synthesis,
 specified timing, assignment of pins, and grouping of logic provided to the tools by the user.
@@ -356,27 +353,36 @@ There are two main type of constraints:
 		\item Relative Location (RLOC) constraints
 		\item Timing constraints
 	\end{itemize}
-	Timing constraints allow to specify the maximum allowable delay or skew on any given set of paths or nets in the design.
-	
-	\item \textbf{Physical constraints}. Constraints can also be attached to the elements in the physical design, that is, the design
-	after mapping has been performed. These constraints, like I/O pin selection, are referred to as physical constraints.	 
+	Timing constraints\cite{timing98} allow to specify the maximum allowable delay or skew on any given set of paths or nets in the design.
+	The two general types of timing constraints are \textit{global} and \textit{path-specific}.
+	\textit{Global} timing constraints cover all paths within the logic design.
+	\textit{Path-specific} constraints cover specific paths, the more used design path constrains are: \textit{multicycle}, \textit{false path} and \textit{critical path}. 
+	\item \textbf{Physical constraints}. Constraints can be also attached to the elements in the physical design, that is, the design
+	after mapping has been performed. These constraints, such as I/O pin selection, are referred to as physical constraints.	 
 \end{itemize}
-\noindent XDC constraints are a combination of industry standard Synopsys Design Constraints (SDC) and Xilinx proprietary physical constraints. XDC constraints have the following properties:
+\noindent XDC (Xilinx Design Constraints) are a combination of industry standard Synopsys Design Constraints (SDC) and Xilinx proprietary physical constraints.
+XDC have the following properties:
 \begin{itemize}
-	\item They are not simple strings, but are commands that follow the Tcl (Tool command language) semantic.
-	\item They can be interpreted like any other Tcl command by the Vivado Tcl interpreter.
+	\item They are not simple strings, but are commands that follow the TCL (Tool command language) semantic, in section \ref{tcl}.
+	\item They can be interpreted like any other command by the software interpreter.
 	\item They can be stored in one or more XDC files.
 \end{itemize}
 
+\subsection{Timing}
+\noindent When writing RTL (Register Transfer Level)\cite{timing}, the design is described in terms of what happens between registers. “What happens” is combinational logic. In FPGAs, that combinational logic is implemented as networks of look-up tables (LUTs). Data is "waiting" at the output of some registers. It flows through a combinational network of LUTs until a stable result is achieved and is presented to the inputs of the next register. Then, the next clock edge arrives and clocks that result into the register.
+What often happens in practice is that the signal takes too long to propagate through the combinational logic, and it is not ready by the time the clock edge arrives to clock the data into the next register.
+Instead, what gets clocked in is some transient result that almost certainly is wrong. This is known as \textit{TIMING VIOLATION}.
+The design tools can estimate how long data will take to flow through the combinational logic and arrive at those inputs, and it will let know that the design has a problem. It does so by adding up the expected delay from all the LUTs (and the wiring that interconnects them) and compares that with the clock period.
+If the combinational delay is less than the clock period, the difference is called the “slack”. When the combinational delay is more than the clock period, it appears the “negative slack”. Negative slack is bad.
+
 \section{Development tools}
 
-\subsection{Vivado}
-\noindent In the MoVeIT project for the simulation, synthesis and implementation of the firmware it was used only Xilinx Vivado software.
-\newline
-Vivado Design Suite is a software suite produced by Xilinx for synthesis and analysis of HDL designs. It has also its own text editor, however it is not the most efficient tool for writing code.
-Vivado includes a in-built logic simulator, high-level synthesis, an IP (Intellectual Property) Integrator, and a toolchain that converts C code into programmable logic\cite{vivado}.
+\subsection{Xilinx Vivado Design Suite}
+\noindent In the MoVeIT project for the implementation, simulation and synthesis of the FPGA firmware it was used Xilinx Vivado software.
+Vivado Design Suite is a FPGA programming suite targeting Xilinx devices.
+Vivado includes a logic simulator (XSIM), High-Level Synthesis (HLS) and an IP (Intellectual Property) Integrator\cite{vivado}.
 This tool supports both VHDL and Verilog and can manage mixed language projects.
-For this project was used the Vivado 2015.4 version. 
+For the MoVeIT project it was used the Vivado 2015.4 version. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch3/VIVADO}
@@ -384,10 +390,8 @@ For this project was used the Vivado 2015.4 version.
 	\label{fig:vivado}
 \end{figure}
 
-\subsection{IP}
-\noindent \textit{"Intellectual property (IP) is a category of property that includes intangible creations of the human intellect."}
-\newline
-Xilinx allows the user to use pre-configured pieces of code that were written by expertises specifically for a particular purpose, such as: FIFO memory, RAM memory, Adder block, Clock Manager, De-Serializer block and more.
+\subsection{IP Cores}
+\noindent Xilinx allows the user to use pre-configured pieces of hardware that were written by expertises specifically for a particular purpose, such as: FIFO memory, RAM memory, Adder blocks, Clock Managers, De-Serializer blocks and more.
 In a complex project it is common to use a handful of IPs; first of all having a pre-prepared and tested block speeds-up the coding process and secondly it allows the user to validate less code. The same IP module can be instantiated multiple time, with different names, in the same project. In figure \ref{fig:ip}  on the left it can be seen a list of all the IPs used in the current firmware and on the right there is a list of all the categories of available IPs, some are free to use and some have a cost.
 \begin{figure}[H]
 	\centering
@@ -397,8 +401,9 @@ In a complex project it is common to use a handful of IPs; first of all having a
 \end{figure} 
 
 \subsection{LabVIEW}
-\noindent Laboratory Virtual Instrument Engineering Workbench (LabVIEW) is a system-design platform and development environment for a visual programming language from National Instruments. The graphical language is named "G". LabVIEW is commonly used for data acquisition, instrument control, and industrial automation on a variety of operating systems.
-LabVIEW integrates the creation of user interfaces (termed front panels) into the development cycle. LabVIEW programs-subroutines are termed virtual instruments (VIs). Each VI has three components: a block diagram, a front panel, and a connector pane.
+\noindent Laboratory Virtual Instrument Engineering Workbench (LabVIEW) is a system-design platform and development environment from National Instruments for visual programming.
+The graphical language is named "G". LabVIEW is commonly used for data acquisition, instrument control, and industrial automation on a variety of operating systems.
+LabVIEW integrates the creation of user interfaces (termed front panels) into the development cycle. LabVIEW programs-subroutines are termed Virtual Instruments (VIs). Each VI has three components: a block diagram, a front panel, and a connector pane.
 The front panel is built using controls and indicators. Controls are inputs: they allow a user to supply information to the VI. Indicators are outputs: they indicate, or display, the results based on the inputs given to the VI. The back panel, which is a block diagram, contains the graphical source code.
 \begin{figure}[H]
 	\centering
@@ -413,12 +418,12 @@ LabVIEW includes extensive support for interfacing to devices such as instrument
 In figure \ref{fig:labview2} it can be seen the LabVIEW program that controls (writes and reads) the internals DACs for the ABACUS2 chip; it will be analyzed more in depth in the next chapter.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{IMG/ch3/LABVIEW2}
+	\includegraphics[width=0.8\linewidth]{IMG/ch3/LABVIEW2}
 	\caption{LabVIEW Test Hardware Commands program. The white rectangles are inputs, the user can set a value bounded between 0 and 63, the green dots and the buttons are 1 bit inputs, while the more grey squares are outputs}
 	\label{fig:labview2}
 \end{figure}
-\subsection{TCL}
-Tcl (Tool Command Language) is a very powerful dynamic programming language, suitable for a very wide range of uses, including web and desktop applications, networking, administration, testing and many more. Open source and business-friendly, Tcl is a mature yet evolving language that is truly cross platform, easily deployed and highly extensible.\cite{tcl}.
+\subsection{TCL}\label{tcl}
+Tool Command Language (TCL) is a very powerful dynamic programming language, suitable for a wide range of uses, including web and desktop applications, networking, administration, testing and many more. Open source and business-friendly, Tcl is a mature yet evolving language that is truly cross platform, easily deployed and highly extensible.\cite{tcl}.
 Xilinx has adopted Tcl as the native programming language for the Vivado Design Suite,
 as it is easily adopted and mastered by designers familiar with this industry standard
 language. The Tcl interpreter inside the Vivado Design Suite provides the full power and
@@ -427,11 +432,13 @@ create custom reports. Using Tcl, the user can adapt the design flow to meet spe
 challenges.
 
 
-\section{Xilinx 7 Series}
-\noindent The FPGA used in this project is a Kintex 7, however Xilinx 7 series comprise four FPGA families that address a complete range of system requirements; in figure \ref{fig:kintex72} it can be seen a comparison between the four different families.
+\section{Xilinx 7 Series FPGA Devices}
+\noindent The Xilinx 7 series comprise four FPGA families that address a complete range of system requirements.
+Figure \ref{fig:kintex72} shows a comparison between the four different families.
+The FPGA used in this thesis is a Xilinx Kintex 7 KC705\cite{xilinx7}.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{IMG/ch3/KINTEX72}
+	\includegraphics[width=0.8\linewidth]{IMG/ch3/KINTEX72}
 	\caption{Comparison between the different boards from the Xilinx 7 line-up}
 	\label{fig:kintex72}
 \end{figure}
@@ -443,25 +450,23 @@ challenges.
 	transceivers and high DSP and logic throughput. Provides the lowest
 	total bill of materials cost for high-throughput, cost-sensitive
 	applications.
-	\item \textbf{Kintex-7} Family: Optimized for best price-performance with a 2X
-	improvement compared to previous generation, enabling a new class
-	of FPGAs.
+	\item \textbf{Kintex-7} Family: Optimized for best price-performance. FPGAs with lots of I/O and memory resources. Ideal for research purposes.
 	\item \textbf{Virtex-7} Family: Optimized for highest system performance and
 	capacity with a 2X improvement in system performance. Highest
 	capability devices enabled by stacked silicon interconnect (SSI)
 	technology.
 \end{itemize}
-\subsection{Kintex 7 kc705}
-\noindent In the MoVeIT project are used FPGA boards like the one in figure \ref{fig:kintex}, a Xilinx Kintex 7 kc705 development board\cite{kintex7}.
+\subsection{Kintex 7 KC705}
+\noindent In the MoVeIT project are used FPGA boards like the one in figure \ref{fig:kintex}, a Xilinx Kintex 7 kC705 development board\cite{kintex7}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch3/KINTEX}
-	\caption{Xilinx Kintex 7 kc705 development board}
+	\caption{Xilinx Kintex 7 KC705 development board}
 	\label{fig:kintex}
 \end{figure}
 \noindent Its main characteristics are:
 \begin{itemize}
-	\item \textbf{RJ45 Ethernet Jack}, direction indicator LEDs and \textbf{PHY chip} allow communication between FPGA and PC to speeds up to 1Gb/s.
+	\item \textbf{RJ45 Ethernet Jack}, direction indicator LEDs and \textbf{PHY chip} allow communication between FPGA and PC with speeds up to 1Gb/s.
 	 \begin{figure}[H]
 	 	\centering
 	 	\includegraphics[width=0.2\linewidth]{IMG/ch3/PHY}
@@ -480,64 +485,65 @@ challenges.
 		\item 61 ground and 10 power connections;
 		\item 2 differential clocks;
 	\end{itemize}
-	For the purpose of this project the two connectors are equal, since they are used only the pins common to both pin configurations.
+	For the purpose of the MoVeIT project the two connectors are equal, since only the pins common to both pin configurations are used.
 	\item 16x2 \textbf{LCD Display} used to show information such as: organization name, project name, firmware version and board number.
-	\item \textbf{LEDs}, \textbf{buttons} and \textbf{dip switches} are useful tool for debugging purpose. In this case the LEDs and the buttons can be used to verify the correct operation of the FPGA-PC communication while the dip switches are used to configure the board number (operation mandatory when using more than one board at the time).  
-	\item The \textbf{FPGA Chip} is the XC7K325T; in figure \ref{fig:kintex7} can be seen the most important parameters.
+	\item \textbf{General purpose LEDs}, \textbf{buttons} and \textbf{dip switches} are useful tools for debugging purposes. In this case the LEDs and the buttons can be used to verify the correct operation of the FPGA-PC communication, while the dip switches are used to configure the board number (operation mandatory when using more than one board at the time).  
+	\item The \textbf{FPGA Chip} is the XC7K325T; in figure \ref{fig:kintex7} are summarized the most important resources.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.9\linewidth]{IMG/ch3/KINTEX7}
-		\caption{Xilinx Kintex 7 XC7K325T main parameters; each logic cell is made up with 1 MUX, 1 LUT and 1 Filp Flop; one slice is made up with 4 LUTs, 8 Flip Flop and a Carry Chain; 1 CLB = 2 Slice; DSP = Digital Signal Processing; BRAM = Block RAM}
+		\caption{Xilinx Kintex 7 XC7K325T main resources; each logic cell is made up with 1 MUX, 1 LUT and 1 Filp Flop; one slice is made up with 4 LUTs, 8 Flip Flop and a Carry Chain; 1 CLB = 2 Slice; DSP = Digital Signal Processing; BRAM = Block RAM}
 		\label{fig:kintex7}
 	\end{figure}
-	\item \textbf{Flash Memory} used to store the firmware binfile wile the card is not powered.
-	\item \textbf{USB JTAG} interface used to program the board.
+	\item External 128~MB quad SPI (Serial Peripheral Interface) \textbf{Flash Memory} used to store the firmware binfile wile the card is not powered.
+	\item \textbf{USB/JTAG} interface used to program the board.
 	
 \end{itemize}
 
 \section{KC705 FMC debug tool}
-\noindent The Kintex7 KC705 board does not have a way to auto-check if all of the devices on the board are working properly.
-This means that if a channel on one of the two FMC connector goes defective the user does not get any message or feedback.
-For example, if \textit{ch00\_counter} is always 0, even if the test pulses (TP) are being sent to the chip, is up to the user to understand if the chip is bad or the FMC channel is damaged. This problem can be solved using an oscilloscope to probe the selected channel, however that's not a practical and fast solution.
-Thus the question is:
-how to understand if all the I/O resources needed are working properly?
+\noindent The first personal contribution to the project has been the creation of an additional debug firmware for the verification of the correct operation of the FPGA channels. 
+\newline
+The Kintex7 KC705 FPGA does not have a way to auto-check if all of the board I/O resources are working properly.
+This means that if a channel on one of the two FMC connector goes defective the user does not get any error message or feedback.
+For example, if the \textit{ch00\_counter} signal is always \textit{0}, even if the Test Pulses (TP) are being sent to the chip, is up to the user to understand if the chip is bad or the FMC channel is damaged.
+This problem can be solved using an oscilloscope to probe the selected channel, however that is not a practical and fast solution.
 \subsection{LVDS25}
-Before seeing that it is useful to understand what tipe of signal the FPGA is receiving and what are the levels involved.
-Low Voltage Differential Signaling\cite{lvds} (LVDS) is a technical standard that specifies electrical characteristics of a differential, serial signaling standard.
+Before seeing that it is useful to understand what type of signal the FPGA is receiving and what are the levels involved.
+Low Voltage Differential Signaling\cite{lvds} (LVDS) is an industry standard that specifies electrical characteristics of a differential, serial signalling standard.
 LVDS operates at low power and can run at very high speeds using inexpensive twisted-pair copper cables. LVDS is a physical layer specification only.
-LVDS was introduced in 1994, and has become popular in products such as LCD-TVs, automotive infotainment systems, industrial cameras, notebook and tablet computers, communications systems, and FPGAs boards. The typical applications are high-speed video, graphics, video camera data transfers, and general purpose computer buses.
-LVDS is a differential signaling system, meaning that it transmits information as the difference between the voltages on a pair of wires; the two wire voltages are compared at the receiver.
+LVDS was introduced in 1994, and has become popular in products such as LCD-TVs, automotive systems, industrial cameras, notebook and tablet computers, communications systems, and FPGAs boards. The typical applications are high-speed video, graphics, video camera data transfers, and general purpose computer buses.
+LVDS is a differential signalling system, meaning that it transmits information as the difference between the voltages on a pair of wires; the two wire voltages are compared at the receiver.
 In a typical implementation, the transmitter injects a constant current of 3.5~mA into the wires, with the direction of current determining the digital logic level. The current passes through a termination resistor of about 100~$\Omega$ to 120~$\Omega$ at the receiving end, and then returns in the opposite direction via the other wire. From Ohm's law, the voltage difference across the resistor is therefore about 350~mV. The receiver senses the polarity of this voltage to determine the logic level.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{IMG/ch3/LVDS}
+	\includegraphics[width=0.5\linewidth]{IMG/ch3/LVDS}
 	\caption{Basic LVDS circuit operation example}
 	\label{fig:lvds}
 \end{figure}
 \noindent In figure \ref{fig:lvds25} it can be seen a table with the DC voltages specifications for the Xilinx LVDS25 standard. This means that the voltage of the power rail for that IO bank is 2.5~V. The most important values to be observed are the \textit{Output Common-Mode Voltage}=~1.250~V and the \textit{Differential Output Voltage}=~0.350~V. This means that when probing the two wires of a LVDS25 signal the two voltages to be expected are $Q$=1.600~V and $\bar{Q}$=0.900~V.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch3/LVDS25SPEC}
+	\includegraphics[width=0.8\linewidth]{IMG/ch3/LVDS25SPEC}
 	\caption{LVDS25 DC specifications}
 	\label{fig:lvds25}
 \end{figure}
 \subsection{Debug tool implementation}
-This was my first contribution for the project.
-In order to create a easy to use debug tool for the FMC connectors of the board I created a completely new firmware that sets every FMC pin as an output.
+In order to create an easy to use debug tool for the FMC connectors of the board I created a completely new firmware that sets every FMC pin as an output.
 With the use of an LVDS IP output buffer the pin pairs can be driven with a \textit{high}/\textit{low} logic signal.
 The user can also change between states with the use of a dip switch.
 In figure \ref{fig:debug1} it can be seen the first part of the output-pins declaration in the VHDL code.
-This code is divided into 5 "columns" in order to facilitate the pin of interest identification. Thus for each signal there is a:
+This code is divided into 5 "columns" in order to facilitate the identification of the pin under test.
+Thus for each signal there is a:
 \begin{itemize}
-	\item \textbf{Pin name}: is the name given to each signal in the hdl code.
-	\item \textbf{Pin configuration}: always std\_logic output in this case.
+	\item \textbf{Pin name}: is the name given to each signal in the HDL code.
+	\item \textbf{Pin configuration}: always \textit{std\_logic} output in this case.
 	\item \textbf{J22 Pin-schematic Net Name}: pin name in the FPGA schematic documentation. 
 	\item \textbf{FPGA Pin}: pin name used in constraints file. 
 	\item \textbf{J4}: pin number in the FMC breakout board in figure \ref{fig:debug2}. 
 \end{itemize}     
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{IMG/ch3/DEBUG1}
+	\includegraphics[width=0.8\linewidth]{IMG/ch3/DEBUG1}
 	\caption{Example code for the kc705 FMC debug tool}
 	\label{fig:debug1}
 \end{figure}
@@ -553,7 +559,7 @@ This code is divided into 5 "columns" in order to facilitate the pin of interest
 \caption{Constraints code example}
 \label{fig:debug3}
 \end{figure}
-\noindent For example; if the external DAC does not get any data the procedure to check the pin is as follows:
+\noindent For example; if the external DAC does not get any data the procedure to check the pin is the following:
 \begin{itemize}
 	\item Check in the .xdc constraints file the respective signal, in this case \textit{baseline\_dac1\_mosi} in figure \ref{fig:debug3} and look for the FPGA Pin name, in this case \textit{H30} and \textit{G30}.
 	\item Check in the HDL, figure \ref{fig:debug1} to witch breakout pin leads the signal; in this case \textit{H30}$\rightarrow$P7 and \textit{G30}$\rightarrow$P8 in figure \ref{fig:debug2}.

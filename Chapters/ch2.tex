@@ -109,10 +109,7 @@ of the sensors decreases with the dose, but this can be compensated by raising t
 \noindent In figure \ref{fig:abacus2} it can be seen a schematic of the chip die area. Inside the black rectangle it can be seen a single channel. Its design will be analysed later in this section.
 This prototype is a 24 channels ASIC designed in UMC (United Microelectronics Corporation) 110~nm technology.
 The die size is 4.95~x~1.935~mm$^2$.
-The 24 channels are divided in two 12-channels groups. The two groups differs for the architecture of the first stage only.
-The first group (group A) is based on a TIA (Trans-Impedance Amplifier) architecture with a two stage core amplifier.
-The second group (group B) is based on a Regulated Common Gate (RCG) input stage followed by a single stage TIA.
-The pro and cons of the two architectures will not be a part of this thesis.\\
+The amplification is based on a Regulated Common Gate (RCG) input stage followed by a single stage Trans Impedance Amplifier(TIA).\\
 As already discussed, the design goal of the counting device is to measure the number of protons with a maximum error of 1\% up to a fluxes of 10$^8$~p/(cm$^2$$\cdot$s).
 For a single particle the efficiency must be greater than 99\%, and this defines the range of charges the electronics must be able to accept.
 The ABACUS2 chip was optimized for an input capacitance between 5 and 20 pF and to cope with continuous signals up to 100 MHz rate.
