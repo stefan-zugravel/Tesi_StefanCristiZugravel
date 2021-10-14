@@ -21,7 +21,27 @@
 \usepackage[pdf]{graphviz}
 \usepackage[justification=centering]{caption}
 
-\hyphenation{Systems sending GbPhy cluster ABACUS system acceptable FPGAs amazing customers physical Modeling}
+\usepackage{listings}
+\lstdefinelanguage{VHDL}{
+	morekeywords={
+		library,use,all,entity,is,port,in,out,end,architecture,of,
+		begin,and
+	},
+	morecomment=[l]--
+}
+
+\usepackage{xcolor}
+\colorlet{keyword}{blue!100!black!80}
+\colorlet{comment}{green!90!black!90}
+\lstdefinestyle{vhdl}{
+	language     = VHDL,
+	basicstyle   = \ttfamily,
+	keywordstyle = \color{keyword}\bfseries,
+	commentstyle = \color{comment}
+}
+
+
+\hyphenation{Systems sending GbPhy cluster ABACUS system acceptable FPGAs amazing customers physical Modeling ionization accelerated magnets}
 
 \addto{\captionsenglish}{%
 	\renewcommand{\bibname}{References}

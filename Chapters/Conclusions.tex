@@ -13,32 +13,30 @@ implementation and validation of new additions to the
 FPGA firmware used to characterize and test the ABACUS2
 chip.\\
 \noindent The work was carried out using VHDL language and
-Xilinx Vivado software on Xilinx Kintex 7 FPGA boards. 
+Xilinx Vivado software on Xilinx Kintex 7 KC705 FPGA boards. 
 I personally implemented:
 i) the logic for the configuration of the ABACUS2 trimming
 DACs, that now use an I2C based address system;
 ii) the creation of a latch module that saves into BRAM the
 value of every FPGA counter at the same time;
 iii) the implementation of a timestamp generator in order
-to obtain a more accurate measurement of the particle rate;
-in addition, I developed a debug tool for the verification
+to obtain a more accurate measurement of the particle rate.
+Moreover, I developed a debug tool for the verification
 of the FPGA channels working conditions.\\
-\noindent The results of this thesis depicted that:
+\noindent The results of this thesis are:
 i) the ABACUS2 I2C controller and the FPGA configuration
 logic for the trimming DACs are working as intended; 
 ii) from the performed threshold scans emerged that the ABACUS2
 internal DACs are changing the threshold voltage and thus
 shifting the S-curves as expected;
-iii) from the figures of section \ref{latchtests} it can be
-observed that the latch system works properly and freezes the state
+iii) the latch system works properly and freezes the state
 of each counter into a register;
-iv) the measurements performed in section \ref{RateMeasurements2}
-illustrate how the new timestamp generator improves the rate
+iv) the new timestamp generator improves the rate
 calculation accuracy, lowering the standard deviation by a factor of 90; 
 v) the new rate measurement system allows lower integration times
 and at the same time keeps the uncertainty under 1\%;
 vi) the FMC debug tool can correctly be used for the identification
-of bad channels on the FPGAs board.\\
+of malfunctioning channels on the FPGAs board.\\
 \noindent Possible future developments of the MoVeIT project
 include:
 i) the creation of a software configurable mask that allows
