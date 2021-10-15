@@ -22,12 +22,12 @@ The FPGA elaborates the data and finally sends them to a computer. In the final 
 	%\label{fig:moveit}
 \end{figure}
 \section{The MoVeIT project}\label{moveit}
-\noindent The Medical Physics group at University of Turin and INFN (the Italian National Institute for Nuclear and Particle Physics) currently are participating to the Modeling and Verification for Ion beam Treatment planning research project (MoVeIT), which aims to develop new and innovative models for biologically optimized Treatment Planning Systems (TPS) using ion beams in hadron therapy\cite{moveit}.
+\noindent The Medical Physics group at University of Turin and INFN (the Italian National Institute for Nuclear and Particle Physics) currently are participating to the Modeling and Verification for Ion beam Treatment planning research project (MoVeIT), which aims to develop new and innovative models for biologically optimized Treatment Planning Systems (TPS) using ion beams in hadron therapy~\cite{moveit}.
 As~part of the project the Turin group is involved in the development of solid state detectors and readout electronics for measuring with high precision
 the characteristics of the hadron beam for irradiation, such as number of particles delivered per unit time, energy and beam profile.
 The final goal is to prove the ability of LGAD detectors to discriminate individual protons and to count their number up to fluxes of 100~MHz/cm$^2$ with an uncertainty below 1\% which is the required clinical tolerance.
 In order to do that a custom detector was built specifically for this purpose; a LGAD type sensor with an area of $\approx$ 3x3~cm$^2$ and 144 strips which has a thickness of the active region of 50~$\mu$m.
-The final goal is to use two of this sensors in orthogonal directions in order to obtain a precise information on the beam position and profile\cite{hammad}.
+The final goal is to use two of this sensors in orthogonal directions in order to obtain a precise information on the beam position and profile~\cite{hammad}.
 The main key-points of the final design are:
 \begin{itemize}
 	\item a cover area of $\approx$ 3x3~cm$^2$;
@@ -42,7 +42,7 @@ The main key-points of the final design are:
 short signals are mandatory in order to be able to detect a single particle and to reduce the pile-up effects.
 To obtain a short signal the active region of the sensor needs to be the as thin as possible. However the thinner the detector the lower is the Signal to Noise Ratio (SNR).
 To solve this problem it was decided to use a new type of sensors known as LGAD.
-\noindent Low-Gain Avalanche Detectors (LGADs) are innovative detectors developed in collaboration with the Fondazione Bruno Kessler (FBK, Trento) which feature a moderate ($\approx$10) internal charge multiplication achieved through an additional p+ doping layer few microns depth. The increased signal-to-noise ratio allows designing very thin Ultra Fast Silicon Detectors (UFSD) designed for fast signal collection times, high rates and very good time resolution\cite{lgad}.
+\noindent Low-Gain Avalanche Detectors (LGADs) are innovative detectors developed in collaboration with the Fondazione Bruno Kessler (FBK, Trento) which feature a moderate ($\approx$10) internal charge multiplication achieved through an additional p+ doping layer few microns depth. The increased signal-to-noise ratio allows designing very thin Ultra Fast Silicon Detectors (UFSD) designed for fast signal collection times, high rates and very good time resolution~\cite{lgad}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The basic doping profiles of the LGAD structure, based on a standard P-In-N detector, is sketched in figure \ref{fig:ufsdlgad}, showing a n++/p+/p/p++ structure.
 The figure depicts a highly doped n++ cathode electrode with a moderately doped p+ type region
@@ -55,7 +55,7 @@ on the backside.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.35\linewidth]{IMG/ch2/UFSDLGAD.png}
-	\caption{Schematic cross-section of the LGAD pad design. A p+ type layer is diffused below the n++ electrode to form the n++/p+/p junction where the multiplication occurs\cite{lgad2}.}
+	\caption{Schematic cross-section of the LGAD pad design. A p+ type layer is diffused below the n++ electrode to form the n++/p+/p junction where the multiplication occurs~\cite{lgad2}.}
 	\label{fig:ufsdlgad}
 \end{figure}
 \noindent The LGAD device is operated with the bulk fully depleted. Incident radiation produces electron-hole
@@ -73,7 +73,7 @@ significantly higher than this, at least $\approx$~400~V.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.42\linewidth]{IMG/ch2/LGAD_Signal}
-	\caption{Simulated detector signal\cite{dac}.}
+	\caption{Simulated detector signal~\cite{dac}.}
 	\label{fig:signal}
 \end{figure}
 \noindent The output signal from a detector used in the project has a trapezoidal form, a duration of $\approx$ 1.2~ns (rise and fall times of $\approx$~450~ps and a  flat region of $\approx$~300~ps) and a current in the order of 1$\cdot$10$^{-5}$~A.
@@ -93,8 +93,8 @@ In general the internal gain of the sensors decreases with the dose, but this ca
 
 
 \section{ABACUS2 chip}\label{chip}
-%\noindent The signal from each detector strip, shown in figure \ref{fig:signal}, is connected to an input channel of the new ABACUS2 full custom chip\cite{abacus}\cite{dac} designed by the Turin INFN group and submitted on October 2020.
-\noindent The Charge signals, shown in figure \ref{fig:signal}, amplified in the LGAD sensor are processed by the second version of a full custom Application Specific Integrated Circuit (ASIC) referred as Asynchronous logic Based Analog Counter for Ultra fast Silicon strips (ABACUS2)\cite{abacus}\cite{dac} which was designed by the Turin INFN group and submitted on October 2020.
+%\noindent The signal from each detector strip, shown in figure \ref{fig:signal}, is connected to an input channel of the new ABACUS2 full custom chip~\cite{abacus,dac} designed by the Turin INFN group and submitted on October 2020.
+\noindent The Charge signals, shown in figure \ref{fig:signal}, amplified in the LGAD sensor are processed by the second version of a full custom Application Specific Integrated Circuit (ASIC) referred as Asynchronous logic Based Analog Counter for Ultra fast Silicon strips (ABACUS2)~\cite{abacus,dac} which was designed by the Turin INFN group and submitted on October 2020.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch2/ABACUS2.png}
@@ -127,7 +127,7 @@ The amplified signal is then fed to a leading-edge multistage discriminator (3 a
 The output of the discriminator is also used in a feedback circuit (7 and 8) to reset the CSA feedback capacitance.
 This feedback circuit was designed for a fast baseline restoring and to avoid signal saturation (fast-reset signal).
 The chip has been extensively tested by INFN; the output voltage from the amplifier and the noise were estimated by the measurement of the number of detected pulses as a function of the threshold value, this procedure is referred as S-curve method and will be explained is section \ref{considerations}.
-The results, in terms of amplifier output voltage as a function of the input charge, are shown in figure \ref{fig:abacustest} for charges between 3 fC and 20 fC\cite{abacus}.
+The results, in terms of amplifier output voltage as a function of the input charge, are shown in figure \ref{fig:abacustest} for charges between 3 fC and 20 fC~\cite{abacus}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch2/ABACUSTEST}
@@ -137,8 +137,8 @@ The results, in terms of amplifier output voltage as a function of the input cha
 \noindent For this thesis, the most important considerations concern the functioning of the discriminator (3).
 The threshold voltage (V$_{th}$) is the sum of two different components that are independently configurable:
 \begin{itemize}
-	\item An external 16~bit DAC (Digital to Analog Converter) for the global V$_{th}$;
-	\item A programmable 6~bit internal DAC for threshold tuning for each individual channel;
+	\item an external 16~bit DAC (Digital to Analog Converter) for the global V$_{th}$;
+	\item a programmable 6~bit internal DAC for threshold tuning for each individual channel;
 \end{itemize}
 \noindent The main external DAC provides the same threshold voltage for every channel, however due to manufacturing tolerances not every channel behaves in the same way.
 These differences, which mainly concern the mismatch between the differential pairs of the discriminator, may have a relevant impact on the measured particle rate.
@@ -146,7 +146,7 @@ In order to reduce these differences each channel has an independently programma
 \subsubsection{External DAC}
 The external DAC is a commercially available Linear Technology LTC2604 Quad 16-bit Rail-to-Rail DAC.
 The device uses the Inter Integrated Circuit (I2C) protocol and reads 24~bit words configured as in figure \ref{fig:extdactiming2}.
-More details are provided in the data-sheet \cite{LTC2604}.
+More details are provided in the data-sheet~\cite{LTC2604}.
 The main features are:
 \begin{itemize}
 	\item a guaranteed 16~Bit monotonic characteristic over temperature;

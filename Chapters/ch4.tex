@@ -19,11 +19,11 @@ In this chapter there are also considerations on the implemented design and a sh
 	PHY is an abbreviation for "physical layer" and is an electronic component, usually implemented as an integrated circuit, mandatory to implement links between physical mediums such as copper or optical fiber. It basically converts data between a "clean" clocked digital stream form that is suitable only for very short distance communication (centimetres) and an analog form that is suitable for long range transmission (meters or more).
 	The chip on the KC705 board is able to transmit data up to 1Gb/s.
 	\newline
-	The PHY is thus firmware controlled, in the MoVeIT project the reception and sending of messages is managed by another project of the Turin INFN group called GbPhy. This thesis will  not focus on how it works, but only on its main characteristics\cite{gbphy}.     
+	The PHY is thus firmware controlled, in the MoVeIT project the reception and sending of messages is managed by another project of the Turin INFN group called GbPhy. This thesis will  not focus on how it works, but only on its main characteristics~\cite{gbphy}.     
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.6\linewidth]{IMG/ch4/PHY100}
-		\caption{GbPhy firmware structure}
+		\caption{GbPhy firmware structure.}
 		\label{fig:phy100}
 	\end{figure}
 	\noindent GbPhy provides a UDP-based Ethernet control link based on a fixed length 8 byte protocol (64 bit).
@@ -47,13 +47,13 @@ In this chapter there are also considerations on the implemented design and a sh
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\linewidth]{IMG/ch4/LCD}
-		\caption{KC705 tera10 LCD output}
+		\caption{KC705 tera10 LCD output.}
 		\label{fig:lcd}
 	\end{figure}
 	\noindent This module contains multiple processes, FSMs (Finite State Machines) and a RAM module. The first FSM manages the start-up sequence for the LCD, the second does the conversion of the firmware version from hex to ASCII, a third one sends one by one the characters to the display while a fourth one manages the communications with the UDP module. In fact the firmware can not only display a fixed pre-selected banner, but also a user-sent 'message' from the pc.
 	The LCD is extremely useful when working with multiples FPGAs to distinguish one board from the other and for keeping track of the firmware version of each device.
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-	\item \textbf{Tera10 I/O}: this module contains the declaration and port-map for 24 \textit{tera10 channel coincidence} modules\cite{limardi}; each module receives as an input the data from two channels of the ABACUS2 chip, this signal is then de-serialized with a 1~GHz frequency clock (\textit{serdes\_clk}), ten times higher than the main clock (100~MHz). The output of the de-serializer is a 10~bit bus (one for each signal) to which it is added, using a shift register, the last bit from the previous bus. This is done in order to not lose any transition (high/low) from one packet and the next one.
+	\item \textbf{Tera10 I/O}: this module contains the declaration and port-map for 24 \textit{tera10 channel coincidence} modules~\cite{limardi}; each module receives as an input the data from two channels of the ABACUS2 chip, this signal is then de-serialized with a 1~GHz frequency clock (\textit{serdes\_clk}), ten times higher than the main clock (100~MHz). The output of the de-serializer is a 10~bit bus (one for each signal) to which it is added, using a shift register, the last bit from the previous bus. This is done in order to not lose any transition (high/low) from one packet and the next one.
 	\newline
 	The counting of the number of pulses is done with a LUT (Look Up Table) that from a 11~bit bus gives back a 3~bit logic vector corresponding to the number from 0 to 1. This result is used to update a 32~bit counter for each channel; in figure \ref{fig:coincidence} those are N1 for ch0 and N2 for ch1.
 	\newline
@@ -61,7 +61,7 @@ In this chapter there are also considerations on the implemented design and a sh
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.7\linewidth]{IMG/ch4/COINCIDENCE}
-		\caption{KC705 tera10 channel coincidence architecture diagram}
+		\caption{KC705 tera10 channel coincidence architecture diagram.}
 		\label{fig:coincidence}
 	\end{figure}
 	\noindent The counters $T_{1}$, $T_{2}$, $T_{AND}$ and $T_{OR}$ contain the number of clock strokes in which one of the two channel or a logic combination of both is \textit{high}.
@@ -108,7 +108,7 @@ In this chapter there are also considerations on the implemented design and a sh
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/CMDtoTERA10.pdf}
-	\caption{Command to TERA10 Finite State Machine Diagram}
+	\caption{Command to TERA10 Finite State Machine Diagram.}
 	\label{fig:fsmFIFO1}
 \end{figure}
 \noindent In order to send the data to the computer in the correct order another FIFO memory is implemented for storing all the replies strings.
@@ -117,7 +117,7 @@ The logic that writes the data into the memory is described in the FSM in figure
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/TERA10controll.pdf}
-	\caption{TERA10 control Finite State Machine}
+	\caption{TERA10 control Finite State Machine.}
 	\label{fig:fsmFIFO2}
 \end{figure}  
 
@@ -130,20 +130,19 @@ My work on the KC705 firmware can be divided into three parts:
 \end{itemize}
 
 \subsection{Hardware controller}\label{InternalDac}
-\noindent The internal DACs of the ABACUS2 chip are configured using an on-chip I2C controller that can be described as in figure \ref{fig:internaldac}, thus as a module with 3 inputs (Serial Clock, Serial INput and Reset) and an output (Serial OUTput)\cite{dac}.
+\noindent The internal DACs of the ABACUS2 chip are configured using an on-chip I2C controller that can be described as in figure \ref{fig:internaldac}, thus as a module with 3 inputs (Serial Clock, Serial INput and Reset) and an output (Serial OUTput)~\cite{dac}.
 The controller behaviour is simulated using a Verilog module.
 The tests therefore simulate not only the firmware operation, but also the response of the chip itself.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.34\linewidth]{IMG/ch4/INTERNALDAC.PNG}
-	\caption{Internal I2C controller for trimming DACs configuration module representation}
+	\caption{Internal I2C controller for trimming DACs configuration module diagram.}
 	\label{fig:internaldac}
 \end{figure}
 \noindent The 24 threshold fine tuning DACs are controlled by 24 5-bits registers. These registers can be independently
 loaded and read-out via a serial interface protocol based on 16-bits words. The commands are send via a Serial
 INput pin (SIN) and the data are read-out on a Serial OUTput pin (SOUT). The two serial streams are
 synchronous to the CLK clock input and are sampled on the clock rising edge.
-\newline
 The write operations are performed according to the following sequence:
 \begin{itemize}
 	\item Send start sequence : 0xA5A5 = 0b\textit{1010010110100101}
@@ -188,7 +187,7 @@ In figure \ref{fig:fsmDACs} it can be seen the new logic diagram.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\linewidth]{FSMdiagrams/InternalDACsFSM.pdf}
-	\caption{FSM for the configuration of the internal fine tuning DACs of the ABACUS2 chip}
+	\caption{FSM for the configuration of the internal fine tuning DACs of the ABACUS2 chip.}
 	\label{fig:fsmDACs}
 \end{figure}
 \noindent The FSM runs into an independent process that sends to the chip 64 clock strokes, in the first 32 the data are sent, while in the remaining 32 the firmware is waiting for a response from the the ASIC.
@@ -317,7 +316,7 @@ This means that for each state a total of 6.144~kb of memory needs to be allocat
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{IMG/ch4/LATCH_RAM_IP}
-	\caption{Vivado IP manager summary for Latch Counters Block Memory IP}
+	\caption{Vivado IP manager summary for Latch Counters Block Memory IP.}
 	\label{fig:ramip}
 \end{figure}
 \noindent Before talking about the latch logic it is important to understand how the RAM needs to be controlled. There are a total of 8 input signals and one output:
@@ -334,7 +333,7 @@ This means that for each state a total of 6.144~kb of memory needs to be allocat
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{FSMdiagrams/latch_counter.pdf}
-	\caption{Counters data flow from \textit{tera10\_I/O} to the PC}
+	\caption{Counters data flow from \textit{tera10\_I/O} to the PC.}
 	\label{fig:latch_counter}
 \end{figure}
 \noindent In order to control the block I created a new sub-system target (\textit{0x8}) dedicated to the latch and timestamp and two new FSMs with the same style as the ones in figure \ref{fig:fsmFIFO1} and \ref{fig:fsmFIFO2}. The new sub-system commands ids are:
@@ -429,13 +428,13 @@ In figure \ref{fig:allcounters} the number of used RAM blocks doubled, it is not
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/routed_colored_counters_clocks}
-		\caption{Post-routing device view\\ with 96 counters latched}
+		\caption{Post-routing device view\\ with 96 counters latched.}
 		\label{fig:counters_clocks}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/routed_colored_perfect}
-		\caption{Post-routing device view\\ with all 192 counters latched}
+		\caption{Post-routing device view\\ with all 192 counters latched.}
 		\label{fig:allcounters}
 	\end{minipage}
 \end{figure}
@@ -448,7 +447,7 @@ The Total Negative Slack (TNS) is the slack sum of every path that do not met ti
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/TIMING_perfect}
-	\caption{Design Timing Report Summary for kc705\_tera10 firmware; All user specified timing constraints are met}
+	\caption{Design Timing Report Summary for kc705\_tera10 firmware; All user specified timing constraints are met.}
 	\label{fig:timingperfect}
 \end{figure}
 
@@ -507,7 +506,7 @@ In order to prevent that I implemented an extremely simple FSM, in figure \ref{f
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.85\linewidth]{FSMdiagrams/timestampFSM.pdf}
-	\caption{Timestamp latch FSM diagram}
+	\caption{Timestamp latch FSM diagram.}
 	\label{fig:timestampFSM}
 \end{figure}
 \noindent In figure \ref{fig:timestampfsm} it can be seen the FSM simulation. The first signal is the 500~MHz clock. After this there is the 64~bit counter that is being updated each rising edge clock. The third signal is the \textit{do\_timestamp} trigger. The fourth is the FSM state.
@@ -540,7 +539,7 @@ In figure \ref{fig:fifonearram} it can be seen how the placer "decided" to place
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch4/FIFOnearRAM}
-	\caption{Device view with focus on timestamp FIFO and RAM placement}
+	\caption{Device view with focus on timestamp FIFO and RAM placement.}
 	\label{fig:fifonearram}
 \end{figure}
 
@@ -556,13 +555,13 @@ In this section it will be analyzed the differences between these two results. I
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/FirmwareNOFLAT/DEVICE}
-		\caption{Firmware device view \\with NON flattened logic}
+		\caption{Firmware device view \\with NON flattened logic.}
 		\label{fig:noflatdevice}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.85\linewidth]{IMG/ch4/FirmwareFLAT/DEVICE}
-		\caption{Firmware device view \\with flattened logic}
+		\caption{Firmware device view \\with flattened logic.}
 		\label{fig:flatdevice}
 	\end{minipage}
 \end{figure}
@@ -575,14 +574,14 @@ A small difference in WNS (if still positive) will not affect the operation of t
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch4/FirmwareNOFLAT/TIMING}
-	\caption{Timing report with hierarchical logic}
+	\caption{Timing report with hierarchical logic.}
 	\label{fig:noflattiming}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch4/FirmwareFLAT/TIMING}
-	\caption{Timing report with flattened logic}
+	\caption{Timing report with flattened logic.}
 	\label{fig:flattiming}
 \end{figure}
 
@@ -596,13 +595,13 @@ Thus we can use this numbers only for our interest without being too much concer
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\linewidth]{IMG/ch4/FirmwareNOFLAT/POWER}
-		\caption{Power report with \\hierarchical logic}
+		\caption{Power report with \\hierarchical logic.}
 		\label{fig:noflatpower}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\linewidth]{IMG/ch4/FirmwareFLAT/POWER}
-		\caption{Power report with \\flattened logic}
+		\caption{Power report with \\flattened logic.}
 		\label{fig:flatpower}
 	\end{minipage}
 \end{figure}
@@ -616,13 +615,13 @@ It should be noted that no FPGA primitive is used for more that 50\%. The KC705 
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch4/FirmwareNOFLAT/UTILIZATION}
-		\caption{Utilization report with \\hierarchical logic}
+		\caption{Utilization report with \\hierarchical logic.}
 		\label{fig:noflatutilization}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch4/FirmwareFLAT/UTILIZATION}
-		\caption{Utilization report with \\flattened logic}
+		\caption{Utilization report with \\flattened logic.}
 		\label{fig:flatutilization}
 	\end{minipage}
 \end{figure}

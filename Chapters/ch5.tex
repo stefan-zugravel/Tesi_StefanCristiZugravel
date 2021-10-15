@@ -8,7 +8,7 @@ The second half will analyse how the new firmware extensions perform on real har
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/TESTBENCH}
-	\caption{Experimental setup and devices}
+	\caption{Experimental setup and devices.}
 	\label{fig:testbench}
 \end{figure}
 In order to properly validate the new additions of the FPGA firmware, after the simulations performed in the Vivado design suite, numerous tests have been carried out on the FPGA board and on chip.
@@ -27,39 +27,39 @@ The setup used to perform the tests is shown in figure \ref{fig:testbench} and i
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{IMG/ch5/TESTBOARD}
-	\caption{Test board top and bottom view}
+	\caption{Test board top and bottom view.}
 	\label{fig:testboard}
 \end{figure}
 To test every feature of the ABACUS2 chip the INFN Turin section designed a custom test board.
 On the back side of the PCB, shown in figure \ref{fig:testboard}, it can be observed the naked chip bonded to the board.
 The main components of the test board are:
 \begin{itemize}
-	\item Two 50 pin connectors, the bottom one is used to send the differential data from the chip to the FPGA and the top one is used to receive the controls (main DAC, trimming DACs, clocks) to the board
+	\item Two 50 pin connectors, the bottom one is used to send the differential data from the chip to the FPGA and the top one is used to receive the controls (main DAC, trimming DACs, clocks) to the board;
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.95\linewidth]{IMG/ch5/DATATOFPGA}
-		\caption{Wiring from the chip to the bottom 50 PIN connector}
+		\caption{Wiring from the chip to the bottom 50 PIN connector.}
 		\label{fig:datatofpga}
 	\end{figure}
-	\item The external DAC, a commercially available Linear Technology LTC2604 Quad 16-bit Rail-to-Rail DAC \cite{LTC2604}, connected as in figure \ref{fig:externaldac}
+	\item The external DAC, a commercially available Linear Technology LTC2604 Quad 16-bit Rail-to-Rail DAC~\cite{LTC2604}, connected as in figure \ref{fig:externaldac};
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.3\linewidth]{IMG/ch5/EXTERNALDAC}
-		\caption{Connections of the LTC2604 external DAC}
+		\caption{Connections of the LTC2604 external DAC.}
 		\label{fig:externaldac}
 	\end{figure}
-	\item Two TP (Test Pulse) connectors (\textit{TP\_odd} and \textit{TP\_even}) used to inject a charge and thus to simulate the signal from the LGAD detector, connected to the chip as in figure \ref{fig:tpconnector}
+	\item Two TP (Test Pulse) connectors (\textit{TP\_odd} and \textit{TP\_even}) used to inject a charge and thus to simulate the signal from the LGAD detector, connected to the chip as in figure \ref{fig:tpconnector};
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.4\linewidth]{IMG/ch5/TPCONNECTOR}
-		\caption{Wiring of the \textit{TP\_even} connector}
+		\caption{Wiring of the \textit{TP\_even} connector.}
 		\label{fig:tpconnector}
 	\end{figure}
-	\item Two connectors (Data INput and Data OUTput) used to send and receive data to and from the internal DACs, wired as in figure \ref{fig:internaldacwiring} with a 50~$\Omega$ termination 
+	\item Two connectors (Data INput and Data OUTput) used to send and receive data to and from the internal DACs, wired as in figure \ref{fig:internaldacwiring} with a 50~$\Omega$ termination.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.2\linewidth]{IMG/ch5/INTERNALDACWIRING}
-		\caption{Wiring of the Data INput (trimming/internal) DAC connector}
+		\caption{Wiring of the Data INput (trimming/internal) DAC connector.}
 		\label{fig:internaldacwiring}
 	\end{figure} 
 \end{itemize} 
@@ -73,7 +73,7 @@ The data coming from the FPGA to the chip is at 2.5~V single-ended. To lower thi
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch5/VOLTAGEDIVIDER}
-	\caption{Voltage dividers on the back of the test board, one is used for the clock signal and one for the data input}
+	\caption{Voltage dividers on the back of the test board, one is used for the clock signal and one for the data input.}
 	\label{fig:voltagedivider}
 \end{figure}
 \noindent To obtain the 1.2~V output voltage three resistors were used: a 3.3~k$\Omega$ one for the first stage and a 6.8~k$\Omega$ and 5.6~k$\Omega$ placed in parallel for the second stage.
@@ -82,7 +82,7 @@ The data coming from the ABACUS2 internal DACs I2C controller are 1.2~V CMOS. Th
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{IMG/ch5/DIAGRAM}
-	\caption{Diagram of the level translation device}
+	\caption{Diagram of the level translation device.}
 	\label{fig:diagram}
 \end{figure}
 \noindent For this purpose I created the simple circuit that can be seen in figure \ref{fig:diagram} using three 1~k$\Omega$ resistors and two classic \textit{2N2222} transistors that are configured in the standard common emitter mode.
@@ -92,7 +92,7 @@ According to the simulation the device works properly and thus it can be impleme
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{IMG/ch5/TRANSSIMULATION}
-	\caption{LTspice simulation of the translation device}
+	\caption{LTspice simulation of the translation device.}
 	\label{fig:transsimulation}
 \end{figure}
 \noindent The device was built by soldering the components on a piece of perfboard that can be seen in figure \ref{fig:fronttranslator} and \ref{fig:backtranslator}.
@@ -102,13 +102,13 @@ It needs to be externally powered with 2.5~V, however, in order to assure the sa
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/FRONTTRANSLATOR}
-		\caption{Front view of the \\implemented translation device}
+		\caption{Front view of the \\implemented translation device.}
 		\label{fig:fronttranslator}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/BACKTRANSLATOR}
-		\caption{Back view of the \\implemented translation device}
+		\caption{Back view of the \\implemented translation device.}
 		\label{fig:backtranslator}
 	\end{minipage}
 \end{figure}
@@ -123,14 +123,14 @@ For this first part the goal was to validate the clock period and its amplitude.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_clock-specks}
-	\caption{\textit{baseline\_dac\_sck}; period and amplitude measurements}
+	\caption{\textit{baseline\_dac\_sck}; period and amplitude measurements.}
 	\label{fig:clockspecs}
 \end{figure}
 \noindent In section \ref{confing} it was said that the clock period should theoretically be 98.28~$\mu$s, in figure \ref{fig:clockspecs} it can be seen that the measured period is 98.44~$\mu$s. The difference between the two values is 160~ns which is approximately $\approx$0.16\% of the total. The period can be then considered perfectly compatible.
 The second value to be noted in figure \ref{fig:clockspecs} is the amplitude of the signal, which is 1.22~V, perfectly safe for the chip. 
 
 \subsubsection{Write sequence}
-\noindent In order to write into the trimming DACs and to read from them a new LabVIEW panel was implemented\cite{data}. This piece of software, that can be seen in figure \ref{fig:labview3}, sends and receives the commands discussed in section \ref{InternalDac}. In addition it implements some useful features like:
+\noindent In order to write into the trimming DACs and to read from them a new LabVIEW panel was implemented~\cite{data}. This piece of software, that can be seen in figure \ref{fig:labview3}, sends and receives the commands discussed in section \ref{InternalDac}. In addition it implements some useful features like:
 \begin{itemize}
 	\item the ability to write on only one DAC at a time with the \textit{Set Internal DAC} button
 	\item the ability to write every DAC with a single \textit{Set multiple internal DAC} button press
@@ -141,13 +141,13 @@ The second value to be noted in figure \ref{fig:clockspecs} is the amplitude of 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.99\linewidth]{IMG/ch3/LABVIEW2}
-	\caption{LabVIEW tool coded by \textit{Emanuele Data} for the configuration of the trimming DACs}
+	\caption{LabVIEW tool coded by \textit{Emanuele Data} for the configuration of the trimming DACs.}
 	\label{fig:labview3}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-write63-baselinedac1}
-	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{magenta}purple}= clock, {\color{blue}blue}= data out}
+	\caption{Writing sequence, channel 5, word 63, DAC 1\\{\color{magenta}purple}= clock, {\color{blue}blue}= data out.}
 	\label{fig:ch05write63}
 \end{figure}
 \noindent In figure \ref{fig:ch05write63} it can be seen an example reading sequence being sent to the chip. In purple there is the clock signal discussed previously while in blue it can be seen the serial data being sent to the DAC controller.
@@ -165,7 +165,7 @@ For the moment the user has no way of knowing if the chip was properly configure
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/probe/09-08-2021_ch05-read63-baselinedac1}
-	\caption{Reading sequence, channel 5, word 63, DAC 1\\{\color{magenta}purple}= clock, {\color{blue}blue}= data out,\\{\color{cyan}cyan}= data in, {\color{orange}orange}= data from chip}
+	\caption{Reading sequence, channel 5, word 63, DAC 1\\{\color{magenta}purple}= clock, {\color{blue}blue}= data out,\\{\color{cyan}cyan}= data in, {\color{orange}orange}= data from chip.}
 	\label{fig:ch05read63}
 \end{figure}
 \noindent In figure \ref{fig:ch05read63} it can be seen a reading sequence being performed on the same channel as before (\textit{ch05}).
@@ -187,10 +187,10 @@ This behaviour makes the ability to read and configure these DACs even more impo
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{IMG/ch5/DataDacConfig/tscan_sketch2}
-	\caption{Threshold scan example\cite{rivetti}}
+	\caption{Threshold scan example~\cite{rivetti}.}
 	\label{fig:tscansketch}
 \end{figure}
-\noindent The ABACUS2 chip implements a binary readout system. As a consequence, any signal crossing the threshold ($V_{th}$) is processed as a good event\cite{rivetti}.
+\noindent The ABACUS2 chip implements a binary readout system. As a consequence, any signal crossing the threshold ($V_{th}$) is processed as a good event~\cite{rivetti}.
 Therefore, it is important to minimize the number of hits due to noise, which requires a proper setting of the comparator threshold. It can be proven that the frequency of noisy hits can be estimated as
 \begin{equation}
 	f_n=\frac{1}{4 \sqrt{3} \tau} e^{- \frac{V^2_{th}}{2V^2_n}} 
@@ -246,14 +246,14 @@ This translations is approximately 20~mV.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch5/DataDacConfig/ThScan_ch0.pdf}
-	\caption{Sample S-curves obtained with: {\color{blue}blue}= trimming DAC at \textit{0d00},\\{\color{green}green}= trimming DAC at \textit{0d63}}
+	\caption{Sample S-curves obtained with: {\color{blue}blue}= trimming DAC at \textit{0d00},\\{\color{green}green}= trimming DAC at \textit{0d63}.}
 	\label{fig:thscanch0}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch5/DataDacConfig/DAC_V_REF_600mv-Copia.pdf}
-	\caption{{\color{blue}blue}= pedestal values with trimming DAC at \textit{0d00}, {\color{green}green}= pedestal values with trimming DAC at \textit{0d63}}
+	\caption{{\color{blue}blue}= pedestal values with trimming DAC at \textit{0d00}, {\color{green}green}= pedestal values with trimming DAC at \textit{0d63}.}
 	\label{fig:pedestal}
 \end{figure}
 \noindent After fitting the S-curves with the error function and calculating the pedestal voltages some mode consideration can be taken.
@@ -269,7 +269,7 @@ In order to test the new \textit{tera10\_latch\_counter} module a new LabVIEW pa
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.99\linewidth]{IMG/ch5/latch_tests/fig1.PNG}
-	\caption{New LabVIEW data acquisition panel used for rate measurements}
+	\caption{New LabVIEW data acquisition panel used for rate measurements.}
 	\label{fig:newlabviewpanel}
 \end{figure}
 \noindent This new piece of software allows new types of measurements that could not be performed before.
@@ -288,7 +288,7 @@ By combining the reading and latching addresses four possibilities emerge:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{IMG/ch5/latch_tests/fig2.PNG}
-	\caption{Latch counter measurement on graph}
+	\caption{Latch counter measurement on graph.}
 	\label{fig:latchfigure}
 \end{figure}
 \noindent In figure \ref{fig:latchfigure} it can be seen the behaviour of the latch system. On the X axis there is the channel number and on the Y axis there is the total number of counts; the test pulses are being sent only to even channels, however it can be seen that not every channel is counting and others, for example \textit{ch23}, are suffering from cross talk problems. Some other channels, like \textit{ch12}, have counts almost doubled. This is known as "counting for after pulse" and happens when the threshold value is not perfectly setted and some noise is being counted.
@@ -306,7 +306,7 @@ These values can be seen in figure \ref{fig:timestampfigure}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{IMG/ch5/latch_tests/fig15.PNG}
-	\caption{Details of the Timestamp indicators values. For example in this case the timestamp measurement was done $\approx$~24~min after the board was turned on}
+	\caption{Details of the Timestamp indicators values. For example in this case the timestamp measurement was done $\approx$~24~min after the board was turned on.}
 	\label{fig:timestampfigure}
 \end{figure}
 \noindent A proper performance test of this new feature is presented in the next subsection. However, a simple measurement was performed in order to check if the timestamp counter runs at a "reasonable speed".
@@ -315,7 +315,7 @@ This is exactly what happened, thus the timestamp module was working as intended
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.35\linewidth]{IMG/ch5/latch_tests/fig20.PNG}
-	\caption{Timestamp measured after 30 min = 1800 s\\initial time $\approx$ 74.1 s}
+	\caption{Timestamp measured after 30 min = 1800 s\\initial time $\approx$ 74.1 s.}
 	\label{fig:timestamptest}
 \end{figure}
 
@@ -342,25 +342,25 @@ The next important step is to create an automated rate calculation logic in LabV
 	\begin{minipage}{0.24\textwidth}
 		\centering
 		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig16}
-		\caption{Pulsed rate=\\10~kHz}
+		\caption{Pulsed rate=\\10~kHz.}
 		\label{fig:10khz}
 	\end{minipage}
 	\begin{minipage}{0.24\textwidth}
 		\centering
 		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig17}
-		\caption{Pulsed rate=\\50~kHz}
+		\caption{Pulsed rate=\\50~kHz.}
 		\label{fig:50khz}
 	\end{minipage}
 	\begin{minipage}{0.24\textwidth}
 		\centering
 		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig18}
-		\caption{Pulsed rate=\\75~kHz}
+		\caption{Pulsed rate=\\75~kHz.}
 		\label{fig:75khz}
 	\end{minipage}
 	\begin{minipage}{0.24\textwidth}
 		\centering
 		\includegraphics[width=.7\linewidth]{IMG/ch5/latch_tests/fig19}
-		\caption{Pulsed rate=\\110~kHz}
+		\caption{Pulsed rate=\\110~kHz.}
 		\label{fig:110khz}
 	\end{minipage}
 \end{figure}
@@ -370,13 +370,13 @@ The next important step is to create an automated rate calculation logic in LabV
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig3.PNG}
-		\caption{Latch Rate calculation at 10~kHz impulse rate}
+		\caption{Latch Rate calculation at 10~kHz impulse rate.}
 		\label{fig:latchrate10}
 	\end{minipage}%
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig5.PNG}
-		\caption{Latch Rate calculation at 50~kHz impulse rate}
+		\caption{Latch Rate calculation at 50~kHz impulse rate.}
 		\label{fig:latchrate50}
 	\end{minipage}
 \end{figure}
@@ -385,13 +385,13 @@ The next important step is to create an automated rate calculation logic in LabV
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig9.PNG}
-		\caption{Latch Rate calculation at 75~kHz impulse rate}
+		\caption{Latch Rate calculation at 75~kHz impulse rate.}
 		\label{fig:latchrate75}
 	\end{minipage}%
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.95\linewidth]{IMG/ch5/latch_tests/fig12.PNG}
-		\caption{Latch Rate calculation at 110~kHz impulse rate}
+		\caption{Latch Rate calculation at 110~kHz impulse rate.}
 		\label{fig:latchrate110}
 	\end{minipage}
 \end{figure}
@@ -410,13 +410,13 @@ All measurements were performed on data from \textit{ch16}.
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.95\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-100ms}
-		\caption{1 MHz pulsed rate\\100 ms integration time\\CPU time method}
+		\caption{1 MHz pulsed rate\\100 ms integration time\\CPU time method.}
 		\label{fig:CPU-time-rate-1MHz-100ms}
 	\end{minipage}%
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-100ms}
-		\caption{1 MHz pulsed rate\\100 ms integration time\\FPGA time method}
+		\caption{1 MHz pulsed rate\\100 ms integration time\\FPGA time method.}
 		\label{fig:FPGA-time-rate-1MHz-100ms}
 	\end{minipage}
 \end{figure}
@@ -434,13 +434,13 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 4.0 Hz
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-200ms}
-		\caption{1 MHz pulsed rate\\200 ms integration time\\CPU time method}
+		\caption{1 MHz pulsed rate\\200 ms integration time\\CPU time method.}
 		\label{fig:CPU-time-rate-1MHz-200ms}
 	\end{minipage}%
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-200ms}
-		\caption{1 MHz pulsed rate\\200 ms integration time\\FPGA time method}
+		\caption{1 MHz pulsed rate\\200 ms integration time\\FPGA time method.}
 		\label{fig:FPGA-time-rate-1MHz-200ms}
 	\end{minipage}
 \end{figure}
@@ -457,13 +457,13 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 2.1 Hz
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-300ms}
-		\caption{1 MHz pulsed rate\\300 ms integration time\\CPU time method}
+		\caption{1 MHz pulsed rate\\300 ms integration time\\CPU time method.}
 		\label{fig:CPU-time-rate-1MHz-300ms}
 	\end{minipage}%
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-300ms}
-		\caption{1 MHz pulsed rate\\300 ms integration time\\FPGA time method}
+		\caption{1 MHz pulsed rate\\300 ms integration time\\FPGA time method.}
 		\label{fig:FPGA-time-rate-1MHz-300ms}
 	\end{minipage}
 \end{figure}
@@ -480,13 +480,13 @@ FPGA method $\rightarrow$ measured $\sigma_{FPGA}$ = 1.4 Hz
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/CPU-time-rate-1MHz-500ms}
-		\caption{1 MHz pulsed rate\\500 ms integration time\\CPU time method}
+		\caption{1 MHz pulsed rate\\500 ms integration time\\CPU time method.}
 		\label{fig:CPU-time-rate-1MHz-500ms}
 	\end{minipage}%
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=.99\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-500ms}
-		\caption{1 MHz pulsed rate\\500 ms integration time\\FPGA time method}
+		\caption{1 MHz pulsed rate\\500 ms integration time\\FPGA time method.}
 		\label{fig:FPGA-time-rate-1MHz-500ms}
 	\end{minipage}
 \end{figure}
@@ -507,14 +507,14 @@ For the 50~ms case $\sigma_{FPGA}$~=~8.0~Hz, this is still almost 10 times lower
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-50ms}
-	\caption{1 MHz pulsed rate\\50 ms integration time\\FPGA time method}
+	\caption{1 MHz pulsed rate\\50 ms integration time\\FPGA time method.}
 	\label{fig:FPGA-time-rate-1MHz-50ms}
 \end{figure}
 \noindent Lowering the integration time even more, down to 1~ms, makes the measurement less accurate ($\sigma_{FPGA}$~=~408.7~Hz), however the error is still less than 1\% which is perfectly compatible with the required clinical precision.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA-time-rate-1MHz-1ms}
-	\caption{1 MHz pulsed rate\\1 ms integration time\\FPGA time method}
+	\caption{1 MHz pulsed rate\\1 ms integration time\\FPGA time method.}
 	\label{fig:FPGA-time-rate-1MHz-1ms}
 \end{figure}
 
@@ -523,7 +523,7 @@ For the 50~ms case $\sigma_{FPGA}$~=~8.0~Hz, this is still almost 10 times lower
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.95\linewidth]{IMG/ch5/RateMeasures/FPGA_and_CPU_rate_1MHz_100ms}
-	\caption{1 MHz pulsed rate; 100~ms integration time\\FPGA time method in black, CPU time method in red}
+	\caption{1 MHz pulsed rate; 100~ms integration time\\FPGA time method in black, CPU time method in red.}
 	\label{fig:FPGA_and_CPU_rate_1MHz_100ms}
 \end{figure}
 
