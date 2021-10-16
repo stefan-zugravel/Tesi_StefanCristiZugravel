@@ -68,19 +68,19 @@ In this chapter there are also considerations on the implemented design and a sh
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 	\item \textbf{Tera10 Controller}: this module is strictly connected to the previous one (\textit{Tera10 I/O}). It receives the content of each counter from the previous block and manages the data according to the commands sent by the user. Some of the most used and important commands are:
 	\begin{itemize}
-		\item \textit{0x01} \textit{reset serdes}: send reset signal for the de-serializers;
-		\item \textit{0x02} \textit{reset counters}: every counter for each \textit{tera10 channel coincidence} module is set to 0;
-		\item \textit{0x10} \textit{set counter enable}: to enable selected counters. This is done by dividing the channels in blocks of 16. When a 20~bit data command is sent, bits 18-17-16 are used to identify the block, and the next 16~bit are encoded one-hot for each channel; for example, to enable channel 2 the data to be sent is \textit{0-000-0000000000000010} and to enable channel 18 the data is \textit{0-001-0000000000000100};  
-		\item \textit{0x11} \textit{read counter}: read selected counter. the firmware response is a 16~bit bus, thus 2 commands are needed in order to read the entire counter; the LSB (Least Significant Bit) selects between the first and last 16~bit. For example:
+		\item \textit{0x01} => \textit{reset serdes}: send reset signal for the de-serializers;
+		\item \textit{0x02} => \textit{reset counters}: every counter for each \textit{tera10 channel coincidence} module is set to 0;
+		\item \textit{0x10} => \textit{set counter enable}: to enable selected counters. This is done by dividing the channels in blocks of 16. When a 20~bit data command is sent, bits 18-17-16 are used to identify the block, and the next 16~bit are encoded one-hot for each channel; for example, to enable channel 2 the data to be sent is \textit{0-000-0000000000000010} and to enable channel 18 the data is \textit{0-001-0000000000000100};  
+		\item \textit{0x11} => \textit{read counter}: read selected counter. the firmware response is a 16~bit bus, thus 2 commands are needed in order to read the entire counter; the LSB (Least Significant Bit) selects between the first and last 16~bit. For example:
 		\newline
 		fifo\_data(7 downto 0) = \textit{01110110} means read ch59\_counter(15 downto 0)
 		\newline
 		fifo\_data(7 downto 0) = \textit{01110111} means read ch59\_counter(31 downto 15)
-		\item \textit{0x13} \textit{read clocks}: read selected clock counter; the firmware response is a 16~bit bus, thus are valid the same considerations as before;
-		\item \textit{0x14} \textit{read coincidence counter}: read selected coincidence counter, the MSB (Most Significant Bit) selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16~bit bus. For example:
+		\item \textit{0x13} => \textit{read clocks}: read selected clock counter; the firmware response is a 16~bit bus, thus are valid the same considerations as before;
+		\item \textit{0x14} => \textit{read coincidence counter}: read selected coincidence counter, the MSB (Most Significant Bit) selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16~bit bus. For example:
 		\newline
 		fifo\_data(7 downto 0) = \textit{10000010} means read ch0203\_or\_counter(15 downto 0)
-		\item \textit{0x15} \textit{read coincidence clocks}: read selected clock coincidence counter, the MSB selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16~bit bus as shown for command \textit{0x14};
+		\item \textit{0x15} => \textit{read coincidence clocks}: read selected clock coincidence counter, the MSB selects between \textit{AND} and \textit{OR} counters; the firmware response is a 16~bit bus as shown for command \textit{0x14};
 		%\item x"18" \textit{set selected channel}:
 		%\item x"20" \textit{do external trigger}:
 		%\item x"12" \textit{read event buffer ram address}:
@@ -90,17 +90,17 @@ In this chapter there are also considerations on the implemented design and a sh
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 	\item \textbf{Hardware Controller}: this module manages hardware devices such as internal and external DACs, LEDs and GPIO (General Purpose Input Output) switches and buttons available on the FPGA board. The main commands are:
 	\begin{itemize}
-		\item \textit{0x01} \textit{read GPIO switches}: this command returns the current state of the GPIO switches and buttons, thus:
+		\item \textit{0x01} => \textit{read GPIO switches}: this command returns the current state of the GPIO switches and buttons, thus:
 		\newline
 		reply(8 downto 4) = buttons state
 		\newline
 		reply(3 downto 0) = switches state
-		\item \textit{0x02} \textit{set hardware LED}: this command can turn on or off LEDs on the board;
-		\item \textit{0x11} \textit{set baseline DACs}: this command is used for both writing (setting) and reading the values of the ABACUS2 internal DACs, as explained in section \ref{InternalDac};
+		\item \textit{0x02} => \textit{set hardware LED}: this command can turn on or off LEDs on the board;
+		\item \textit{0x11} => \textit{set baseline DACs}: this command is used for both writing (setting) and reading the values of the ABACUS2 internal DACs, as explained in section \ref{InternalDac};
 		%\item {\color{red} non so se ho detto cose sbagliate}
-		\item \textit{0x20} \textit{clear external DAC}: to clear the current settings of the eternal DAC;
-		\item \textit{0x21} \textit{set external DAC data register}: to set the external DAC with the values written in the RAM;
-		\item \textit{0x22} \textit{write external DAC register}: to write on memory the values to be written on the eternal DAC;
+		\item \textit{0x20} => \textit{clear external DAC}: to clear the current settings of the eternal DAC;
+		\item \textit{0x21} => \textit{set external DAC data register}: to set the external DAC with the values written in the RAM;
+		\item \textit{0x22} => \textit{write external DAC register}: to write on memory the values to be written on the eternal DAC;
 	\end{itemize}  
 		
 \end{itemize}
@@ -342,38 +342,38 @@ This means that for each state a total of 6.144~kb of memory needs to be allocat
 \end{figure}
 \noindent In order to control the block, I created a new sub-system target (\textit{0x8}) dedicated to the latch and timestamp and two new FSMs with the same style as the ones in figure \ref{fig:fsmFIFO1} and \ref{fig:fsmFIFO2}. The new sub-system commands ids are:
 \begin{itemize}
-	\item \textit{0x0F} \textit{do latch}: 
+	\item \textit{0x0F} => \textit{do latch}: 
 	\begin{itemize}
 		\item fifo\_data(8) = write address ('\textit{0}' or '\textit{1}')
 	\end{itemize}
-	\item \textit{0x1F} \textit{read latch counters}:
+	\item \textit{0x1F} => \textit{read latch counters}:
 	\begin{itemize}
 		\item fifo\_data(8) = read address ('\textit{0}' or '\textit{1}')
 		\item fifo\_data(7 downto 1) = counter select (from 0$\rightarrow$"\textit{0000000}" to 48$\rightarrow$"\textit{0110000}")
 		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
 	\end{itemize}
-	\item \textit{0x2F} \textit{read latch clocks}:
+	\item \textit{0x2F} => \textit{read latch clocks}:
 	\begin{itemize}
 		\item fifo\_data(8) = read address ('\textit{0}' or '\textit{1}')
 		\item fifo\_data(7 downto 1) = counter select (from 0$\rightarrow$"\textit{0000000}" to 48$\rightarrow$"\textit{0110000}")
 		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
 	\end{itemize}
-	\item \textit{0x3F} \textit{read latch coincidence counters}:
+	\item \textit{0x3F} => \textit{read latch coincidence counters}:
 	\begin{itemize}
 		\item fifo\_data(8) = read address ('\textit{0}' or '\textit{1}')
 		\item fifo\_data(7) = coincidence select ('0'$\rightarrow$read AND coincidence; '1'$\rightarrow$read OR coincidence)
 		\item fifo\_data(6 downto 1) = counter select (from 0$\rightarrow$"\textit{0000000}" to 24$\rightarrow$"\textit{0011000}")
 		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
 	\end{itemize}
-	\item \textit{0x4F} \textit{read latch coincidence clocks}:
+	\item \textit{0x4F} => \textit{read latch coincidence clocks}:
 	\begin{itemize}
 		\item fifo\_data(8) = read address ('\textit{0}' or '\textit{1}')
 		\item fifo\_data(7) = coincidence select ('0'$\rightarrow$read AND coincidence; '1'$\rightarrow$read OR coincidence)
 		\item fifo\_data(6 downto 1) = counter select (from 0$\rightarrow$"\textit{0000000}" to 24$\rightarrow$"\textit{0011000}")
 		\item fifo\_data(0) = bit select $\rightarrow$ read first or last 16 bits of the counters \\('0'$\rightarrow$read~15~downto~0; '1'$\rightarrow$read~31~downto~15)
 	\end{itemize}
-	\item \textit{0x5F} \textit{do timestamp}: see section \ref{Timestamp}
-	\item \textit{0x6F} \textit{read timestamp}: see section \ref{Timestamp}
+	\item \textit{0x5F} => \textit{do timestamp}: see section \ref{Timestamp}
+	\item \textit{0x6F} => \textit{read timestamp}: see section \ref{Timestamp}
 \end{itemize}
 
 \subsubsection{Vivado simulations}
@@ -488,12 +488,12 @@ This automatically generated module has a 64~bit write width, a depth of 512 (th
 \end{figure}
 \noindent I then added two sub-system commands IDs to the ones described in section \ref{Latch}:
 \begin{itemize}
-	\item \textit{0x5F} \textit{do timestamp}:
+	\item \textit{0x5F} => \textit{do timestamp}:
 	\begin{itemize}
 		\item fifo\_data(11 downto 8) = read address (from \textit{0x0} to \textit{0xF})
 		\item fifo\_data(7 downto 0) = don't care
 	\end{itemize}
-	\item \textit{0x6F} \textit{read timestamp}:
+	\item \textit{0x6F} => \textit{read timestamp}:
 	\begin{itemize}
 		\item fifo\_data(11 downto 8) = read address (from \textit{0x0} to \textit{0xF})
 		\item fifo\_data(7 downto 0) = select data portion (from \textit{0x00} to \textit{0x03})
