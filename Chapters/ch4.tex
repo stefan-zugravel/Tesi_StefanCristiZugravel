@@ -1,13 +1,18 @@
 \chapter{MoVeIT KC705 firmware extensions}
 \section{Introduction}
 \noindent As explained in the previous chapters a good VHDL design, in order to improve readability, uses separate modules for each main task of the firmware. Each module is connected with wires (signals) to the others. The first half of this chapter will analyze the structure of the firmware used for the readout of the output of the ABACUS2 chip (section \ref{chip}), from now on named "KC705\_tera10 firmware", while the second half will be focused on my personal contribution to the project; this comprehends the HDL additions to the firmware and the simulations carried out with the Xilinx Vivado Software.
-In this chapter there are also considerations on the implemented design and a short analysis of the most important post-implementation reports. 
-
+In this chapter there are also considerations on the implemented design and a short analysis of the most important post-implementation reports.
+\newline
+(\textit{tera10} in the firmware name comes from the TERA foundation, that is a scientific research foundation, recognized by the ministry of health, which since 1992 has been proposing the implementation of hadron therapy centers for the treatment of cancer through the applications of physics and advanced technologies in Italy and around the world.)
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.2\linewidth]{IMG/ch4/TERA}
+\end{figure}
 \section{Firmware structure}\label{structure}
 \noindent The starting point of the thesis work is a firmware developed by Richard Wheadon of INFN, Turin, designed to count the number of output logical pulses from the ABACUS2 chip, and store the corresponding count values on internal registers accessible from remote. This firmware has a hierarchical structure, shown in figure \ref{fig:tera10}, in which the main modules are:
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.4\linewidth]{IMG/ch4/HIERARCHY5}
+	\includegraphics[width=0.75\linewidth]{IMG/ch4/HIERARCHY5}
 	\caption{KC705\_tera10 firmware structure. GbPhy= purple; tera10\_latch\_counter= yellow; tera10\_io= green; tera10\_controller= light blue; lcd\_controller= red; hardware\_controller= blue; command\_processor= grey.}
 	\label{fig:tera10}
 \end{figure}
