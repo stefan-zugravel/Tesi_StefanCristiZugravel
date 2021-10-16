@@ -1,9 +1,11 @@
 \chapter*{Conclusions and future developments}
-\noindent This thesis work was performed within MoVeIT, a research
-project by the Medical Physics group at University of Turin
-and INFN, which aims to develop new and
+\noindent This thesis work was performed within MoVeIT,
+a INFN research project, which aims to develop new and
 innovative models for biologically optimized Treatment
 Planning Systems (TPS) using ion beams in hadron therapy.
+The Medical Physics group of Turin University and INFN
+is in charge of develop new beam monitoring devices
+based on single particle detection.
 The particles are detected using a Low-Gain Avalanche Diode
 (LGAD) thin silicon sensor segmented in strips. The signal
 is then read out by a full-custom ASIC designed by Turin
@@ -26,7 +28,7 @@ of the FPGA channels working conditions.\\
 \noindent The results of this thesis are:
 i) the ABACUS2 I2C controller and the FPGA configuration
 logic for the trimming DACs are working as intended; 
-ii) from the performed threshold scans emerged that the ABACUS2
+ii) from the performed threshold scans it emerged that the ABACUS2
 internal DACs are changing the threshold voltage and thus
 shifting the S-curves as expected;
 iii) the latch system works properly and freezes the state
@@ -40,8 +42,8 @@ of malfunctioning channels on the FPGAs board.\\
 \noindent Possible future developments of the MoVeIT project
 include:
 i) the creation of a software configurable mask that allows
-the hardware calculation of the sum of the counts of only
-the selected channels;
+the hardware calculation of the sum of the counts of
+a group of selected channels;
 ii) the implementation of the particle rate calculation directly
 on board;
 iii) the coding of a fully capable data acquisition panel with
