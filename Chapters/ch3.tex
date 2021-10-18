@@ -487,7 +487,7 @@ This device provide many possible I/O interfaces to communicate with the externa
 	\begin{itemize}
 		\item 68 single-ended or 34 differential user-defined signals;
 		\item 61 ground and 10 power connections;
-		\item 2 differential clocks;
+		\item 2 differential clocks.
 	\end{itemize}
 	For the purpose of the MoVeIT project the two connectors are equal, since only the pins common to both pin configurations are used.
 	\item 16x2 \textbf{LCD Display} used to show information such as: organization name, project name, firmware version and board number.
@@ -531,7 +531,7 @@ This means that when probing the two wires of a LVDS25 signal the two voltages t
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch3/LVDS25SPEC}
-	\caption{LVDS25 DC specifications.}
+	\caption{LVDS25 DC specifications~\cite{lvds2}.}
 	\label{fig:lvds25}
 \end{figure}
 \subsection{Debug tool implementation}
@@ -542,16 +542,16 @@ In figure \ref{fig:debug1} the first part of the output-pins declaration in the 
 This code is divided into 5 "columns" in order to facilitate the identification of the pin under test.
 Thus for each signal there is a:
 \begin{itemize}
-	\item \textbf{Pin name}: is the name given to each signal in the HDL code.
-	\item \textbf{Pin configuration}: always \textit{std\_logic} output in this case.
-	\item \textbf{J22 Pin-schematic Net Name}: pin name in the FPGA schematic documentation. 
-	\item \textbf{FPGA Pin}: pin name used in constraints file. 
+	\item \textbf{pin name}: is the name given to each signal in the HDL code;
+	\item \textbf{pin configuration}: always \textit{std\_logic} output in this case;
+	\item \textbf{J22 Pin-schematic Net Name}: pin name in the FPGA schematic documentation; 
+	\item \textbf{FPGA Pin}: pin name used in constraints file; 
 	\item \textbf{J4}: pin number in the FMC breakout board in figure \ref{fig:debug2}. 
 \end{itemize}     
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{IMG/ch3/DEBUG1}
-	\caption{Example code for the kc705 FMC debug tool.}
+	\caption{Example code for the KC705 FMC debug tool.}
 	\label{fig:debug1}
 \end{figure}
 \begin{figure}[H]
@@ -568,9 +568,9 @@ Thus for each signal there is a:
 \end{figure}
 \noindent For example, if the \textit{baseline\_dac1\_mosi} signal is always \textit{low}, the procedure to check the pin is the following (to be noted that for this example does not matter what the signal is used for and what is its purpose in the FPGA firmware, this section only explains the debugging procedure):
 \begin{itemize}
-	\item Check in the .xdc constraints file the respective signal, in this case \textit{baseline\_dac1\_mosi} in figure \ref{fig:debug3} and look for the FPGA Pin name, in this case \textit{H30} and \textit{G30}.
-	\item Check in the HDL, figure \ref{fig:debug1} to witch breakout pin leads the signal; in this case \textit{H30}$\rightarrow$P7 and \textit{G30}$\rightarrow$P8 in figure \ref{fig:debug2}.
-	\item Load on the board the debug firmware and check with a multimeter the voltages at the desired pins.    
+	\item check in the .xdc constraints file the respective signal, in this case \textit{baseline\_dac1\_mosi} in figure \ref{fig:debug3} and look for the FPGA Pin name, in this case \textit{H30} and \textit{G30};
+	\item check in the HDL, figure \ref{fig:debug1} to witch breakout pin leads the signal; in this case \textit{H30}$\rightarrow$P7 and \textit{G30}$\rightarrow$P8 in figure \ref{fig:debug2};
+	\item load on the board the debug firmware and check with a multimeter the voltages at the desired pins.    
 \end{itemize}
 \noindent If the channel is working properly the voltages should be \textit{low}$\approx$0.75~V and \textit{high}$\approx$1.5~V for this board.  
 
