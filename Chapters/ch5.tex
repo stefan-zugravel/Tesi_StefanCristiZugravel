@@ -14,13 +14,13 @@ The second half will analyse how the new firmware extensions perform on real har
 In order to properly validate the new additions to the FPGA firmware, after the simulations performed in the Vivado design suite, numerous tests have been carried out on the FPGA board and on chip.
 The setup used to perform the tests is shown in figure \ref{fig:testbench} and it comprehends:
 \begin{itemize}
-	\item \textit{KEYSIGHT DSOS254A} (Digital Storage Oscilloscope), 4-channels, 2.5~GHz, 20~GSa/s, 10~bit ADC professional oscilloscope
-	\item \textit{BK PRECISION 9140} power supply for the test board and the level translator device of section \ref{leveltranslator}
-	\item \textit{ACTIVE TECHNOLOGIES} Fast Pulse Generator (70~ps Pulse/Delay) used to simulate the signal coming from the detector
-	\item A computer with LabVIEW 
-	\item The FPGA board with the firmware extensions to be tested
-	\item The test board with the ABACUS2 bonded to it
-	\item A level translator circuit required to boost the output data from the ABACUS2 I2C controller
+	\item \textit{KEYSIGHT DSOS254A} (Digital Storage Oscilloscope), 4-channels, 2.5~GHz, 20~GSa/s, 10~bit ADC professional oscilloscope;
+	\item \textit{BK PRECISION 9140} power supply for the test board and the level translator device of section \ref{leveltranslator};
+	\item \textit{ACTIVE TECHNOLOGIES} Fast Pulse Generator (70~ps Pulse/Delay) used to simulate the signal coming from the detector;
+	\item a computer with LabVIEW;
+	\item the FPGA board with the firmware extensions to be tested;
+	\item the test board with the ABACUS2 bonded to it;
+	\item a level translator circuit required to boost the output data from the ABACUS2 I2C controller.
 \end{itemize}
 
 \section{Test board}\label{testboard}
@@ -129,22 +129,23 @@ For this first part the goal was to validate the clock period and its amplitude.
 	\caption{\textit{baseline\_dac\_sck}; period and amplitude measurements.}
 	\label{fig:clockspecs}
 \end{figure}
-\noindent In section \ref{confing} it was underlined that the clock period should theoretically be 98.28~$\mu$s, in figure \ref{fig:clockspecs} it can be seen that the measured period is 98.44~$\mu$s. The difference between the two periods is 160~ns, corresponding to about $\approx$0.16\% of the total. The period can be then considered perfectly compatible.
+\noindent In section \ref{confing} it was underlined that the clock period should theoretically be 98.28~$\mu$s, in figure \ref{fig:clockspecs} it can be seen that the measured period is 98.44~$\mu$s. The difference between the two periods is 160~ns, corresponding to about $\approx$~0.16\% of the total.
+The period can be then considered perfectly compatible.
 The second value to be noted in figure \ref{fig:clockspecs} is the amplitude of the signal, which is 1.22~V, perfectly safe for the chip. 
 
 \subsubsection{Write sequence}
 \noindent In order to write into the trimming DACs and to read from them, a new LabVIEW panel was implemented~\cite{data}. This piece of software, with the graphical interface shown in figure \ref{fig:labview3}, sends and receives the commands discussed in section \ref{InternalDac}. In addition it implements some useful features like:
 \begin{itemize}
-	\item the ability to write on only one DAC at a time with the \textit{Set Internal DAC} button
-	\item the ability to write every DAC with a single \textit{Set multiple internal DAC} button press
-	\item the possibility to read only one DAC value at the time with the \textit{Read ONE Internal DAC} button
-	\item the possibility to read every DAC with a single \textit{Read Internal DACs} button press
-	\item the ability to chose for each DAC channel if the signal needs to be sent to the HPC or LPC FMC
+	\item the ability to write on only one DAC at a time with the \textit{Set Internal DAC} button;
+	\item the ability to write every DAC with a single \textit{Set multiple internal DAC} button press;
+	\item the possibility to read only one DAC value at the time with the \textit{Read ONE Internal DAC} button;
+	\item the possibility to read every DAC with a single \textit{Read Internal DACs} button press;
+	\item the ability to chose for each DAC channel if the signal needs to be sent to the HPC or LPC FMC.
 \end{itemize}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.99\linewidth]{IMG/ch3/LABVIEW2}
-	\caption{LabVIEW tool coded by \textit{Emanuele Data} for the configuration of the trimming DACs.}
+	\caption{LabVIEW tool for the configuration of the trimming DACs.}
 	\label{fig:labview3}
 \end{figure}
 \begin{figure}[H]
@@ -285,9 +286,9 @@ When the \textit{DO LATCH} button is pressed a flag is raised, the LabVIEW logic
 In figure \ref{fig:newlabviewpanel} it can be noted that there are two buttons, one for latching and one for reading the counters. For each button there is a boolean controller that allows the selection between address \textit{0} and \textit{1}.
 By combining the reading and latching addresses four possibilities emerge:
 \begin{itemize}
-	\item \textbf{LATCH~=~0} and \textbf{READ~=~0 $\rightarrow$} every time the \textit{do\_latch} button is pressed and then the reading command is sent, the values displayed are being updated. The user is reading the latest saved latched values.
-	\item \textbf{LATCH~=~1} and \textbf{READ~=~0 $\rightarrow$} this time the data is being saved on address \textit{1}, however we are still reading from address \textit{0}, this means that the data on the screen should stay the same as the case before.
-	\item \textbf{LATCH~=~0} and \textbf{READ~=~1 $\rightarrow$} with this combination at the first reading command the read data value change, however this happens only the first time. Now the user is writing on address \textit{0}, but reading from address \textit{1}. 
+	\item \textbf{LATCH~=~0} and \textbf{READ~=~0 $\rightarrow$} every time the \textit{do\_latch} button is pressed and then the reading command is sent, the values displayed are being updated. The user is reading the latest saved latched values;
+	\item \textbf{LATCH~=~1} and \textbf{READ~=~0 $\rightarrow$} this time the data is being saved on address \textit{1}, however we are still reading from address \textit{0}, this means that the data on the screen should stay the same as the case before;
+	\item \textbf{LATCH~=~0} and \textbf{READ~=~1 $\rightarrow$} with this combination at the first reading command the read data value change, however this happens only the first time. Now the user is writing on address \textit{0}, but reading from address \textit{1};
 	\item \textbf{LATCH~=~1} and \textbf{READ~=~1 $\rightarrow$} this case works as the first one, the user is reading from the same channel on which he is writing thus the data is always updated. 
 \end{itemize}
 \noindent By doing these four simple tests it turns out that the address system works as intended. The next step is to set the fast pulse generator to a known rate and to measure it using the new and improved latch system.

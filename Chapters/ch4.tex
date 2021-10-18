@@ -329,13 +329,13 @@ This means that for each state a total of 6.144~kb of memory needs to be allocat
 \end{figure}
 \noindent Before talking about the latch logic it is important to understand how the RAM needs to be controlled. There are a total of 8 input signals and one output:
 \begin{itemize}
-	\item \textit{clka} and \textit{clkb}: clock signal for writing and reading logic. Considering that all the logic runs with the 125~MHz \textit{tera10\_clk}, in order to avoid timing errors \textit{clka} and \textit{clkb} will also have a frequency of 125~MHz
-	\item \textit{ena} and \textit{enb}: enable signal for ram ports \textit{A} and \textit{B}, this signals are always \textit{high}
-	\item \textit{dina}: 32~bit input signal
-	\item \textit{doutb}: 32~bit output signal
-	\item \textit{addra}: 1~bit write address, this means that the RAM has depth~=~2, thus two states can be latched
-	\item \textit{addrb}: 1~bit read address
-	\item \textit{wea}: \textit{write enable a}, when this signal is \textit{high} the input from dina is saved into memory at the address \textit{addra}
+	\item \textit{clka} and \textit{clkb}: clock signal for writing and reading logic. Considering that all the logic runs with the 125~MHz \textit{tera10\_clk}, in order to avoid timing errors \textit{clka} and \textit{clkb} will also have a frequency of 125~MHz;
+	\item \textit{ena} and \textit{enb}: enable signal for ram ports \textit{A} and \textit{B}, this signals are always \textit{high};
+	\item \textit{dina}: 32~bit input signal;
+	\item \textit{doutb}: 32~bit output signal;
+	\item \textit{addra}: 1~bit write address, this means that the RAM has depth~=~2, thus two states can be latched;
+	\item \textit{addrb}: 1~bit read address;
+	\item \textit{wea}: \textit{write enable a}, when this signal is \textit{high} the input from \textit{dina} is saved into memory at the address \textit{addra}.
 \end{itemize} 
 \noindent The \textit{tera10\_latch\_counter} receives as inputs every counter from \textit{tera10\_I/O}; each counter is then routed to the input (\textit{dina}) of one RAM component. When the user sends a \textit{do\_latch} command with the desired address ('\textit{0}' or '\textit{1}') the \textit{wea} signal will turn \textit{high} for each RAM and thus the state of every counter will be saved.
 \begin{figure}[H]
@@ -344,7 +344,7 @@ This means that for each state a total of 6.144~kb of memory needs to be allocat
 	\caption{Counters data flow from \textit{tera10\_I/O} to the PC.}
 	\label{fig:latch_counter}
 \end{figure}
-\noindent In order to control the block, I created a new sub-system target (\textit{0x8}) dedicated to the latch and timestamp and two new FSMs with the same style as the ones in figure \ref{fig:fsmFIFO1} and \ref{fig:fsmFIFO2}. The new sub-system commands ids are:
+\noindent In order to control the block, I created a new sub-system target (\textit{0x8}) dedicated to the latch and timestamp and two new FSMs with the same style as the ones in figure \ref{fig:fsmFIFO1} and \ref{fig:fsmFIFO2}. The new sub-system commands IDs are:
 \begin{itemize}
 	\item \textit{0x0F} => \textit{do latch}: 
 	\begin{itemize}
@@ -383,8 +383,8 @@ This means that for each state a total of 6.144~kb of memory needs to be allocat
 \subsubsection{Vivado simulations}
 \noindent In order to test the correct functioning of the latch logic I performed extensive software simulations. In figure \ref{fig:dolatch} it can be seen how the latching system works for one channel, in this case \textit{ch00}. The first signal is the 125~MHz clock; the following 3 lines show the received packet divided in three buses:
 \begin{itemize}
-	\item fifo\_target = sub-system target, in this case \textit{0x8}
-	\item fifo\_command = sub-system commands id, in this case \textit{0x0F}, corresponding to a \textit{do\_latch} command
+	\item fifo\_target = sub-system target, in this case \textit{0x8};
+	\item fifo\_command = sub-system commands ID, in this case \textit{0x0F}, corresponding to a \textit{do\_latch} command;
 	\item fifo\_data = command data, in this case \textit{0x00100}, only fifo\_data(8)=~'1'. This means that the data will be saved on address 1.
 \end{itemize} 
 The next signal is \textit{ch00\_data}, this is a 32~bit counter that contains the number of pulses that have been detected by the sensor (in this case 7).
@@ -399,8 +399,8 @@ Once the FSM is in the \textit{DOlatch} state, the write enable signal (\textit{
 \end{figure}
 \noindent Figure \ref{fig:readlatch} shows an example of the reading process from a RAM module. The first signal is the 125~MHz clock followed in the next row by the value of the received packet:
 \begin{itemize}
-	\item fifo\_target = sub-system target, in this case \textit{0x8}
-	\item fifo\_command = sub-system commands id, in this case \textit{0x1F}, thus a \textit{read\_latch\_counter} command
+	\item fifo\_target = sub-system target, in this case \textit{0x8};
+	\item fifo\_command = sub-system commands ID, in this case \textit{0x1F}, thus a \textit{read\_latch\_counter} command;
 	\item fifo\_data = command data, in this case \textit{0x00100}, only fifo\_data(8)=~'\textit{1}'. This means that the data will be read from address \textit{1}, from the channel \textit{0}, since fifo\_data(7 downto 1) = "\textit{0000000}" and from the first 16~bits since the least significant bit is \textit{0}.
 \end{itemize}
 \noindent When the FSM state is \textit{ReadLatchCounter}, the \textit{latch\_counter\_ram\_address\_read} updates, in this case to '\textit{1}'. After 2 clock strokes the RAM output updates as well. From now on the logic can take this value and send it to the computer. 
@@ -412,7 +412,7 @@ Once the FSM is in the \textit{DOlatch} state, the write enable signal (\textit{
 \end{figure}
 \noindent The next step is to send the correct 32~bit RAM output signal to the GbPhy module and thus to the computer.
 The 192 individually implemented RAM components are divided into the four main categories introduced before (hit counters, clock counters, coincidence hit counters and coincidence clock counters).
-The outputs of the RAMs of each main module are all connected to a 8~bit multiplexer. Each multiplexer is controlled by the fifo\_data(7 downto 0). These four multiplexers are then connected to another 4-inputs 1-output MUX controlled by the fifo\_command (sub-system command id). In this way the user can obtain and read only the desired signal.
+The outputs of the RAMs of each main module are all connected to a 8~bit multiplexer. Each multiplexer is controlled by the fifo\_data(7 downto 0). These four multiplexers are then connected to another 4-inputs 1-output MUX controlled by the fifo\_command (sub-system command ID). In this way the user can obtain and read only the desired signal.
 In figure \ref{fig:replylatch} it can be seen a simulation of the of the reply from a read latch counter command.
 The first signal is the 125~MHz clock, followed by the received packet, the FSM state and the RAM output signal.
 The next signal, \textit{read\_latch\_counter\_reply[15:0]} is the 16~bit output from the first main MUX which is updated after one clock stroke of the RAM output.
