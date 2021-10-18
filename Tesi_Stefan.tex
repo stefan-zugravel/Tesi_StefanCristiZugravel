@@ -22,23 +22,27 @@
 \usepackage[pdf]{graphviz}
 \usepackage[justification=centering]{caption}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{comment}{rgb}{0,0.6,0}
+\definecolor{numbers}{rgb}{0.5,0.5,0.5}
+\definecolor{arrows}{rgb}{0.2,0.6,1.0}
+\definecolor{keyword}{rgb}{0.1,0,0.6}
+\definecolor{rising}{rgb}{0,1,1}
+\definecolor{orange}{rgb}{1,0.6,0.1}
+\definecolor{black}{rgb}{0,0,0}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage{listings}
 \lstdefinelanguage{VHDL}{
-	morekeywords={
-		library,use,all,entity,is,port,in,out,end,architecture,of,
-		begin,and,or,Not,downto,ALL, abs, access, after, alias, all, and, architecture, array, assert, attribute, begin, block, body, buffer, bus, case, component, configuration, constant, disconnect, else, elsif, end, entity, exit, file, for, function, generate, generic, group, guarded, if, impure, in, inertial, inout, map, out, process, signal, then, to, when, while
-	},
 	morecomment=[l]--
 }
-\colorlet{keyword}{blue!100!black!80}
-\colorlet{comment}{green!90!black!90}
+
 \lstdefinestyle{vhdl}{
 	language     = VHDL,
 	basicstyle   = \ttfamily,
 	keywordstyle = \color{keyword}\bfseries,
-	commentstyle = \color{comment}
+	numberstyle  = \color{numbers},
+	commentstyle = \color{comment},
 	breakatwhitespace=false,         
 	breaklines=true,      %con questo si va a capo           
 	keepspaces=true,                 
@@ -48,15 +52,22 @@
 	showstringspaces=false,
 	showtabs=false,                  
 	tabsize=2,
+	otherkeywords={<=, =>, '0', '1', "00", "01", "11", "000", "111", b"0000_0000", b"0000_0001", b"0000_0010", b"0000_0011", x"0000", "00000000", ;},
+	morekeywords={library, use, all, entity, is, port, in, out, end, architecture, of, begin, and, or, Not, downto, ALL , abs, access, after, alias, all, and, architecture, array, assert, attribute, begin, block, body, buffer, bus, case, component, configuration, constant, disconnect, else, elsif, end, entity, exit, file, for, function, generate, generic, group, guarded, if, impure, in, inertial, inout, map, out, process, signal, then, to, when, while },
+	morekeywords=[2]{'0', '1', "00", "01", "11", "000", "111", b"0000_0000", b"0000_0001", b"0000_0010", b"0000_0011", x"0000", "00000000"},
+	keywordstyle=[2]\color{numbers},
+	morekeywords=[3]{rising_edge},
+	keywordstyle=[3]\color{rising},
+	morekeywords=[4]{=>, <=, ;},
+	keywordstyle=[4]\color{arrows}
 }
 
-
-\hyphenation{Systems sending GbPhy cluster ABACUS system acceptable FPGAs amazing customers physical Modeling ionization accelerated magnets}
+%\hyphenation{Systems sending GbPhy cluster ABACUS system acceptable FPGAs amazing customers physical Modeling ionization accelerated magnets}
+\hyphenation{GbPhy ABACUS FPGAs INFI Turin}
 
 \addto{\captionsenglish}{%
 	\renewcommand{\bibname}{References}
 }
-
 
 \usepackage{fancyhdr}
 \pagestyle{plain}
